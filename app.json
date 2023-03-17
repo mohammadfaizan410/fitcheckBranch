@@ -25,6 +25,12 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "40cba90e-2df5-4af6-ab5c-1c64c0ed1b3d"
+      }
+    },
+    "owner": "theintrigued"
   }
 }
