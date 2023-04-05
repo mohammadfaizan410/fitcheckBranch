@@ -3,18 +3,29 @@ import { StyleSheet } from "react-native";
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    height: "100%",
+    width: "100%",
     justifyContent: "center",
-    alignItems: "center",
-    margin: "auto",
   },
 
-  subcontainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "flex-start",
-    width: 200,
-    marginBottom: 10,
-    marginTop: 10,
+  rowContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    backgroundColor: "#eee",
+    borderRadius: 5,
+  },
+
+  columnContainer: {
+    flexDirection: "column",
+    justifyContent: "flex-end",
+    alignItems: "center",
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    backgroundColor: "#eee",
+    borderRadius: 5,
   },
 
   title: {
@@ -25,7 +36,7 @@ const styles = StyleSheet.create({
 
   subtitle: {
     fontSize: 18,
-    alignSelf: "flex-start",
+    textTransform: "capitalize",
   },
 
   button: {
@@ -33,7 +44,6 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     color: "#ffffff",
     backgroundColor: "rgb(62,0,153)",
-    width: "100%",
     marginBottom: 10,
     marginTop: 10,
   },
@@ -44,12 +54,23 @@ const styles = StyleSheet.create({
 
   input: {
     fontSize: 18,
-    width: "100%",
+    //width: "100%",
     borderColor: "rgb(176,176,176)",
     borderWidth: 1,
     borderRadius: 5,
     padding: 5,
     marginBottom: 5,
+  },
+  profilePicture: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+  },
+
+  selectedImage: {
+    resizeMode: "center",
+    width: "100%",
+    height: "30%",
   },
 });
 
