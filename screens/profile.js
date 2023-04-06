@@ -22,6 +22,7 @@ import {
 import styles from "./profile.style";
 
 export default function Profile({ navigation }) {
+
   //Redux Store data
   const dispatch = useDispatch();
   const {
@@ -36,20 +37,22 @@ export default function Profile({ navigation }) {
   } = useSelector((state) => state.user);
 
   const [retrievedImages, setRetrievedImages] = useState([]);
-
-  useEffect(() => {
+  const [imgCount, setImgCount] = useState({});
+  
+  const fetchImages = () => {
     const formData = {
       username: username,
     };
-
-    fetch("http://192.168.1.30:3000/getimages", {
-      //replace with server IP later
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(formData),
-    })
+    fetch(
+      "http://192.168.1.20:3000/getimages" || "http://192.168.1.30:3000/getimages",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      }
+    )
       .then((response) => {
         return response.json();
       })
@@ -59,7 +62,15 @@ export default function Profile({ navigation }) {
       .catch((error) => {
         console.error(error);
       });
-  }, []);
+  };
+
+
+  useEffect(() => {
+    console.log("hello there")
+    fetchImages()
+    
+  }, [])
+
 
   useEffect(() => {
     if (!isLoggedIn) {
@@ -69,6 +80,7 @@ export default function Profile({ navigation }) {
 
   useEffect(() => {
     navigation.navigate("Profile");
+    fetchImages();
   }, [images]);
 
   const handleLogout = () => {
@@ -125,12 +137,31 @@ export default function Profile({ navigation }) {
           <Text style={styles.buttonText}>Upload Image</Text>
         </TouchableOpacity>
       </View>
-      <FlatList
+      {
+        retrievedImages ? 
+        <FlatList
         style={styles.postContainer}
         data={retrievedImages}
         renderItem={renderImageItem}
         keyExtractor={(item) => item.filename}
-      />
+          />
+          : ""
+      }
+      <View>
+        {/* {
+          retrievedImages.map(item => {
+            return (<View>
+              <Image
+            style={{ ...styles.postImage, width: "30%", height: 200 }}
+            source={{ uri: `data:${item.contentType};base64,${item.data}` }}
+          />
+              <Text>{item.caption}</Text>
+            </View>
+          )})
+        } */}
+        </View>
+
     </View>
+
   );
 }

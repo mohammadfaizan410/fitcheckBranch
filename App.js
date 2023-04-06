@@ -14,28 +14,40 @@ import { createStackNavigator } from "@react-navigation/stack";
 const Stack = createStackNavigator();
 
 export default function App() {
+  function ProfileScreen(props) {
+    return <Profile {...props} />;
+  }
+  function LoginScreen(props) {
+    return <Login {...props} />;
+  }
+  function RegisterScreen(props) {
+    return <Login {...props} />;
+  }
+  function UploadImageScreen(props) {
+    return <UploadImage {...props} />
+  }
   return (
     <Provider store={store}>
       <NavigationContainer>
         <Stack.Navigator initialRouteName="Login">
           <Stack.Screen
             name="Profile"
-            component={(props) => <Profile {...props} />}
+            component={ProfileScreen}
             options={{ headerShown: false }}
           />
           <Stack.Screen
             name="Login"
-            component={(props) => <Login {...props} />}
+            component={LoginScreen}
             options={{ headerShown: false }}
           />
           <Stack.Screen
             name="Register"
-            component={(props) => <Register {...props} />}
+            component={ RegisterScreen}
             options={{ headerShown: false }}
           />
           <Stack.Screen
             name="UploadImage"
-            component={(props) => <UploadImage {...props} />}
+            component={UploadImageScreen}
             options={{ headerShown: false }}
           />
         </Stack.Navigator>

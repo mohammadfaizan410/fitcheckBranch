@@ -75,7 +75,7 @@ export default function UploadImage({ navigation }) {
     };
     console.log("Form Data: " + formData.username);
 
-    fetch("http://192.168.1.30:3000/imageupload", {
+    fetch("http://192.168.1.20:3000/imageupload" || "http://192.168.1.30:3000/imageupload", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -87,7 +87,8 @@ export default function UploadImage({ navigation }) {
       })
       .then((result) => {
         console.log("Success: ", result);
-        dispatch(setImages(result.filename));
+        const updatedImages = [...images, result.filename];
+        dispatch(setImages(updatedImages));
         navigation.navigate("Profile");
       })
       .catch((error) => {
@@ -121,7 +122,7 @@ export default function UploadImage({ navigation }) {
           onChangeText={setImageCaption}
           value={imageCaption}
         />
-
+      
         <TouchableOpacity
           style={styles.button}
           onPress={() => navigation.navigate("Profile")}
