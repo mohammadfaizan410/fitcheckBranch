@@ -4,6 +4,7 @@ import { View, Text } from "react-native";
 import Login from "./screens/login";
 import Register from "./screens/register";
 import Profile from "./screens/profile";
+import Landing from "./screens/landing";
 import UploadImage from "./screens/uploadImage";
 import NavBar from "./components/navBar";
 import { Provider } from "react-redux";
@@ -21,15 +22,23 @@ export default function App() {
     return <Login {...props} />;
   }
   function RegisterScreen(props) {
-    return <Login {...props} />;
+    return <Register {...props} />;
   }
   function UploadImageScreen(props) {
     return <UploadImage {...props} />
   }
+  function LandingImageScreen(props) {
+    return <Landing {...props} />
+  }
   return (
     <Provider store={store}>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="Login">
+        <Stack.Navigator initialRouteName="Landing">
+          <Stack.Screen
+            name="Landing"
+            component={LandingImageScreen}
+            options={{ headerShown: false }}
+          />
           <Stack.Screen
             name="Profile"
             component={ProfileScreen}
@@ -42,7 +51,7 @@ export default function App() {
           />
           <Stack.Screen
             name="Register"
-            component={ RegisterScreen}
+            component={RegisterScreen}
             options={{ headerShown: false }}
           />
           <Stack.Screen

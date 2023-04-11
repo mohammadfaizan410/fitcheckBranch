@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "fitcheck",
-    "slug": "fitcheck",
+    "slug": "fitcheck2",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -28,9 +28,9 @@
     },
     "extra": {
       "eas": {
-        "projectId": "4408F1A6-0F3F-4D7F-8F7E-1B3C6DE02D94"
+        "projectId": "bea636fe-de05-487b-8323-938c97861660"
       }
     },
-    "owner": "fitcheck"
+    "owner": "muhammadfaizan410"
   }
 }

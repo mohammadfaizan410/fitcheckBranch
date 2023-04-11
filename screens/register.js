@@ -93,7 +93,7 @@ export default function Register({ navigation }) {
 
         <TouchableOpacity
           style={styles.button}
-          onPress={() => navigation.navigate("Login")}
+          onPress={() => navigation.navigate("Landing")}
         >
           <Text style={styles.buttonText}>Back to Login</Text>
         </TouchableOpacity>

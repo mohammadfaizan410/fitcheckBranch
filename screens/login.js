@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useDispatch, useSelector } from "react-redux";
+import Icon from 'react-native-vector-icons/AntDesign';
 import {
   setIsLoggedIn,
   setUserEmail,
@@ -11,10 +12,13 @@ import {
   setImages,
   setVideos,
 } from "../reducers/user";
-import { View, Text, TextInput, TouchableOpacity } from "react-native";
-import styles from "./login.style";
+import { Keyboard,View, Text, TextInput, TouchableOpacity, Image, SafeAreaView } from "react-native";
+import styles from "./login.styles";
+import { Button } from "react-native-web";
 
 export default function Login({ navigation }) {
+  const userIcon = <Icon name="user" size={30} />;
+  const LockIcon = <Icon name="lock" size={30} />;
   //Redux Store data
   const dispatch = useDispatch();
   const {
@@ -31,8 +35,7 @@ export default function Login({ navigation }) {
   //const [email, setEmail] = useState('');
   const [usernameAtLogin, setUsernameAtLogin] = useState("");
   const [password, setPassword] = useState("");
-  const [formData, setFormData] = useState({});
-
+  const [keyboardState, setKeyboardState] = useState(false);
   AsyncStorage.getItem("user")
     .then((storedData) => {
       const userData = JSON.parse(storedData);
@@ -46,11 +49,21 @@ export default function Login({ navigation }) {
 
   useEffect(() => {
     if (isLoggedIn) {
+      console.log("logged in")
       navigation.navigate("Profile");
     }
   }, [isLoggedIn]);
 
+  Keyboard.addListener("keyboardDidShow", () => {
+    setKeyboardState(true);
+  })
+  Keyboard.addListener("keyboardDidHide", () => {
+    setKeyboardState(false);
+  })
+
+
   const handleLogin = () => {
+    console.log("login activated")
     const formData = {
       email: "",
       username: usernameAtLogin,
@@ -98,40 +111,84 @@ export default function Login({ navigation }) {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.subcontainer}>
-        <Text style={styles.title}>Fitcheck</Text>
+    <SafeAreaView style={styles.container}>
+      <Image style={styles.backGroundImage} source={require("../images/loginImg.jpg")}></Image>
+      {keyboardState === false ? <Text style={styles.screenTitle}>Welcome back to</Text> : ''}
+      {keyboardState===false ? 
+      <View style={styles.logoContainer}>
+        <Image style={styles.logo} source={require("../images/logoAndText.png")}></Image>  
+      </View> : ''}
 
-        <Text style={styles.subtitle}>Username:</Text>
-        <TextInput
-          style={styles.input}
+      <View style={styles.formContainer}>
+        <View style={{ ...styles.formSection, borderBtoomWidth: 0, borderBottomColor: 'white' }}>
+          <Text style={{ ...styles.formTitle }}>Login</Text>
+          </View>
+        <View style={styles.formSection}>
+          {userIcon}
+          <TextInput
+          style={styles.loginInput}
           placeholder="Enter your Username"
           placeholderTextColor="#999"
           onChangeText={setUsernameAtLogin}
           value={usernameAtLogin}
-        />
-
-        <Text style={styles.subtitle}>Password:</Text>
-        <TextInput
-          style={styles.input}
+          />
+        </View>
+        <View style={styles.formSection}>
+          {LockIcon}
+          <TextInput
+          style={styles.loginInput}
           placeholder="Enter your Password"
           placeholderTextColor="#999"
           onChangeText={setPassword}
-          secureTextEntry={true}
           value={password}
-        />
-
-        <TouchableOpacity style={styles.button} onPress={handleLogin}>
-          <Text style={styles.buttonText}>Login</Text>
-        </TouchableOpacity>
-
+          />
+        </View>
         <TouchableOpacity
-          style={styles.button}
-          onPress={() => navigation.navigate("Register")}
-        >
-          <Text style={styles.buttonText}>Register</Text>
-        </TouchableOpacity>
+          style={{ ...styles.button, marginTop: 30 }}
+          onPress={handleLogin}
+        ><Text style={styles.buttonText}>Login</Text></TouchableOpacity>
       </View>
-    </View>
+  </SafeAreaView>
   );
 }
+{/* <View style={styles.container}>
+<View style={styles.subcontainer}>
+
+<Text style={styles.title}>Welcome Back to FitCheck</Text>
+
+<Text style={styles.subtitle}>Username:</Text>
+
+
+<TouchableOpacity style={styles.button} onPress={handleLogin}>
+<Text style={styles.buttonText}>Login</Text>
+</TouchableOpacity>
+
+<TouchableOpacity
+style={styles.button}
+onPress={() => navigation.navigate("Register")}
+>
+<Text style={styles.buttonText}>Register</Text>
+</TouchableOpacity>
+ </View>
+ </View> */}
+
+
+
+
+// <TextInput
+//     style={styles.input}
+//     placeholder="Enter your Username"
+//     placeholderTextColor="#999"
+//     onChangeText={setUsernameAtLogin}
+//     value={usernameAtLogin}
+//     />
+
+//     <Text style={styles.subtitle}>Password:</Text>
+//     <TextInput
+//     style={styles.input}
+//     placeholder="Enter your Password"
+//     placeholderTextColor="#999"
+//     onChangeText={setPassword}
+//     secureTextEntry={true}
+//     value={password}
+//     />
