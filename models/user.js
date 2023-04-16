@@ -2,18 +2,18 @@ const mongoose = require("mongoose");
 
 const fitcheckCollectionSchema = new mongoose.Schema({
   fullname: {
-    required: false,
     type: String,
     default: "",
+    required : false
   },
   email: {
     required: true,
     type: String,
   },
   username: {
-    required: false,
     type: String,
     default: "",
+    required : false
   },
   password: {
     required: true,

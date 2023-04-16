@@ -53,11 +53,8 @@ router.post("/register", async (req, res) => {
   User.findOne({ email: req.body.email }).then(async (result) => {
     if (!result) {
       const newUser = new User({
-        fullname: req.body.fullname,
         email: req.body.email,
-        username: req.body.username,
         password: req.body.password,
-        id: req.body.username,
       });
 
       try {
