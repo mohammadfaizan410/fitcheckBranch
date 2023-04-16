@@ -6,7 +6,6 @@ import Register from "./screens/register";
 import Profile from "./screens/profile";
 import Landing from "./screens/landing";
 import UploadImage from "./screens/uploadImage";
-import NavBar from "./components/navBar";
 import { Provider } from "react-redux";
 import store from "./store";
 import { NavigationContainer } from "@react-navigation/native";

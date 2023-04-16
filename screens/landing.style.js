@@ -95,11 +95,14 @@ const styles = StyleSheet.create({
     width: '72%',
     textAlign: 'center',
     marginBottom: 10,
+    zIndex: 100
+
   },
   buttonText: {
     color: "white",
     fontSize: 20,
-    textAlign:'center'
+    textAlign: 'center',
+    zIndex: 99
   },
 
   input: {

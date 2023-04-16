@@ -29,40 +29,6 @@ const styles = StyleSheet.create({
     marginBottom: 0,
   },
 
-  loginBottom: {
-    width: '100%',
-    height: '45%',
-    justifyContent: "center",
-    alignItems: "flex-start",
-    backgroundColor: '#2E2E2E',
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    position: 'absolute',
-    top:'55%',
-  },
-
-  btnContainer: {
-    width: '100%',
-    alignItems: 'center',
-  },
-
-  overlay: {
-    position: 'absolute',
- top: 0,
- left: 0,
- right: 0,
-    bottom: 0,
-    backgroundColor: 'white',
-    opacity: 0.8
-  },
-
-  welcomeImage: {
-    flex: 1,
-    width: '100%',
-    height: '100%',
-    margin: "auto",
-
-  },
   titleView: {
     position: 'absolute',
     justifyContent: 'center',
@@ -72,9 +38,16 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
   },
+  logoContainer: {
+    position: "absolute",
+    top : '10%'
+  },
+
   logo: {
-    width: 100,
-    height: 100
+    height: 75,
+    width: 150,
+    resizeMode: 'contain',
+    marginLeft: 15
   },
 
   title: {

@@ -3,60 +3,74 @@ import { StyleSheet } from 'react-native';
 const styles = StyleSheet.create({
 
     container: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-      
-      margin:'auto'
-    },
-
-    subcontainer: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'flex-start',
-      width: 200,
-      marginBottom: 10,
-      marginTop: 10
-    },
-
-    title: {
-      fontSize: 24,
-      fontWeight: 'bold',
-      marginBottom: 20
-    },
-
-    subtitle: {
-    fontSize: 18,
-    alignSelf: 'flex-start'
-    },
-
-    button: {
-      padding: 10,
-      borderRadius: 5,
-      color: '#ffffff',
-      alignSelf:'center',
-      width: '100%',
-      backgroundColor: 'rgb(62,0,153)',
-      marginBottom: 10,
-      marginTop: 10
+        alignItems: "center",
+        width: '100%',
+        height:'100%',
+        marginTop: 0
   },
-
-  buttonText: {
-    color: 'white',
-    alignSelf:'center'
+  backgroundImage: {
+    width: '100%',
+    height: '100%'
+  },
+  screenTitle: {
+    // fontFamily: "Neurial Grotesk",
+    position: 'absolute',
+    top: '15%',
+    fontSize: 32
+  },
+  logoContainer: {
+    position: 'absolute',
+    top: "20%",
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
+  logo: {
+    height: 100,
+    width: 200,
+    resizeMode: 'contain'
+  },
+  formTitle: {
+    width: '100%',
+    fontSize: 30,
+    textAlign:'left'
 },
-
-    input: {
-      fontSize: 18,
-      borderColor: 'rgb(176,176,176)',
-      borderWidth: 1,
-      borderRadius: 5,
-      width: '100%',
-      padding: 5,
-      marginBottom: 5,
-      marginTop: 5
-      
-    }
+  formContainer: {
+    position: 'absolute',
+    top: '35%',
+    width: '90%',
+    height: '40%',
+    backgroundColor: 'white',
+    borderRadius: 20,
+    alignItems: 'center'
+  },
+  formSection: {
+    width: '90%',
+    flexDirection: 'row',
+    borderBottomColor: 'black',
+    borderBottomWidth: 1,
+    paddingBottom: 10,
+    marginTop: 20
+  },
+  
+  registerInput: {
+    width: '100%',
+    marginLeft: 10
+},
+button: {
+  padding: 20,
+  borderRadius: 20,
+  color: "#ffffff",
+  backgroundColor: "#5E2BAA",
+  width: '72%',
+  textAlign: 'center',
+  marginBottom: 10,
+  zIndex: 100
+},
+buttonText: {
+    color: "white",
+    fontSize: 20,
+    textAlign:'center'
+  },
   });
   
   export default styles;

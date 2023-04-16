@@ -5,18 +5,31 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
+  Keyboard,
+  Image
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import styles from "./register.style";
+import { SafeAreaView } from "react-native-safe-area-context";
+import Icon from 'react-native-vector-icons/AntDesign';
 
 export default function Register({ navigation }) {
+  const userIcon = <Icon name="user" size={30} />;
+  const LockIcon = <Icon name="lock" size={30} />;
   const [isRegistered, setIsRegistered] = useState(false);
   const [fullname, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [formData, setFormData] = useState({});
+  const [keyboardState, setKeyboardState] = useState(false)
+  Keyboard.addListener("keyboardDidShow", () => {
+    setKeyboardState(true);
+  })
+  Keyboard.addListener("keyboardDidHide", () => {
+    setKeyboardState(false);
+  })
 
   const handleSubmit = () => {
     const formData = {
@@ -45,18 +58,49 @@ export default function Register({ navigation }) {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.subcontainer}>
-        <Text style={styles.title}>Register</Text>
+    <SafeAreaView style={styles.container}>
 
-        <Text style={styles.subtitle}>Full Name:</Text>
+      <Image style={styles.backgroundImage} source={require("../images/loginImg.jpg")}></Image>
+
+        {keyboardState === false ? <Text style={styles.screenTitle}>Welcome back to</Text> : ''}
+        {keyboardState===false ? 
+        <View style={styles.logoContainer}>
+          <Image style={styles.logo} source={require("../images/logoAndText.png")}></Image>  
+        </View> : ''}
+
+        <View style={{...styles.formContainer}}>
+        <View style={{ ...styles.formSection, borderBtoomWidth: 0, borderBottomColor: 'white' }}>
+          <Text style={{ ...styles.formTitle }}>Create Account</Text>
+          </View>
+          <View style={styles.formSection}>
+          {userIcon}
+          <TextInput
+          style={styles.registerInput}
+          placeholder="Email/Phone Number"
+          placeholderTextColor="#999"
+          onChangeText={setEmail}
+          value={email}
+          />
+        </View>
+          <View style={styles.formSection}>
+          {LockIcon}
+          <TextInput
+          style={styles.registerInput}
+          placeholder="Password"
+          placeholderTextColor="#999"
+          onChangeText={setPassword}
+          value={password}
+          />
+          </View>
+          
+        {/* <Text style={styles.subtitle}>Full Name:</Text>
         <TextInput
           style={styles.input}
           placeholder="Enter your full name"
           placeholderTextColor="#999"
           onChangeText={setFullName}
           value={fullname}
-        />
+          />
 
         <Text style={styles.subtitle}>Email:</Text>
         <TextInput
@@ -66,7 +110,7 @@ export default function Register({ navigation }) {
           onChangeText={setEmail}
           value={email}
           keyboardType="email-address"
-        />
+          />
 
         <Text style={styles.subtitle}>Username:</Text>
         <TextInput
@@ -75,7 +119,7 @@ export default function Register({ navigation }) {
           placeholderTextColor="#999"
           onChangeText={setUsername}
           value={username}
-        />
+          />
 
         <Text style={styles.subtitle}>Password:</Text>
         <TextInput
@@ -85,19 +129,11 @@ export default function Register({ navigation }) {
           onChangeText={setPassword}
           secureTextEntry={true}
           value={password}
-        />
-
-        <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-          <Text style={styles.buttonText}>Submit</Text>
+          /> */}
+          <TouchableOpacity style={{ ...styles.button, marginTop: 30 }} onPress={handleSubmit}>
+          <Text style={styles.buttonText}>Create Account</Text>
         </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => navigation.navigate("Landing")}
-        >
-          <Text style={styles.buttonText}>Back to Login</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
+        </View>
+  </SafeAreaView>
   );
 }

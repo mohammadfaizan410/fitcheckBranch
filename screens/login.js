@@ -52,7 +52,7 @@ export default function Login({ navigation }) {
       console.log("logged in")
       navigation.navigate("Profile");
     }
-  }, [isLoggedIn]);
+  }, [isLoggedIn])
 
   Keyboard.addListener("keyboardDidShow", () => {
     setKeyboardState(true);

@@ -9,6 +9,7 @@ const initialState = {
   following: 0,
   images: [],
   videos: [],
+  pageIndex : 0
 };
 
 export const userSlice = createSlice({
@@ -40,6 +41,13 @@ export const userSlice = createSlice({
     setVideos: (state, action) => {
       state.videos = action.payload;
     },
+    incrPageIndex: (state, action) => {
+      state.pageIndex += 1;
+    },
+    decrPageIndex: (state, action) => {
+      state.pageIndex -= 1;
+    }
+
   },
 });
 
@@ -53,6 +61,8 @@ export const {
   setFollowing,
   setImages,
   setVideos,
+  incrPageIndex,
+  decrPageIndex
 } = userSlice.actions;
 
 export default userSlice.reducer;
