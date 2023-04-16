@@ -27,7 +27,7 @@ export default function LandingPageComponent(props) {
 
   return (
     <View style={styles.loginTop}
-      {...props.panHandlers}
+      {...props.panHandlers} 
     >
       <View style={{ ...styles.logoContainer}}>
         <Image style={{ ...styles.logo }} source={require("../../images/logoAndText.png")}></Image>  
