@@ -7,7 +7,7 @@ const { Readable } = require("stream");
 const bodyParser = require("body-parser");
 
 // ------- mongo db connection --------
-mongoose.connect("mongodb://localhost:27017/fitcheckDB");
+mongoose.connect("mongodb://localhost:27018/fitcheckDB");
 const database = mongoose.connection; //get the database object from mongoose connection
 
 database.on("error", (error) => {
@@ -71,14 +71,14 @@ router.post("/register", async (req, res) => {
 
 //Handle Login
 router.post("/login", async (req, res) => {
-  const query = { username: req.body.username, password: req.body.password };
+  const query = { email: req.body.email, password: req.body.password };
   User.find(query).then(async (result) => {
     if (!result) {
       // user not found
 
       res.status(400).json({ message: "Username Not Found" });
     } else {
-      const token = jwt.sign({ username: req.body.username }, "secretKey");
+      const token = jwt.sign({ email: req.body.email }, "secretKey");
       res.status(200).json({ message: result, token: token });
     }
   });

@@ -76,14 +76,17 @@ export default function Login({ navigation }) {
       password: password,
     };
 
-    fetch("http://192.168.1.20:3000/login", {
-      //replace with server IP later
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(formData),
-    })
+    fetch(
+      "http://192.168.1.30:3000/login" || "http://192.168.1.20:3000/login",
+      {
+        //replace with server IP later
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      }
+    )
       .then((res) => {
         return res.json();
       })
