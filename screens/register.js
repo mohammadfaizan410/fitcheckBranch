@@ -6,13 +6,13 @@ import {
   TouchableOpacity,
   StyleSheet,
   Keyboard,
-  Image
+  Image,
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import styles from "./register.style";
 import { SafeAreaView } from "react-native-safe-area-context";
-import Icon from 'react-native-vector-icons/AntDesign';
+import Icon from "react-native-vector-icons/AntDesign";
 
 export default function Register({ navigation }) {
   const userIcon = <Icon name="user" size={30} />;
@@ -23,33 +23,34 @@ export default function Register({ navigation }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [formData, setFormData] = useState({});
-  const [keyboardState, setKeyboardState] = useState(false)
+  const [keyboardState, setKeyboardState] = useState(false);
   Keyboard.addListener("keyboardDidShow", () => {
     setKeyboardState(true);
-  })
+  });
   Keyboard.addListener("keyboardDidHide", () => {
     setKeyboardState(false);
-  })
+  });
 
   const handleSubmit = () => {
     const formData = {
-      fullname: fullname,
       email: email,
-      username: username,
       password: password,
-      id: username,
     };
-
+    console.log(formData);
     //handle registration logic here
 
-    fetch("http://192.168.1.20:3000/register" || "http://192.168.1.30:3000/register", {
-      //replace with server IP later
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(formData),
-    })
+    fetch(
+      "http://192.168.1.20:3000/register" ||
+        "http://192.168.1.30:3000/register",
+      {
+        //replace with server IP later
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      }
+    )
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
@@ -59,40 +60,58 @@ export default function Register({ navigation }) {
 
   return (
     <SafeAreaView style={styles.container}>
+      <Image
+        style={styles.backgroundImage}
+        source={require("../images/loginImg.jpg")}
+      ></Image>
 
-      <Image style={styles.backgroundImage} source={require("../images/loginImg.jpg")}></Image>
-
-        {keyboardState === false ? <Text style={styles.screenTitle}>Welcome back to</Text> : ''}
-        {keyboardState===false ? 
+      {keyboardState === false ? (
+        <Text style={styles.screenTitle}>Welcome back to</Text>
+      ) : (
+        ""
+      )}
+      {keyboardState === false ? (
         <View style={styles.logoContainer}>
-          <Image style={styles.logo} source={require("../images/logoAndText.png")}></Image>  
-        </View> : ''}
+          <Image
+            style={styles.logo}
+            source={require("../images/logoAndText.png")}
+          ></Image>
+        </View>
+      ) : (
+        ""
+      )}
 
-        <View style={{...styles.formContainer}}>
-        <View style={{ ...styles.formSection, borderBtoomWidth: 0, borderBottomColor: 'white' }}>
+      <View style={{ ...styles.formContainer }}>
+        <View
+          style={{
+            ...styles.formSection,
+            borderBtoomWidth: 0,
+            borderBottomColor: "white",
+          }}
+        >
           <Text style={{ ...styles.formTitle }}>Create Account</Text>
-          </View>
-          <View style={styles.formSection}>
+        </View>
+        <View style={styles.formSection}>
           {userIcon}
           <TextInput
-          style={styles.registerInput}
-          placeholder="Email/Phone Number"
-          placeholderTextColor="#999"
-          onChangeText={setEmail}
-          value={email}
+            style={styles.registerInput}
+            placeholder="Email/Phone Number"
+            placeholderTextColor="#999"
+            onChangeText={setEmail}
+            value={email}
           />
         </View>
-          <View style={styles.formSection}>
+        <View style={styles.formSection}>
           {LockIcon}
           <TextInput
-          style={styles.registerInput}
-          placeholder="Password"
-          placeholderTextColor="#999"
-          onChangeText={setPassword}
-          value={password}
+            style={styles.registerInput}
+            placeholder="Password"
+            placeholderTextColor="#999"
+            onChangeText={setPassword}
+            value={password}
           />
-          </View>
-          
+        </View>
+
         {/* <Text style={styles.subtitle}>Full Name:</Text>
         <TextInput
           style={styles.input}
@@ -130,10 +149,13 @@ export default function Register({ navigation }) {
           secureTextEntry={true}
           value={password}
           /> */}
-          <TouchableOpacity style={{ ...styles.button, marginTop: 30 }} onPress={handleSubmit}>
+        <TouchableOpacity
+          style={{ ...styles.button, marginTop: 30 }}
+          onPress={handleSubmit}
+        >
           <Text style={styles.buttonText}>Create Account</Text>
         </TouchableOpacity>
-        </View>
-  </SafeAreaView>
+      </View>
+    </SafeAreaView>
   );
 }

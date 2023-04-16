@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useDispatch, useSelector } from "react-redux";
-import Icon from 'react-native-vector-icons/AntDesign';
+import Icon from "react-native-vector-icons/AntDesign";
 import {
   setIsLoggedIn,
   setUserEmail,
@@ -12,7 +12,15 @@ import {
   setImages,
   setVideos,
 } from "../reducers/user";
-import { Keyboard,View, Text, TextInput, TouchableOpacity, Image, SafeAreaView } from "react-native";
+import {
+  Keyboard,
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  Image,
+  SafeAreaView,
+} from "react-native";
 import styles from "./login.styles";
 import { Button } from "react-native-web";
 
@@ -33,7 +41,7 @@ export default function Login({ navigation }) {
   } = useSelector((state) => state.user);
 
   //const [email, setEmail] = useState('');
-  const [usernameAtLogin, setUsernameAtLogin] = useState("");
+  const [emailAtLogin, setEmailAtLogin] = useState("");
   const [password, setPassword] = useState("");
   const [keyboardState, setKeyboardState] = useState(false);
   AsyncStorage.getItem("user")
@@ -49,26 +57,23 @@ export default function Login({ navigation }) {
 
   useEffect(() => {
     if (isLoggedIn) {
-      console.log("logged in")
+      console.log("logged in");
       navigation.navigate("Profile");
     }
-  }, [isLoggedIn])
+  }, [isLoggedIn]);
 
   Keyboard.addListener("keyboardDidShow", () => {
     setKeyboardState(true);
-  })
+  });
   Keyboard.addListener("keyboardDidHide", () => {
     setKeyboardState(false);
-  })
-
+  });
 
   const handleLogin = () => {
-    console.log("login activated")
+    console.log("login activated");
     const formData = {
-      email: "",
-      username: usernameAtLogin,
+      email: emailAtLogin,
       password: password,
-      id: usernameAtLogin,
     };
 
     fetch("http://192.168.1.20:3000/login", {
@@ -92,7 +97,7 @@ export default function Login({ navigation }) {
           setIsLoggedIn(true);
         } else {
           //login cred. WRONG
-          console.log("Invalid Username or Password");
+          console.log("Invalid Email or Password");
         }
       })
       .catch((err) => {
@@ -112,46 +117,68 @@ export default function Login({ navigation }) {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Image style={styles.backGroundImage} source={require("../images/loginImg.jpg")}></Image>
-      {keyboardState === false ? <Text style={styles.screenTitle}>Welcome back to</Text> : ''}
-      {keyboardState===false ? 
-      <View style={styles.logoContainer}>
-        <Image style={styles.logo} source={require("../images/logoAndText.png")}></Image>  
-      </View> : ''}
+      <Image
+        style={styles.backGroundImage}
+        source={require("../images/loginImg.jpg")}
+      ></Image>
+      {keyboardState === false ? (
+        <Text style={styles.screenTitle}>Welcome back to</Text>
+      ) : (
+        ""
+      )}
+      {keyboardState === false ? (
+        <View style={styles.logoContainer}>
+          <Image
+            style={styles.logo}
+            source={require("../images/logoAndText.png")}
+          ></Image>
+        </View>
+      ) : (
+        ""
+      )}
 
       <View style={styles.formContainer}>
-        <View style={{ ...styles.formSection, borderBtoomWidth: 0, borderBottomColor: 'white' }}>
+        <View
+          style={{
+            ...styles.formSection,
+            borderBtoomWidth: 0,
+            borderBottomColor: "white",
+          }}
+        >
           <Text style={{ ...styles.formTitle }}>Login</Text>
-          </View>
+        </View>
         <View style={styles.formSection}>
           {userIcon}
           <TextInput
-          style={styles.loginInput}
-          placeholder="Enter your Username"
-          placeholderTextColor="#999"
-          onChangeText={setUsernameAtLogin}
-          value={usernameAtLogin}
+            style={styles.loginInput}
+            placeholder="Enter your Email"
+            placeholderTextColor="#999"
+            onChangeText={setEmailAtLogin}
+            value={emailAtLogin}
           />
         </View>
         <View style={styles.formSection}>
           {LockIcon}
           <TextInput
-          style={styles.loginInput}
-          placeholder="Enter your Password"
-          placeholderTextColor="#999"
-          onChangeText={setPassword}
-          value={password}
+            style={styles.loginInput}
+            placeholder="Enter your Password"
+            placeholderTextColor="#999"
+            onChangeText={setPassword}
+            value={password}
           />
         </View>
         <TouchableOpacity
           style={{ ...styles.button, marginTop: 30 }}
           onPress={handleLogin}
-        ><Text style={styles.buttonText}>Login</Text></TouchableOpacity>
+        >
+          <Text style={styles.buttonText}>Login</Text>
+        </TouchableOpacity>
       </View>
-  </SafeAreaView>
+    </SafeAreaView>
   );
 }
-{/* <View style={styles.container}>
+{
+  /* <View style={styles.container}>
 <View style={styles.subcontainer}>
 
 <Text style={styles.title}>Welcome Back to FitCheck</Text>
@@ -170,10 +197,8 @@ onPress={() => navigation.navigate("Register")}
 <Text style={styles.buttonText}>Register</Text>
 </TouchableOpacity>
  </View>
- </View> */}
-
-
-
+ </View> */
+}
 
 // <TextInput
 //     style={styles.input}
