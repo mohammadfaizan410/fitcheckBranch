@@ -6,7 +6,7 @@ import homeImg1 from '../../images/homeImg1.png';
 import homeImg2 from '../../images/homeImg2.png';
 import homeImg3 from '../../images/homeImg3.png';
 
-export default function LandingPageComponent() {
+export default function LandingPageComponent(props) {
   const {
     pageIndex
   } = useSelector((state) => state.user);
@@ -26,7 +26,9 @@ export default function LandingPageComponent() {
   }
 
   return (
-    <View style={styles.loginTop}>
+    <View style={styles.loginTop}
+      {...props.panHandlers}
+    >
       <View style={{ ...styles.logoContainer}}>
         <Image style={{ ...styles.logo }} source={require("../../images/logoAndText.png")}></Image>  
           </View>

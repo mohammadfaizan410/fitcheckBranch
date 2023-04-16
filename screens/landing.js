@@ -177,8 +177,9 @@ export default function Login({ navigation }) {
             </View>
 
           </View> 
-          </View> : <View style={{...styles.loginTop}}><LandingPageComponent
-                    /></View>
+          </View> : <LandingPageComponent
+                  panHandlers = {panResponder.panHandlers}          
+          />
         }
         
         <View style={styles.loginBottom}> 
