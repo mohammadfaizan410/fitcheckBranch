@@ -115,7 +115,12 @@ export default function App() {
             name="Video"
             component={VideoComponentScreen}
             options={{ headerShown: false }}
-          /> */}
+          /> 
+          <Stack.Screen
+            name="AddListing"
+            component={AddListingScreen}
+            options={{ headerShown: false }}
+          /> 
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>
