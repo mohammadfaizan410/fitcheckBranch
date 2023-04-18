@@ -34,7 +34,6 @@ export default function Profile({ navigation }) {
   } = useSelector((state) => state.user);
 
   const [retrievedFitchecks, setRetrievedFitchecks] = useState([]);
-  const [imgCount, setImgCount] = useState({});
 
   const fetchFitchecks = () => {
     const formData = {
@@ -111,7 +110,7 @@ export default function Profile({ navigation }) {
     .then((storedData) => {
       const userData = JSON.parse(storedData);
       if (userData != null) {
-        console.log("Stored data is: ", userData["fitcheck"][0].caption);
+        console.log("Stored data is: ", userData);
       } else {
         console.log("NO STORED DATA");
       }

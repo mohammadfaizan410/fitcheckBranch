@@ -7,15 +7,16 @@ import Profile from "./screens/profile";
 import Landing from "./screens/landing";
 import ShopSetup from "./screens/shopSetup";
 import UploadImage from "./screens/uploadImage";
-import UploadFitcheck from "./screens/uploadFitcheck";
+import AddFitcheck from "./screens/addFitcheck";
 import Fitcheck from "./screens/fitcheck";
+import AddListing from "./screens/addListing";
 import { Provider } from "react-redux";
 import store from "./store";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import WelcomePrompt from "./screens/welcomePrompt";
-// import CameraComponent from "./screens/components/cameraComponent";
-// import VideoComponent from './screens//components/videoComponent';  
+import CameraComponent from "./screens/components/cameraComponent";
+import VideoComponent from "./screens//components/videoComponent";
 
 const Stack = createStackNavigator();
 
@@ -33,26 +34,29 @@ export default function App() {
     return <UploadImage {...props} />;
   }
   function UploadFitcheckScreen(props) {
-    return <UploadFitcheck {...props} />;
+    return <AddFitcheck {...props} />;
   }
   function FitcheckScreen(props) {
     return <Fitcheck {...props} />;
+  }
+  function AddListingScreen(props) {
+    return <AddListing {...props} />;
   }
   function LandingImageScreen(props) {
     return <Landing {...props} />;
   }
   function ShopSetupScreen(props) {
-    return <ShopSetup {...props} />
+    return <ShopSetup {...props} />;
   }
   function WelcomePromptScreen(props) {
-    return <WelcomePrompt {...props} />
+    return <WelcomePrompt {...props} />;
   }
-  // function CameraComponentScreen(props) {
-  //   return <CameraComponent {...props} />
-  // }
-  // function VideoComponentScreen(props) {
-  //   return <VideoComponent {...props} />
-  // }
+  function CameraComponentScreen(props) {
+    return <CameraComponent {...props} />
+  }
+  function VideoComponentScreen(props) {
+    return <VideoComponent {...props} />
+  }
   return (
     <Provider store={store}>
       <NavigationContainer>
@@ -102,7 +106,7 @@ export default function App() {
             component={FitcheckScreen}
             options={{ headerShown: false }}
           />
-          {/* <Stack.Screen
+          <Stack.Screen
             name="Camera"
             component={CameraComponentScreen}
             options={{ headerShown: false }}

@@ -52,25 +52,6 @@ async function generateUniqueFilename(username, bucket) {
 router.post("/register", async (req, res) => {
   User.findOne({ email: req.body.email }).then(async (result) => {
     if (!result) {
-      /* const listings = {
-        name: "",
-        description: "",
-        category: "",
-        size: "",
-        brand: "",
-        condition: "",
-        packagesize: "",
-        price: "",
-        images: [],
-      };
-      const fitcheck = {
-        likes: 0,
-        caption: "",
-        listings: [listings],
-
-        videos: [],
-      }; */
-
       const newUser = new User({
         fullname: req.body.fullname,
         username: req.body.username,
@@ -213,20 +194,37 @@ router.post("/uploadfitcheck", async (req, res) => {
       }, // Push a new fitcheck object to the fitcheck array
       { new: true } // Return the updated user object
     );
-    const fitcheckId =
-      updatedUser.fitcheck[updatedUser.fitcheck.length - 1]._id;
+    const fitcheckObject =
+      updatedUser.fitcheck[updatedUser.fitcheck.length - 1];
 
-    console.log(fitcheckId);
+    console.log(fitcheckObject);
 
     res.status(200).json({
       message: "Video saved successfully! file id: " + fileData.filename,
       filename: fileData.filename,
-      fitcheckId: fitcheckId,
+      fitcheckObject: fitcheckObject,
     });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Error saving video" });
   }
+});
+
+//SET A new Listing (of a Fitcheck)
+router.post("/uploadnewlisting", async (req, res) => {
+  const username = req.body.username;
+  const fitcheckId = req.body.fitcheckId;
+  const listings = {
+    name: req.body.name,
+    description: req.body.description,
+    category: req.body.category,
+    size: req.body.size,
+    brand: req.body.brand,
+    condition: req.body.condition,
+    packagesize: req.body.packagesize,
+    price: req.body.price,
+    images: [],
+  };
 });
 
 // GET request handler for getting images by filenames

@@ -64,6 +64,10 @@ export default function Fitcheck({ navigation, route }) {
       });
   };
 
+  const handleAddListing = (fitcheckId) => {
+    navigation.navigate("AddListing", { fitcheck: fitcheck });
+  };
+
   return (
     <SafeAreaView style={styles.fitcheckContainer}>
       <View style={{ ...styles.imageContainer }}>
@@ -84,6 +88,12 @@ export default function Fitcheck({ navigation, route }) {
         onPress={handleLike}
       >
         <Text style={[styles.buttonText]}>Like</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={[styles.button, { alignSelf: "center" }]}
+        onPress={() => handleAddListing(fitcheck.id)}
+      >
+        <Text style={[styles.buttonText]}>Add Listing</Text>
       </TouchableOpacity>
     </SafeAreaView>
   );

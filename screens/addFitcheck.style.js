@@ -67,7 +67,7 @@ const styles = StyleSheet.create({
     borderRadius: 50,
   },
 
-  selectedImage: {
+  selectedVideo: {
     resizeMode: "center",
     width: "100%",
     height: "30%",
