@@ -43,8 +43,8 @@ export default function Fitcheck({ navigation, route }) {
       fitcheckId: fitcheck.id,
     };
     fetch(
-      "http://192.168.1.30:3000/addLikes" ||
-        "http://192.168.1.20:3000/addLikes",
+      "http://192.168.1.20:3000/addLikes" ||
+        "http://192.168.1.30:3000/addLikes",
       {
         method: "POST",
         headers: {

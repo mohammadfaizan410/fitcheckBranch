@@ -52,10 +52,10 @@ export default function App() {
     return <WelcomePrompt {...props} />;
   }
   function CameraComponentScreen(props) {
-    return <CameraComponent {...props} />;
+    return <CameraComponent {...props} />
   }
   function VideoComponentScreen(props) {
-    return <VideoComponent {...props} />;
+    return <VideoComponent {...props} />
   }
   return (
     <Provider store={store}>
@@ -107,11 +107,6 @@ export default function App() {
             options={{ headerShown: false }}
           />
           <Stack.Screen
-            name="AddListing"
-            component={AddListingScreen}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
             name="Camera"
             component={CameraComponentScreen}
             options={{ headerShown: false }}
@@ -120,7 +115,7 @@ export default function App() {
             name="Video"
             component={VideoComponentScreen}
             options={{ headerShown: false }}
-          />
+          /> */}
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>
