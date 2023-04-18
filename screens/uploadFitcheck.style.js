@@ -66,29 +66,11 @@ const styles = StyleSheet.create({
     height: 100,
     borderRadius: 50,
   },
-  fitcheckContainer: {
-    width: "33.3%",
-    aspectRatio: 1, // Makes it square
-    marginVertical: 5,
-    marginHorizontal: 1,
-  },
-  imageContainer: {
-    flex: 1,
-  },
-  image: {
+
+  selectedImage: {
+    resizeMode: "center",
     width: "100%",
-    height: "100%",
-    resizeMode: "cover",
-  },
-  captionContainer: {
-    backgroundColor: "white",
-    padding: 5,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  caption: {
-    fontSize: 12,
-    fontWeight: "bold",
+    height: "30%",
   },
 });
 

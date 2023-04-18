@@ -1,10 +1,64 @@
 const mongoose = require("mongoose");
 
+const listingSchema = new mongoose.Schema({
+  name: {
+    type: String,
+  },
+  description: {
+    type: String,
+  },
+  category: {
+    type: String,
+  },
+  size: {
+    type: String,
+  },
+  brand: {
+    type: String,
+  },
+  condition: {
+    type: String,
+  },
+  packagesize: {
+    type: String,
+  },
+  price: {
+    type: String,
+  },
+  images: [
+    {
+      filename: String,
+      contentType: String,
+      uploadDate: Date,
+      caption: String,
+      size: Number,
+    },
+  ],
+});
+
+const fitcheckSchema = new mongoose.Schema({
+  likes: {
+    type: String,
+  },
+  caption: {
+    type: String,
+  },
+  listings: {
+    type: [listingSchema],
+  },
+  video: {
+    filename: String,
+    contentType: String,
+    uploadDate: Date,
+    caption: String,
+    size: Number,
+  },
+});
+
 const fitcheckCollectionSchema = new mongoose.Schema({
   fullname: {
     type: String,
-    default: "",
-    required : false
+    required: true,
   },
   email: {
     required: true,
@@ -12,10 +66,13 @@ const fitcheckCollectionSchema = new mongoose.Schema({
   },
   username: {
     type: String,
-    default: "",
-    required : false
+    required: true,
   },
   password: {
+    required: true,
+    type: String,
+  },
+  phonenumber: {
     required: true,
     type: String,
   },
@@ -34,19 +91,9 @@ const fitcheckCollectionSchema = new mongoose.Schema({
     default: "",
     type: String,
   },
-  videos: {
-    required: false,
-    type: [String],
+  fitcheck: {
+    type: [fitcheckSchema],
   },
-  images: [
-    {
-      filename: String,
-      contentType: String,
-      uploadDate: Date,
-      caption: String,
-      size: Number,
-    },
-  ],
 });
 
 module.exports = mongoose.model(

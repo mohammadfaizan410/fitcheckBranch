@@ -7,6 +7,8 @@ import Profile from "./screens/profile";
 import Landing from "./screens/landing";
 import ShopSetup from "./screens/shopSetup";
 import UploadImage from "./screens/uploadImage";
+import UploadFitcheck from "./screens/uploadFitcheck";
+import Fitcheck from "./screens/fitcheck";
 import { Provider } from "react-redux";
 import store from "./store";
 import { NavigationContainer } from "@react-navigation/native";
@@ -28,10 +30,16 @@ export default function App() {
     return <Register {...props} />;
   }
   function UploadImageScreen(props) {
-    return <UploadImage {...props} />
+    return <UploadImage {...props} />;
+  }
+  function UploadFitcheckScreen(props) {
+    return <UploadFitcheck {...props} />;
+  }
+  function FitcheckScreen(props) {
+    return <Fitcheck {...props} />;
   }
   function LandingImageScreen(props) {
-    return <Landing {...props} />
+    return <Landing {...props} />;
   }
   function ShopSetupScreen(props) {
     return <ShopSetup {...props} />
@@ -82,6 +90,16 @@ export default function App() {
           <Stack.Screen
             name="UploadImage"
             component={UploadImageScreen}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="UploadFitcheck"
+            component={UploadFitcheckScreen}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="Fitcheck"
+            component={FitcheckScreen}
             options={{ headerShown: false }}
           />
           <Stack.Screen

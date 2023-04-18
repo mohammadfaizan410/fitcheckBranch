@@ -9,8 +9,7 @@ import {
   setFullname,
   setFollowers,
   setFollowing,
-  setImages,
-  setVideos,
+  setFitcheckArray,
 } from "../reducers/user";
 import {
   Keyboard,
@@ -32,18 +31,18 @@ export default function Login({ navigation }) {
   const {
     isLoggedIn,
     email,
-    fullname,
     username,
+    fullname,
     followers,
     following,
-    images,
-    videos,
+    fitcheckArray,
   } = useSelector((state) => state.user);
 
   //const [email, setEmail] = useState('');
-  const [emailAtLogin, setEmailAtLogin] = useState("");
+  const [usernameAtLogin, setUsernameAtLogin] = useState("");
   const [password, setPassword] = useState("");
   const [keyboardState, setKeyboardState] = useState(false);
+
   AsyncStorage.getItem("user")
     .then((storedData) => {
       const userData = JSON.parse(storedData);
@@ -72,7 +71,7 @@ export default function Login({ navigation }) {
   const handleLogin = () => {
     console.log("login activated");
     const formData = {
-      email: emailAtLogin,
+      username: usernameAtLogin,
       password: password,
     };
 
@@ -115,7 +114,7 @@ export default function Login({ navigation }) {
     dispatch(setUserEmail(userData["email"]));
     dispatch(setFollowers(userData["followers"]));
     dispatch(setFollowing(userData["following"]));
-    dispatch(setFollowing(userData["following"]));
+    dispatch(setFitcheckArray(userData["fitcheck"]));
   };
 
   return (
@@ -154,10 +153,10 @@ export default function Login({ navigation }) {
           {userIcon}
           <TextInput
             style={styles.loginInput}
-            placeholder="Enter your Email"
+            placeholder="Username"
             placeholderTextColor="#999"
-            onChangeText={setEmailAtLogin}
-            value={emailAtLogin}
+            onChangeText={setUsernameAtLogin}
+            value={usernameAtLogin}
           />
         </View>
         <View style={styles.formSection}>
