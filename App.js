@@ -109,6 +109,9 @@ export default function App() {
           <Stack.Screen
             name="AddListing"
             component={AddListingScreen}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
             name="Camera"
             component={CameraComponentScreen}
             options={{ headerShown: false }}
