@@ -14,9 +14,9 @@ import {
 import { View, Text, TextInput, TouchableOpacity, Image } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import * as FileSystem from "expo-file-system";
-import styles from "./uploadImage.style";
+import styles from "./uploadFitcheck.style";
 
-export default function UploadImage({ navigation }) {
+export default function UploadFitcheck({ navigation }) {
   const dispatch = useDispatch();
   const {
     isLoggedIn,
@@ -27,14 +27,8 @@ export default function UploadImage({ navigation }) {
     following,
     fitcheckArray,
   } = useSelector((state) => state.user);
-  const [selectedImage, setSelectedImage] = useState(null);
-  const [imageCaption, setImageCaption] = useState("");
-
-  useEffect(() => {
-    if (!isLoggedIn) {
-      navigation.navigate("Login");
-    }
-  }, [isLoggedIn]);
+  const [selectedVideo, setSelectedVideo] = useState(null);
+  const [videoCaption, setVideoCaption] = useState("");
 
   // pick image
   const pickImage = async () => {
@@ -51,31 +45,31 @@ export default function UploadImage({ navigation }) {
     });
 
     if (!result.canceled) {
-      setSelectedImage(result.assets[0].uri);
+      setSelectedVideo(result.assets[0].uri);
     }
   };
 
   //upload image
   const uploadImage = async () => {
-    if (!selectedImage) {
+    if (!selectedVideo) {
       alert("No image selected!");
       return;
     }
 
-    const base64Image = await FileSystem.readAsStringAsync(selectedImage, {
+    const base64Image = await FileSystem.readAsStringAsync(selectedVideo, {
       encoding: FileSystem.EncodingType.Base64,
     });
 
     const formData = {
       username: username,
-      caption: imageCaption,
-      image: base64Image,
+      caption: videoCaption,
+      video: base64Image,
     };
     console.log("Form Data: " + formData.username);
 
     fetch(
-      "http://192.168.1.30:3000/imageupload" ||
-        "http://192.168.1.20:3000/imageupload",
+      "http://192.168.1.30:3000/uploadfitcheck" ||
+        "http://192.168.1.20:3000/uploadfitcheck",
       {
         method: "POST",
         headers: {
@@ -89,9 +83,8 @@ export default function UploadImage({ navigation }) {
       })
       .then((result) => {
         console.log("Success: ", result);
-        const updatedImages = [...images, result.filename];
-        const fitcheckArrayObject = { listingimages: updatedImages };
-        dispatch(setFitcheckArray(fitcheckArrayObject));
+        const newfitcheckArray = [...fitcheckArray, result.fitcheckId];
+        dispatch(setFitcheckArray(newfitcheckArray));
         navigation.navigate("Profile");
       })
       .catch((error) => {
@@ -103,27 +96,27 @@ export default function UploadImage({ navigation }) {
   return (
     <View style={styles.container}>
       <View style={styles.columnContainer}>
-        {selectedImage && (
+        {selectedVideo && (
           <Image
-            source={{ uri: selectedImage }}
-            style={[styles.selectedImage]}
+            source={{ uri: selectedVideo }}
+            style={[styles.selectedVideo]}
           />
         )}
         <TouchableOpacity style={styles.button} onPress={pickImage}>
-          <Text style={styles.buttonText}>Pick an image from camera roll</Text>
+          <Text style={styles.buttonText}>Pick a video from camera roll</Text>
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.button} onPress={uploadImage}>
-          <Text style={styles.buttonText}>Upload image</Text>
+          <Text style={styles.buttonText}>Upload Video</Text>
         </TouchableOpacity>
 
-        <Text style={styles.subtitle}>Write Image Caption: </Text>
+        <Text style={styles.subtitle}>Write Video Caption: </Text>
         <TextInput
           style={styles.input}
           placeholder="Enter Caption"
           placeholderTextColor="#999"
-          onChangeText={setImageCaption}
-          value={imageCaption}
+          onChangeText={setVideoCaption}
+          value={videoCaption}
         />
 
         <TouchableOpacity

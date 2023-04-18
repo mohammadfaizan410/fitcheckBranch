@@ -8,8 +8,7 @@ import {
   setUsername,
   setFollowers,
   setFollowing,
-  setImages,
-  setVideos,
+  setFitcheckArray,
 } from "../reducers/user";
 import {
   View,
@@ -22,7 +21,6 @@ import {
 import styles from "./profile.style";
 
 export default function Profile({ navigation }) {
-
   //Redux Store data
   const dispatch = useDispatch();
   const {
@@ -32,19 +30,19 @@ export default function Profile({ navigation }) {
     fullname,
     followers,
     following,
-    images,
-    videos,
+    fitcheckArray,
   } = useSelector((state) => state.user);
 
-  const [retrievedImages, setRetrievedImages] = useState([]);
+  const [retrievedFitchecks, setRetrievedFitchecks] = useState([]);
   const [imgCount, setImgCount] = useState({});
-  
-  const fetchImages = () => {
+
+  const fetchFitchecks = () => {
     const formData = {
       username: username,
     };
     fetch(
-      "http://192.168.1.20:3000/getimages" || "http://192.168.1.30:3000/getimages",
+      "http://192.168.1.30:3000/getallfitcheckdata" ||
+        "http://192.168.1.20:3000/getallfitcheckdata",
       {
         method: "POST",
         headers: {
@@ -57,20 +55,12 @@ export default function Profile({ navigation }) {
         return response.json();
       })
       .then((data) => {
-        setRetrievedImages(data);
+        setRetrievedFitchecks(data);
       })
       .catch((error) => {
         console.error(error);
       });
   };
-
-
-  useEffect(() => {
-    console.log("hello there")
-    fetchImages()
-    
-  }, [])
-
 
   useEffect(() => {
     if (!isLoggedIn) {
@@ -79,20 +69,49 @@ export default function Profile({ navigation }) {
   }, [isLoggedIn]);
 
   useEffect(() => {
-    navigation.navigate("Profile");
-    fetchImages();
-  }, [images]);
+    //navigation.navigate("Profile");
+    fetchFitchecks();
+  }, [fitcheckArray]);
 
   const handleLogout = () => {
     dispatch(reset());
     AsyncStorage.clear();
+    navigation.navigate("Landing");
+  };
+
+  const handleFitcheckPress = (fitcheckObject) => {
+    const formData = {
+      username: username,
+      fitcheckId: fitcheckObject.id,
+    };
+
+    fetch(
+      "http://192.168.1.30:3000/getfitcheckdata" ||
+        "http://192.168.1.20:3000/getfitcheckdata",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      }
+    )
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        navigation.navigate("Fitcheck", { fitcheck: data.fitcheck });
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   };
 
   AsyncStorage.getItem("user")
     .then((storedData) => {
       const userData = JSON.parse(storedData);
       if (userData != null) {
-        console.log("Stored data is: ", userData);
+        console.log("Stored data is: ", userData["fitcheck"][0].caption);
       } else {
         console.log("NO STORED DATA");
       }
@@ -101,13 +120,19 @@ export default function Profile({ navigation }) {
       console.log("Error retrieving data from AsyncStorage: ", error);
     });
 
-  const renderImageItem = ({ item }) => (
-    <View>
-      <Image
-        style={{ ...styles.postImage, width: "30%", height: 200 }}
-        source={{ uri: `data:${item.contentType};base64,${item.data}` }}
-      />
-      <Text>{item.caption}</Text>
+  const renderFitcheckItem = ({ item }) => (
+    <View style={styles.fitcheckContainer}>
+      <View style={styles.imageContainer}>
+        <TouchableOpacity onPress={() => handleFitcheckPress(item)}>
+          <Image
+            style={{ ...styles.image }}
+            source={{ uri: `data:${item.contentType};base64,${item.data}` }}
+          />
+        </TouchableOpacity>
+      </View>
+      <View>
+        <Text>{item.caption}</Text>
+      </View>
     </View>
   );
 
@@ -121,6 +146,12 @@ export default function Profile({ navigation }) {
         <View style={styles.columnContainer}>
           <Text style={{ ...styles.title }}>{username}</Text>
           <Text style={{ ...styles.subtitle }}>{fullname}</Text>
+          <Text style={{ ...styles.subtitle }}>
+            Followers: {followers.length}
+          </Text>
+          <Text style={{ ...styles.subtitle }}>
+            Following: {following.length}
+          </Text>
         </View>
 
         <TouchableOpacity
@@ -132,36 +163,21 @@ export default function Profile({ navigation }) {
 
         <TouchableOpacity
           style={styles.button}
-          onPress={() => navigation.navigate("UploadImage")}
+          onPress={() => navigation.navigate("UploadFitcheck")}
         >
-          <Text style={styles.buttonText}>Upload Image</Text>
+          <Text style={styles.buttonText}>Upload Fitcheck</Text>
         </TouchableOpacity>
       </View>
-      {
-        retrievedImages ? 
+      {retrievedFitchecks ? (
         <FlatList
-        style={styles.postContainer}
-        data={retrievedImages}
-        renderItem={renderImageItem}
-        keyExtractor={(item) => item.filename}
-          />
-          : ""
-      }
-      <View>
-        {/* {
-          retrievedImages.map(item => {
-            return (<View>
-              <Image
-            style={{ ...styles.postImage, width: "30%", height: 200 }}
-            source={{ uri: `data:${item.contentType};base64,${item.data}` }}
-          />
-              <Text>{item.caption}</Text>
-            </View>
-          )})
-        } */}
-        </View>
-
+          data={retrievedFitchecks}
+          renderItem={renderFitcheckItem}
+          keyExtractor={(item) => item.filename}
+          numColumns={3}
+        />
+      ) : (
+        ""
+      )}
     </View>
-
   );
 }

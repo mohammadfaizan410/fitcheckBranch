@@ -67,13 +67,14 @@ const styles = StyleSheet.create({
     borderRadius: 50,
   },
   fitcheckContainer: {
-    width: "33.3%",
+    width: "100%",
     aspectRatio: 1, // Makes it square
     marginVertical: 5,
     marginHorizontal: 1,
   },
   imageContainer: {
     flex: 1,
+    height: "50%",
   },
   image: {
     width: "100%",

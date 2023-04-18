@@ -20,10 +20,13 @@ export default function Register({ navigation }) {
   const [isRegistered, setIsRegistered] = useState(false);
   const [fullname, setFullName] = useState("");
   const [email, setEmail] = useState("");
+  const [phonenumber, setPhonenumber] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [formData, setFormData] = useState({});
   const [keyboardState, setKeyboardState] = useState(false);
+  const [registrationStep, setRegistrationStep] = useState(0);
+
   Keyboard.addListener("keyboardDidShow", () => {
     setKeyboardState(true);
   });
@@ -33,6 +36,9 @@ export default function Register({ navigation }) {
 
   const handleSubmit = () => {
     const formData = {
+      fullname: fullname,
+      username: username,
+      phonenumber: phonenumber,
       email: email,
       password: password,
     };
@@ -56,6 +62,12 @@ export default function Register({ navigation }) {
         console.log(data);
       })
       .catch((err) => console.error(err));
+  };
+
+  const changeRegistrationStep = () => {
+    if (registrationStep < 3) {
+      setRegistrationStep(registrationStep + 1);
+    }
   };
 
   return (
@@ -95,10 +107,40 @@ export default function Register({ navigation }) {
           {userIcon}
           <TextInput
             style={styles.registerInput}
-            placeholder="Email/Phone Number"
+            placeholder="Full Name"
+            placeholderTextColor="#999"
+            onChangeText={setFullName}
+            value={fullname}
+          />
+        </View>
+        <View style={styles.formSection}>
+          {userIcon}
+          <TextInput
+            style={styles.registerInput}
+            placeholder="Email"
             placeholderTextColor="#999"
             onChangeText={setEmail}
             value={email}
+          />
+        </View>
+        <View style={styles.formSection}>
+          {userIcon}
+          <TextInput
+            style={styles.registerInput}
+            placeholder="Phone Number"
+            placeholderTextColor="#999"
+            onChangeText={setPhonenumber}
+            value={phonenumber}
+          />
+        </View>
+        <View style={styles.formSection}>
+          {userIcon}
+          <TextInput
+            style={styles.registerInput}
+            placeholder="Username"
+            placeholderTextColor="#999"
+            onChangeText={setUsername}
+            value={username}
           />
         </View>
         <View style={styles.formSection}>

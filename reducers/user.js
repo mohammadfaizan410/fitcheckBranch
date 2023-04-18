@@ -5,11 +5,10 @@ const initialState = {
   email: "",
   username: "",
   fullname: "",
-  followers: 0,
-  following: 0,
-  images: [],
-  videos: [],
-  pageIndex : 0
+  followers: [],
+  following: [],
+  fitcheckArray: [],
+  pageIndex: 0,
 };
 
 export const userSlice = createSlice({
@@ -35,19 +34,15 @@ export const userSlice = createSlice({
     setFollowing: (state, action) => {
       state.following = action.payload;
     },
-    setImages: (state, action) => {
-      state.images = action.payload;
-    },
-    setVideos: (state, action) => {
-      state.videos = action.payload;
+    setFitcheckArray: (state, action) => {
+      state.fitcheckArray = action.payload;
     },
     incrPageIndex: (state, action) => {
       state.pageIndex += 1;
     },
     decrPageIndex: (state, action) => {
       state.pageIndex -= 1;
-    }
-
+    },
   },
 });
 
@@ -59,10 +54,9 @@ export const {
   setFullname,
   setFollowers,
   setFollowing,
-  setImages,
-  setVideos,
+  setFitcheckArray,
   incrPageIndex,
-  decrPageIndex
+  decrPageIndex,
 } = userSlice.actions;
 
 export default userSlice.reducer;
