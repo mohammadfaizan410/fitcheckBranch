@@ -4,10 +4,11 @@ const router = express.Router();
 const jwt = require("jsonwebtoken");
 const mongoose = require("mongoose");
 const { Readable } = require("stream");
+const sharp = require("sharp");
 const bodyParser = require("body-parser");
 
 // ------- mongo db connection --------
-mongoose.connect("mongodb://localhost:27017/fitcheckDB");
+mongoose.connect("mongodb://localhost:27018/fitcheckDB");
 const database = mongoose.connection; //get the database object from mongoose connection
 
 database.on("error", (error) => {
@@ -46,6 +47,16 @@ async function generateUniqueFilename(username, bucket) {
     }
   }
   return filename;
+}
+
+//compress image
+async function compressImage(base64Image) {
+  const buffer = Buffer.from(base64Image, "base64");
+  const resizedImageBuffer = await sharp(buffer)
+    .resize({ width: 1200, height: null })
+    .jpeg({ quality: 80 })
+    .toBuffer();
+  return resizedImageBuffer.toString("base64");
 }
 
 //handle Register
@@ -158,8 +169,9 @@ router.post("/imageupload", async (req, res) => {
 // define a route for handling fitcheck uploads
 router.post("/uploadfitcheck", async (req, res) => {
   try {
+    const compressedImage = await compressImage(req.body.video);
     // decode the base64-encoded image data to a buffer
-    const buffer = Buffer.from(req.body.video, "base64");
+    const buffer = Buffer.from(compressedImage, "base64");
 
     const uniqueFilename = await generateUniqueFilename(
       req.body.username,
