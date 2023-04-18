@@ -14,8 +14,8 @@ import store from "./store";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import WelcomePrompt from "./screens/welcomePrompt";
-import CameraComponent from "./screens/components/cameraComponent";
-import VideoComponent from './screens//components/videoComponent';  
+// import CameraComponent from "./screens/components/cameraComponent";
+// import VideoComponent from './screens//components/videoComponent';  
 
 const Stack = createStackNavigator();
 
@@ -47,16 +47,16 @@ export default function App() {
   function WelcomePromptScreen(props) {
     return <WelcomePrompt {...props} />
   }
-  function CameraComponentScreen(props) {
-    return <CameraComponent {...props} />
-  }
-  function VideoComponentScreen(props) {
-    return <VideoComponent {...props} />
-  }
+  // function CameraComponentScreen(props) {
+  //   return <CameraComponent {...props} />
+  // }
+  // function VideoComponentScreen(props) {
+  //   return <VideoComponent {...props} />
+  // }
   return (
     <Provider store={store}>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="Video">
+        <Stack.Navigator initialRouteName="Landing">
           <Stack.Screen
             name="Landing"
             component={LandingImageScreen}
@@ -102,7 +102,7 @@ export default function App() {
             component={FitcheckScreen}
             options={{ headerShown: false }}
           />
-          <Stack.Screen
+          {/* <Stack.Screen
             name="Camera"
             component={CameraComponentScreen}
             options={{ headerShown: false }}
@@ -111,7 +111,7 @@ export default function App() {
             name="Video"
             component={VideoComponentScreen}
             options={{ headerShown: false }}
-          />
+          /> */}
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>

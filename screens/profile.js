@@ -41,8 +41,8 @@ export default function Profile({ navigation }) {
       username: username,
     };
     fetch(
-      "http://192.168.1.30:3000/getallfitcheckdata" ||
-        "http://192.168.1.20:3000/getallfitcheckdata",
+      "http://192.168.1.20:3000/getallfitcheckdata" ||
+        "http://192.168.1.30:3000/getallfitcheckdata",
       {
         method: "POST",
         headers: {
@@ -86,8 +86,8 @@ export default function Profile({ navigation }) {
     };
 
     fetch(
-      "http://192.168.1.30:3000/getfitcheckdata" ||
-        "http://192.168.1.20:3000/getfitcheckdata",
+      "http://192.168.1.20:3000/getfitcheckdata" ||
+        "http://192.168.1.30:3000/getfitcheckdata",
       {
         method: "POST",
         headers: {
