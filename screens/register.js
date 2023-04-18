@@ -23,6 +23,7 @@ export default function Register({ navigation }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [formData, setFormData] = useState({});
+  const [inputError, setInputError] = useState('')
   const [keyboardState, setKeyboardState] = useState(false);
   Keyboard.addListener("keyboardDidShow", () => {
     setKeyboardState(true);
@@ -32,16 +33,17 @@ export default function Register({ navigation }) {
   });
 
   const handleSubmit = () => {
+    setInputError("")
     const formData = {
       email: email,
       password: password,
     };
     console.log(formData);
     //handle registration logic here
-
-    fetch(
-      "http://192.168.1.30:3000/register" ||
-        "http://192.168.1.20:3000/register",
+    if (formData.email !== "" && formData.password !== "") {
+      fetch(
+        "http://192.168.1.20:3000/register" ||
+        "http://192.168.1.30:3000/register",
       {
         //replace with server IP later
         method: "POST",
@@ -54,11 +56,15 @@ export default function Register({ navigation }) {
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
+        navigation.navigate("Login")
       })
       .catch((err) => console.error(err));
-  };
-
-  return (
+    } else {
+      setInputError("please fill all details!")
+    }
+    };
+    
+    return (
     <SafeAreaView style={styles.container}>
       <Image
         style={styles.backgroundImage}
@@ -66,7 +72,7 @@ export default function Register({ navigation }) {
       ></Image>
 
       {keyboardState === false ? (
-        <Text style={styles.screenTitle}>Welcome back to</Text>
+        <Text style={styles.screenTitle}>Welcome to</Text>
       ) : (
         ""
       )}
@@ -85,7 +91,7 @@ export default function Register({ navigation }) {
         <View
           style={{
             ...styles.formSection,
-            borderBtoomWidth: 0,
+            borderBottomWidth: 0,
             borderBottomColor: "white",
           }}
         >
@@ -154,7 +160,9 @@ export default function Register({ navigation }) {
           onPress={handleSubmit}
         >
           <Text style={styles.buttonText}>Create Account</Text>
-        </TouchableOpacity>
+          </TouchableOpacity>
+          
+          <Text>{inputError}</Text>
       </View>
     </SafeAreaView>
   );
