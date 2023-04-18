@@ -6,8 +6,9 @@ import Register from "./screens/register";
 import Profile from "./screens/profile";
 import Landing from "./screens/landing";
 import UploadImage from "./screens/uploadImage";
-import UploadFitcheck from "./screens/uploadFitcheck";
+import AddFitcheck from "./screens/addFitcheck";
 import Fitcheck from "./screens/fitcheck";
+import AddListing from "./screens/addListing";
 import { Provider } from "react-redux";
 import store from "./store";
 import { NavigationContainer } from "@react-navigation/native";
@@ -29,10 +30,13 @@ export default function App() {
     return <UploadImage {...props} />;
   }
   function UploadFitcheckScreen(props) {
-    return <UploadFitcheck {...props} />;
+    return <AddFitcheck {...props} />;
   }
   function FitcheckScreen(props) {
     return <Fitcheck {...props} />;
+  }
+  function AddListingScreen(props) {
+    return <AddListing {...props} />;
   }
   function LandingImageScreen(props) {
     return <Landing {...props} />;
@@ -74,6 +78,11 @@ export default function App() {
           <Stack.Screen
             name="Fitcheck"
             component={FitcheckScreen}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="AddListing"
+            component={AddListingScreen}
             options={{ headerShown: false }}
           />
         </Stack.Navigator>

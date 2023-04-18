@@ -14,9 +14,9 @@ import {
 import { View, Text, TextInput, TouchableOpacity, Image } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import * as FileSystem from "expo-file-system";
-import styles from "./uploadFitcheck.style";
+import styles from "./addFitcheck.style";
 
-export default function UploadFitcheck({ navigation }) {
+export default function AddFitcheck({ navigation }) {
   const dispatch = useDispatch();
   const {
     isLoggedIn,
@@ -65,7 +65,6 @@ export default function UploadFitcheck({ navigation }) {
       caption: videoCaption,
       video: base64Image,
     };
-    console.log("Form Data: " + formData.username);
 
     fetch(
       "http://192.168.1.30:3000/uploadfitcheck" ||
@@ -83,7 +82,7 @@ export default function UploadFitcheck({ navigation }) {
       })
       .then((result) => {
         console.log("Success: ", result);
-        const newfitcheckArray = [...fitcheckArray, result.fitcheckId];
+        const newfitcheckArray = [...fitcheckArray, result];
         dispatch(setFitcheckArray(newfitcheckArray));
         navigation.navigate("Profile");
       })
