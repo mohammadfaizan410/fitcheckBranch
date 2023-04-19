@@ -116,6 +116,11 @@ export default function App() {
             component={VideoComponentScreen}
             options={{ headerShown: false }}
           />
+          <Stack.Screen
+            name="AddListing"
+            component={AddListingScreen}
+            options={{ headerShown: false }}
+          />
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>
