@@ -9,6 +9,7 @@ import ShopSetup from "./screens/shopSetup";
 import UploadImage from "./screens/uploadImage";
 import AddFitcheck from "./screens/addFitcheck";
 import Fitcheck from "./screens/fitcheck";
+import Listing from "./screens/listing";
 import AddListing from "./screens/addListing";
 import { Provider } from "react-redux";
 import store from "./store";
@@ -53,11 +54,14 @@ export default function App() {
   function WelcomePromptScreen(props) {
     return <WelcomePrompt {...props} />;
   }
+  function ListingScreen(props) {
+    return <Listing {...props} />;
+  }
   function CameraComponentScreen(props) {
-    return <CameraComponent {...props} />
+    return <CameraComponent {...props} />;
   }
   function VideoComponentScreen(props) {
-    return <VideoComponent {...props} />
+    return <VideoComponent {...props} />;
   }
   function NavbarPartial(props) {
     return <Navbar {...props} />
@@ -117,6 +121,11 @@ export default function App() {
             options={{ headerShown: false }}
           />
           <Stack.Screen
+            name="Listing"
+            component={ListingScreen}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
             name="Camera"
             component={CameraComponentScreen}
             options={{ headerShown: false }}
@@ -125,12 +134,12 @@ export default function App() {
             name="Video"
             component={VideoComponentScreen}
             options={{ headerShown: false }}
-          /> 
+          />
           <Stack.Screen
             name="AddListing"
             component={AddListingScreen}
             options={{ headerShown: false }}
-          /> 
+          />
           <Stack.Screen
             name="NavbarPartial"
             component={NavbarPartial}
