@@ -3,10 +3,16 @@ import { View, Text, SafeAreaView, TouchableOpacity, Image } from "react-native"
 import styles from './cameraComponent.styles'
 import { Camera } from "expo-camera";
 import * as FileSystem from 'expo-file-system';
+import IconFoundation from "react-native-vector-icons/Foundation";
+import IconFontisto from "react-native-vector-icons/Fontisto";
+import IconMaterialCommunity from "react-native-vector-icons/MaterialCommunityIcons";
 
 
 
 export default function CameraComponent({ navigation }) {
+  const loopIcon = <IconFoundation name="loop" size={30} color='white'/>;
+  const circleIcon = <IconFontisto name="circle-o-notch" size={70} color='white'/>;
+  const galleryIcon = <IconMaterialCommunity name="view-gallery" size={30} color='white'/>;
     const [type, setType] = useState(Camera.Constants.Type.back);
   const [hasPermission, setHasPermission] = useState(null);
   const [photoUri, setPhotoUri] = useState(null);
@@ -27,7 +33,7 @@ export default function CameraComponent({ navigation }) {
       setPhotoUri(photo.uri);
       setPhotoData(base64);
       setPhotoUri(photo.uri);
-      console.log(base64)
+      
     }
   };
     useEffect(() => {
@@ -49,17 +55,49 @@ export default function CameraComponent({ navigation }) {
     <SafeAreaView style={styles.container}>
         <Camera  ref={(ref) => setCameraRef(ref)} style={styles.camera} type={type}>
         </Camera>
-        <TouchableOpacity style={styles.toggleButton} onPress={toggleCameraType}>
-        <Text style={styles.buttonText}>Flip</Text>
-          </TouchableOpacity>
-          
-        <TouchableOpacity style={styles.takeButton} onPress={takePicture}>
-        <Text style={styles.buttonText}>Take</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={{ ...styles.takeButton,  left: '0%' }} >
-        <Text style={styles.buttonText}>Video</Text>
-        </TouchableOpacity>
-      
+  
+        <View style={{ ...styles.navContainer, top : '80%' }}> 
+            <View style={styles.innerContainer}>
+            <TouchableOpacity onPress={toggleCameraType}>
+                <View style={styles.innerContainer}>
+                    <Text>Image</Text>
+                </View>
+            </TouchableOpacity>
+            </View>
+            <View style={styles.innerContainer}>
+            <TouchableOpacity onPress={takePicture}>
+                <View style={styles.innerContainer}>
+                  <Text>Video</Text>
+                </View>
+            </TouchableOpacity>
+            </View>
+        </View>   
+
+
+         <View style={styles.navContainer}> 
+            <View style={styles.innerContainer}>
+            <TouchableOpacity onPress={toggleCameraType}>
+                <View style={styles.innerContainer}>
+                    { loopIcon }
+                </View>
+            </TouchableOpacity>
+            </View>
+            <View style={styles.innerContainer}>
+            <TouchableOpacity onPress={takePicture}>
+                <View style={styles.innerContainer}>
+                    { circleIcon }
+                </View>
+            </TouchableOpacity>
+            </View>
+            
+            <View style={styles.innerContainer}>
+            <TouchableOpacity >
+                <View style={styles.innerContainer}>
+                    { galleryIcon }
+                </View>
+            </TouchableOpacity>
+            </View>
+        </View>   
 </SafeAreaView>
   )
 }

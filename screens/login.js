@@ -57,7 +57,7 @@ export default function Login({ navigation }) {
   useEffect(() => {
     if (isLoggedIn) {
       console.log("logged in");
-      navigation.navigate("Profile");
+      navigation.navigate("Home");
     }
   }, [isLoggedIn]);
 

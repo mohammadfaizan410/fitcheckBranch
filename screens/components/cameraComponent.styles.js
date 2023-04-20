@@ -4,48 +4,34 @@ const styles = StyleSheet.create({
   container: {
     width: '100%',
     height:'100%',
-    marginTop: 0
+    marginTop: 0,
+     backgroundColor: 'black'
     },
     camera: {
         position: 'absolute',
         width: '100%',
-        height: '100%'
+      height: '70%',
+        top: '15%'
 
     },
-  toggleButton: {
-    padding: 20,
-    borderRadius: 20,
-    color: "#ffffff",
-    backgroundColor: "#5E2BAA",
-    width: '22%',
-    textAlign: 'center',
-    marginBottom: 10,
+  navContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-around',
     position: 'absolute',
-      top: '92%',
-      left: '60%'
-    },
-    takeButton: {
-        padding: 20,
-        borderRadius: 20,
-        color: "#ffffff",
-        backgroundColor: "#5E2BAA",
-        width: '22%',
-        textAlign: 'center',
-        marginBottom: 10,
-        position: 'absolute',
-          top: '92%',
-          left: '30%'
-  },
-  buttonText: {
-    color: "white",
-    fontSize: 20,
-    textAlign:'center'
-    },
-    image: {
-        position: 'absolute',
-        width: 500,
-        height: 500
-  }
+    top: '87%',
+    width: '100%',
+    alignItems: 'center',
+    backgroundColor: 'black',
+    padding: 20
+},
+innerContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    textAlign: 'center'
+}
 });
 
 export default styles;
