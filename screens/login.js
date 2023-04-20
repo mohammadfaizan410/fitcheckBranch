@@ -77,7 +77,7 @@ export default function Login({ navigation }) {
     };
 
     fetch(
-      "http://192.168.1.30:3000/login" || "http://192.168.1.20:3000/login",
+      "http://192.168.1.20:3000/login" || "http://192.168.1.30:3000/login",
       {
         //replace with server IP later
         method: "POST",
@@ -98,6 +98,7 @@ export default function Login({ navigation }) {
           AsyncStorage.setItem("user", JSON.stringify(userData));
           setUserData(userData);
           setIsLoggedIn(true);
+          navigation.navigate('Home')
         } else {
           //login cred. WRONG
           console.log("Invalid Email or Password");

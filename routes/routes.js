@@ -8,7 +8,7 @@ const sharp = require("sharp");
 const bodyParser = require("body-parser");
 
 // ------- mongo db connection --------
-mongoose.connect("mongodb://localhost:27018/fitcheckDB");
+mongoose.connect("mongodb://localhost:27017/fitcheckDB");
 const database = mongoose.connection; //get the database object from mongoose connection
 
 database.on("error", (error) => {

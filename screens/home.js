@@ -36,15 +36,15 @@ export default function Home({ navigation }) {
     fitcheckArray,
   } = useSelector((state) => state.user);
 
-  const [allUser, setUsers] = useState([]);
+  const [allUser, setUsers] = useState(null);
 
   const fetchAllUsers = () => {
     const formData = {
       username: username,
     };
     fetch(
-      "http://192.168.1.20:3000/getalluser" ||
-        "http://192.168.1.30:3000/getallusers",
+      "http://192.168.1.20:3000/getallusersandfitchecks" ||
+        "http://192.168.1.30:3000/getallusersandfitchecks",
       {
         method: "POST",
         headers: {
@@ -63,6 +63,13 @@ export default function Home({ navigation }) {
         console.error(error);
       });
   };
+
+  useEffect(() => {
+    console.log("use effects")
+    fetchAllUsers();
+    console.log(allUser)
+  },[])
+
   const arr = [1, 2, 3, 4, 5];
 
 //   useEffect(() => {
@@ -79,34 +86,44 @@ export default function Home({ navigation }) {
 
 
   const MySwiper = () => (
+    allUser!==null ? 
     <Swiper showsPagination={false} showsButtons={false} horizontal={false} loop={false}>
-      {arr.map((item) => (
-        <View style={{ ...styles.homeFeed, backgroundColor: 'grey' }}><Text>Hello there { item}</Text></View>
+      {allUser.map((item) => (
+        <View style={{ ...styles.homeFeed, backgroundColor: 'grey' }}>
+        <Image
+            style={{ ...styles.image }}
+            source={{ uri: `data:${item.video.contentType};base64,${item.video.data}` }}
+          />
+
+        </View>
           ))}
-    </Swiper>
+    </Swiper> : <Text>'hello there empty list'</Text>
   );
 
-  console.log('hello there')
 
-  AsyncStorage.getItem("user")
-    .then((storedData) => {
-      const userData = JSON.parse(storedData);
-      if (userData != null) {
-        console.log("Stored data is: ", userData);
-      } else {
-        console.log("NO STORED DATA");
-      }
-    })
-    .catch((error) => {
-      console.log("Error retrieving data from AsyncStorage: ", error);
-    });
-  
   
 
 
   return (
       <SafeAreaView style={styles.homeContainer}>
-          <View style={styles.homeContent}>{MySwiper()}</View>
+      <View style={styles.homeContent}>
+        
+        {allUser !== null ?
+          <Swiper showsPagination={false} showsButtons={false} horizontal={false} loop={false}>
+            {allUser.map((item) => (
+            
+              <View style={{ ...styles.homeFeed, backgroundColor: 'grey' }}>
+                {/* {console.log(item.video) } */}
+                <Image
+                  style={{ width : '100%', height: '100%' }}
+                  source={{ uri: `data:${item.video.contentType};base64,${item.video}` }}
+                />
+                <Text>Hello there</Text>
+                
+              </View>
+            ))}
+          </Swiper> : <Text>hello there empty list</Text>}
+          </View>
               {/* <Swiper
                 horizontal={false}
                 showsVerticalScrollIndicator={false}

@@ -48,7 +48,7 @@ export default function Register({ navigation }) {
     //handle registration logic here
     if (formData.email !== "" && formData.password !== "") {
       fetch(
-        "http://192.168.1.30:3000/register" ||
+        "http://192.168.1.20:3000/register" ||
           "http://192.168.1.30:3000/register",
         {
           //replace with server IP later

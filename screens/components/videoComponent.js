@@ -9,6 +9,13 @@ import IconMaterialCommunity from "react-native-vector-icons/MaterialCommunityIc
 import Icon from "react-native-vector-icons/AntDesign";
 import { useFocusEffect } from '@react-navigation/native';
 import { Video } from 'expo-av';
+import * as ImagePicker from "expo-image-picker";
+import * as FileSystem from "expo-file-system";
+
+
+
+
+
 export default function CameraComponent({ navigation }) {
   const cameraRef = React.useRef(null);
   const [type, setType] = useState(Camera.Constants.Type.back);
@@ -27,11 +34,6 @@ export default function CameraComponent({ navigation }) {
   function togglePlaying() {
     setIsPlaying(!isPlaying);
     }
-
-
-
-
-
 
   const getPermission = useCallback(async () => {
     const { status } = await Camera.requestCameraPermissionsAsync();
@@ -95,7 +97,31 @@ export default function CameraComponent({ navigation }) {
       getPermission();
     }, [])
   );
-  if (videoRecorded === false) {
+
+  const pickVideo = async () => {
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== "granted") {
+      alert("Permission to access camera roll is required!");
+      return;
+    }
+
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Videos,
+      allowsEditing: false,
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      setUri(result.assets[0].uri);
+      console.log(uri)
+    }
+  };
+
+
+
+
+
+  if (videoRecorded === false && !uri) {
     
     return (    
       <SafeAreaView style={styles.container}>
@@ -119,32 +145,36 @@ export default function CameraComponent({ navigation }) {
                 </TouchableOpacity>
                 </View>
                 
-                <View style={styles.innerContainer}>
-                <TouchableOpacity>
+               {isRecording===false ?  <View style={styles.innerContainer}>
+            <TouchableOpacity onPress={pickVideo}>
                 <View style={styles.innerContainer}>
                 { galleryIcon }
                 </View>
-                </TouchableOpacity>
-            </View>
+            </TouchableOpacity> 
+            </View>: ''
+                }
         </View>      
     </SafeAreaView>
   
     );
   }
-  if (videoRecorded === true) {
-
+  if (uri) {
     return (
+      
       <SafeAreaView style={styles.container}>
-      <Video
-      source={{ uri: uri }}
-      style={styles.preview}
-      resizeMode="contain"
-      shouldPlay={isPlaying}
-      isLooping
-      />
+          <Video
+        source={{ uri: uri }}
+        style={styles.preview}
+        resizeMode="contain"
+        shouldPlay={isPlaying}
+        isLooping
+          />
     <View style={{ ...styles.navContainer }}> 
           <View style={styles.innerContainer}>
-          <TouchableOpacity onPress={()=> setVideoRecorded(false)}>
+            <TouchableOpacity onPress={() => {
+              setVideoRecorded(false)
+              setUri(null)
+            }}>
               <View style={styles.innerContainer}>
                   <Text style={{color: 'white'}}>Discard</Text>
               </View>
@@ -159,9 +189,9 @@ export default function CameraComponent({ navigation }) {
           </View>
 
           <View style={styles.innerContainer}>
-          <TouchableOpacity onPress={()=> navigation.navigate('')}>
+            <TouchableOpacity onPress={() => navigation.navigate('UploadFitcheck', {uri : uri})}>
               <View style={styles.innerContainer}>
-                 <Text style={{color: 'white'}}>Save</Text>
+                 <Text style={{color: 'white'}}>Continue</Text>
               </View>
           </TouchableOpacity>
           </View>

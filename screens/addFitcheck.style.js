@@ -2,76 +2,66 @@ import { StyleSheet } from "react-native";
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    height: "100%",
-    width: "100%",
-    justifyContent: "center",
-  },
+    width: '100%',
+    height:'100%',
+    marginTop: 0,
+    alignItems: 'center',
+    
+    },
+  preview: {
+    width: '90%',
+    height: '60%',
+    left: '0%',
+    top: '4%'
 
-  rowContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    backgroundColor: "#eee",
-    borderRadius: 5,
-  },
+},
+  previewVideo: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    bottom: 0,
+    right: 0,
 
-  columnContainer: {
-    flexDirection: "column",
-    justifyContent: "flex-end",
-    alignItems: "center",
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    backgroundColor: "#eee",
-    borderRadius: 5,
   },
-
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 20,
+  captionContainer: {
+    position: 'absolute',
+    height: '36%',
+    width: '100%',
+    top: '64%',
+    backgroundColor: 'white',
+    padding: 20
   },
-
-  subtitle: {
-    fontSize: 18,
-    textTransform: "capitalize",
+  input: {
+    width: '100%',
+    height: '30%',
+    borderColor: 'rgb(240, 241, 242)',
+    borderWidth: 2,
+    textAlignVertical: 'top',
+    paddingLeft: 10,
+    paddingTop: 7
   },
-
+  buttonContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+   justifyContent: 'space-between',
+   marginTop: 20
+  },
   button: {
-    padding: 10,
-    borderRadius: 5,
-    color: "#ffffff",
-    backgroundColor: "rgb(62,0,153)",
-    marginBottom: 10,
-    marginTop: 10,
+        padding: 20,
+        borderRadius: 20,
+        color: "#ffffff",
+        backgroundColor: "#5E2BAA",
+        width: '40%',
+        textAlign: 'center',
+        marginBottom: 10,
   },
   buttonText: {
     color: "white",
-    alignSelf: "center",
-  },
-
-  input: {
-    fontSize: 18,
-    //width: "100%",
-    borderColor: "rgb(176,176,176)",
-    borderWidth: 1,
-    borderRadius: 5,
-    padding: 5,
-    marginBottom: 5,
-  },
-  profilePicture: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-  },
-
-  selectedVideo: {
-    resizeMode: "center",
-    width: "100%",
-    height: "30%",
-  },
+    fontSize: 15,
+    textAlign: 'center',
+    zIndex: 0
+   }
+  
 });
 
 export default styles;
