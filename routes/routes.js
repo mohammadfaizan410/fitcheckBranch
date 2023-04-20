@@ -5,6 +5,8 @@ const jwt = require("jsonwebtoken");
 const mongoose = require("mongoose");
 const { Readable } = require("stream");
 const sharp = require("sharp");
+const util = require("util");
+const exec = util.promisify(require("child_process").exec);
 const bodyParser = require("body-parser");
 
 // ------- mongo db connection --------
@@ -57,6 +59,31 @@ async function compressImage(base64Image) {
     .jpeg({ quality: 80 })
     .toBuffer();
   return resizedImageBuffer.toString("base64");
+}
+
+//compress video
+async function compressVideo(base64Video) {
+  // Decode base64 video to buffer
+  const videoBuffer = Buffer.from(base64Video, "base64");
+
+  // Write buffer to temporary file
+  const tempInputFile = "/tmp/input.mp4";
+  await sharp(videoBuffer).toFile(tempInputFile);
+
+  // Compress video using ffmpeg
+  const tempOutputFile = "/tmp/output.mp4";
+  const compressionOptions =
+    "-c:v libx264 -crf 28 -preset slow -c:a aac -b:a 128k";
+  const command = `ffmpeg -i ${tempInputFile} ${compressionOptions} ${tempOutputFile}`;
+  await exec(command);
+
+  // Read compressed file into buffer
+  const compressedBuffer = await sharp(tempOutputFile).toBuffer();
+
+  // Convert compressed buffer to base64 string
+  const compressedBase64 = compressedBuffer.toString("base64");
+
+  return compressedBase64;
 }
 
 //handle Register
@@ -169,9 +196,9 @@ router.post("/imageupload", async (req, res) => {
 // define a route for handling fitcheck uploads
 router.post("/uploadfitcheck", async (req, res) => {
   try {
-    const compressedImage = await compressImage(req.body.video);
+    const compressedVideo = await compressVideo(req.body.video);
     // decode the base64-encoded image data to a buffer
-    const buffer = Buffer.from(compressedImage, "base64");
+    const buffer = Buffer.from(compressedVideo, "base64");
 
     const uniqueFilename = await generateUniqueFilename(
       req.body.username,
@@ -189,7 +216,7 @@ router.post("/uploadfitcheck", async (req, res) => {
     const fileData = {
       id: fileID,
       filename: uniqueFilename,
-      contentType: "image/jpeg",
+      contentType: "video/mp4",
     };
 
     const updatedUser = await User.findOneAndUpdate(
