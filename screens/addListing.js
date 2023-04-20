@@ -9,6 +9,7 @@ import {
   setFollowers,
   setFollowing,
   setFitcheckArray,
+  setListingArray,
 } from "../reducers/user";
 import {
   View,
@@ -35,6 +36,7 @@ export default function AddListing({ navigation, route }) {
     followers,
     following,
     fitcheckArray,
+    listingArray,
   } = useSelector((state) => state.user);
 
   const [listingname, setListingname] = useState();
@@ -108,8 +110,14 @@ export default function AddListing({ navigation, route }) {
         return response.json();
       })
       .then((result) => {
-        console.log("Success: ", result);
-        navigation.navigate("Profile");
+        console.log("Listing Added: ", result);
+        const { newListingArrayObject } = {
+          fitcheckId: result.fitcheckId,
+          listingId: result.listingId,
+        };
+        const newListingArray = [...listingArray, newListingArrayObject];
+        dispatch(setListingArray(newListingArray));
+        navigation.goBack();
       })
       .catch((error) => {
         console.error(error);

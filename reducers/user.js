@@ -8,6 +8,7 @@ const initialState = {
   followers: [],
   following: [],
   fitcheckArray: [],
+  listingArray: [{}],
   pageIndex: 0,
 };
 
@@ -37,6 +38,9 @@ export const userSlice = createSlice({
     setFitcheckArray: (state, action) => {
       state.fitcheckArray = action.payload;
     },
+    setListingArray: (state, action) => {
+      state.listingArray = action.payload;
+    },
     incrPageIndex: (state, action) => {
       state.pageIndex += 1;
     },
@@ -55,6 +59,7 @@ export const {
   setFollowers,
   setFollowing,
   setFitcheckArray,
+  setListingArray,
   incrPageIndex,
   decrPageIndex,
 } = userSlice.actions;

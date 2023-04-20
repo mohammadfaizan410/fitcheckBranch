@@ -9,6 +9,7 @@ import ShopSetup from "./screens/shopSetup";
 import UploadImage from "./screens/uploadImage";
 import AddFitcheck from "./screens/addFitcheck";
 import Fitcheck from "./screens/fitcheck";
+import Listing from "./screens/listing";
 import AddListing from "./screens/addListing";
 import { Provider } from "react-redux";
 import store from "./store";
@@ -50,6 +51,9 @@ export default function App() {
   }
   function WelcomePromptScreen(props) {
     return <WelcomePrompt {...props} />;
+  }
+  function ListingScreen(props) {
+    return <Listing {...props} />;
   }
   function CameraComponentScreen(props) {
     return <CameraComponent {...props} />;
@@ -104,6 +108,11 @@ export default function App() {
           <Stack.Screen
             name="Fitcheck"
             component={FitcheckScreen}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="Listing"
+            component={ListingScreen}
             options={{ headerShown: false }}
           />
           <Stack.Screen

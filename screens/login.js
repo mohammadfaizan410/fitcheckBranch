@@ -10,6 +10,7 @@ import {
   setFollowers,
   setFollowing,
   setFitcheckArray,
+  setListingArray,
 } from "../reducers/user";
 import {
   Keyboard,
@@ -76,7 +77,7 @@ export default function Login({ navigation }) {
     };
 
     fetch(
-      "http://192.168.1.20:3000/login" || "http://192.168.1.20:3000/login",
+      "http://192.168.1.30:3000/login" || "http://192.168.1.20:3000/login",
       {
         //replace with server IP later
         method: "POST",
@@ -115,6 +116,7 @@ export default function Login({ navigation }) {
     dispatch(setFollowers(userData["followers"]));
     dispatch(setFollowing(userData["following"]));
     dispatch(setFitcheckArray(userData["fitcheck"]));
+    dispatch(setListingArray(userData["listings"]));
   };
 
   return (
