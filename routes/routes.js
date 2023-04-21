@@ -296,6 +296,7 @@ router.post("/getfitcheckdata2", async (req, res) => {
 
 // define a route for handling fitcheck uploads
 router.post("/uploadfitcheck", async (req, res) => {
+  console.log("hello there")
   try {
     //const compressedVideo = await compressVideo(req.body.video);
     // decode the base64-encoded image data to a buffer

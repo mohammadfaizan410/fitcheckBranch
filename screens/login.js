@@ -59,6 +59,7 @@ export default function Login({ navigation }) {
     if (isLoggedIn) {
       console.log("logged in");
       navigation.navigate("Profile");
+      navigation.navigate("Profile");
     }
   }, [isLoggedIn]);
 

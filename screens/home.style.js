@@ -13,11 +13,13 @@ const styles = StyleSheet.create({
             width: '100%',
             height: '100%',
         flexDirection: 'column',
-        backgroundColor: 'black',
+        backgroundColor: 'white',
+        display: 'flex',
     },
     homeFeed: {
         width: '100%',
-        height: '95%',
+        height: '50%',
+        marginTop: '50%'
     },
     navStyles: {
         zIndex: 100,

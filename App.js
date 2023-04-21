@@ -70,6 +70,7 @@ export default function App() {
     return <Home {...props} />;
   }
 
+
   return (
     <Provider store={store}>
       <NavigationContainer>
@@ -148,7 +149,8 @@ export default function App() {
             name="Home"
             component={HomeScreen}
             options={{ headerShown: false }}
-          /> */}
+          /> 
+      
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>
