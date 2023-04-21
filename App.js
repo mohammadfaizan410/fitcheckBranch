@@ -20,7 +20,6 @@ import CameraComponent from "./screens/components/cameraComponent";
 import VideoComponent from "./screens//components/videoComponent";
 import Navbar from "./screens/components/navbar";
 import Home from './screens/home'
-
 const Stack = createStackNavigator();
 
 export default function App() {
@@ -71,10 +70,11 @@ export default function App() {
   }
 
 
+
   return (
     <Provider store={store}>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="Landing">
+        <Stack.Navigator initialRouteName="Home">
           <Stack.Screen
             name="Landing"
             component={LandingImageScreen}
@@ -150,7 +150,7 @@ export default function App() {
             component={HomeScreen}
             options={{ headerShown: false }}
           /> 
-      
+          
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>

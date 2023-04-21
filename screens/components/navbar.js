@@ -51,7 +51,7 @@ export default function Navbar({ navigation }) {
             </TouchableOpacity>
             </View>
             <View style={styles.innerContainer}>
-            <TouchableOpacity onPress={()=> navigation.navigate('')}>
+            <TouchableOpacity onPress={()=> navigation.navigate('Profile')}>
                 <View style={styles.innerContainer}>
                     { userIcon }
                     <Text>Profile</Text>

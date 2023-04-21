@@ -7,7 +7,6 @@ const styles = StyleSheet.create({
         justifyContent: 'space-around',
         position: 'absolute',
         bottom: 0,
-        height: '10%',
         width: '100%',
         alignItems: 'center',
         backgroundColor: 'white'
@@ -18,7 +17,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         textAlign: 'center'
-    }
+    },
+    
 
 });
 

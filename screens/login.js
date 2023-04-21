@@ -58,7 +58,7 @@ export default function Login({ navigation }) {
   useEffect(() => {
     if (isLoggedIn) {
       console.log("logged in");
-      navigation.navigate("Home");
+      navigation.navigate("Profile");
     }
   }, [isLoggedIn]);
 
@@ -98,7 +98,7 @@ export default function Login({ navigation }) {
           AsyncStorage.setItem("user", JSON.stringify(userData));
           setUserData(userData);
           setIsLoggedIn(true);
-          navigation.navigate('Home')
+          navigation.navigate('Profile')
         } else {
           //login cred. WRONG
           console.log("Invalid Email or Password");

@@ -19,6 +19,7 @@
     "@rneui/themed": "^4.0.0-rc.7",
     "@tradle/react-native-http": "^2.0.0",
     "assert": "^1.1.1",
+    "base-64": "^1.0.0",
     "browserify-zlib": "^0.1.4",
     "buffer": "^4.9.1",
     "circular-json": "^0.5.9",

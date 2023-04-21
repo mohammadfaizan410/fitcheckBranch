@@ -60,7 +60,7 @@ export default function AddFitcheck({ navigation, route }) {
       caption: videoCaption,
       video: base64Video,
     };
-
+    console.log(formData.video)
     fetch(
       "http://192.168.1.20:3000/uploadfitcheck" ||
         "http://192.168.1.30:3000/uploadfitcheck",
