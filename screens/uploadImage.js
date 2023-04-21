@@ -75,7 +75,7 @@ export default function UploadImage({ navigation }) {
 
     fetch(
       "http://192.168.1.30:3000/imageupload" ||
-        "http://192.168.1.20:3000/imageupload",
+        "http://192.168.1.30:3000/imageupload",
       {
         method: "POST",
         headers: {

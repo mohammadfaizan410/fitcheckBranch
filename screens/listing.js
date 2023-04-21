@@ -85,7 +85,7 @@ export default function Listing({ navigation, route }) {
 
     fetch(
       "http://192.168.1.30:3000/uploadnewlistingimage" ||
-        "http://192.168.1.20:3000/uploadnewlistingimage",
+        "http://192.168.1.30:3000/uploadnewlistingimage",
       {
         method: "POST",
         headers: {

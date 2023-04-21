@@ -90,6 +90,19 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: "bold",
   },
+  preview: {
+    width: "90%",
+    height: "60%",
+    left: "0%",
+    top: "4%",
+  },
+  previewVideo: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    bottom: 0,
+    right: 0,
+  },
 });
 
 export default styles;

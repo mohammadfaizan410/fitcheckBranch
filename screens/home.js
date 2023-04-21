@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Navbar from "./components/navbar";
-import styles from "./home.style"
-import Swiper from 'react-native-swiper';
+import styles from "./home.style";
+import Swiper from "react-native-swiper";
 
 import {
   reset,
@@ -43,7 +43,7 @@ export default function Home({ navigation }) {
       username: username,
     };
     fetch(
-      "http://192.168.1.20:3000/getallusersandfitchecks" ||
+      "http://192.168.1.30:3000/getallusersandfitchecks" ||
         "http://192.168.1.30:3000/getallusersandfitchecks",
       {
         method: "POST",
@@ -65,18 +65,18 @@ export default function Home({ navigation }) {
   };
 
   useEffect(() => {
-    console.log("use effects")
+    console.log("use effects");
     fetchAllUsers();
-    console.log(allUser)
-  },[])
+    console.log(allUser);
+  }, []);
 
   const arr = [1, 2, 3, 4, 5];
 
-//   useEffect(() => {
-//     if (!isLoggedIn) {
-//       navigation.navigate("Login");
-//     }
-//   }, [isLoggedIn]);
+  //   useEffect(() => {
+  //     if (!isLoggedIn) {
+  //       navigation.navigate("Login");
+  //     }
+  //   }, [isLoggedIn]);
 
   const handleLogout = () => {
     dispatch(reset());
@@ -84,47 +84,57 @@ export default function Home({ navigation }) {
     navigation.navigate("Landing");
   };
 
-
-  const MySwiper = () => (
-    allUser!==null ? 
-    <Swiper showsPagination={false} showsButtons={false} horizontal={false} loop={false}>
-      {allUser.map((item) => (
-        <View style={{ ...styles.homeFeed, backgroundColor: 'grey' }}>
-        <Image
-            style={{ ...styles.image }}
-            source={{ uri: `data:${item.video.contentType};base64,${item.video.data}` }}
-          />
-
-        </View>
-          ))}
-    </Swiper> : <Text>'hello there empty list'</Text>
-  );
-
-
-  
-
+  const MySwiper = () =>
+    allUser !== null ? (
+      <Swiper
+        showsPagination={false}
+        showsButtons={false}
+        horizontal={false}
+        loop={false}
+      >
+        {allUser.map((item) => (
+          <View style={{ ...styles.homeFeed, backgroundColor: "grey" }}>
+            <Image
+              style={{ ...styles.image }}
+              source={{
+                uri: `data:${item.video.contentType};base64,${item.video.data}`,
+              }}
+            />
+          </View>
+        ))}
+      </Swiper>
+    ) : (
+      <Text>'hello there empty list'</Text>
+    );
 
   return (
-      <SafeAreaView style={styles.homeContainer}>
+    <SafeAreaView style={styles.homeContainer}>
       <View style={styles.homeContent}>
-        
-        {allUser !== null ?
-          <Swiper showsPagination={false} showsButtons={false} horizontal={false} loop={false}>
+        {allUser !== null ? (
+          <Swiper
+            showsPagination={false}
+            showsButtons={false}
+            horizontal={false}
+            loop={false}
+          >
             {allUser.map((item) => (
-            
-              <View style={{ ...styles.homeFeed, backgroundColor: 'grey' }}>
+              <View style={{ ...styles.homeFeed, backgroundColor: "grey" }}>
                 {/* {console.log(item.video) } */}
                 <Image
-                  style={{ width : '100%', height: '100%' }}
-                  source={{ uri: `data:${item.video.contentType};base64,${item.video}` }}
+                  style={{ width: "100%", height: "100%" }}
+                  source={{
+                    uri: `data:${item.video.contentType};base64,${item.video}`,
+                  }}
                 />
                 <Text>Hello there</Text>
-                
               </View>
             ))}
-          </Swiper> : <Text>hello there empty list</Text>}
-          </View>
-              {/* <Swiper
+          </Swiper>
+        ) : (
+          <Text>hello there empty list</Text>
+        )}
+      </View>
+      {/* <Swiper
                 horizontal={false}
                 showsVerticalScrollIndicator={false}
                   loop={false}
@@ -133,10 +143,7 @@ export default function Home({ navigation }) {
                   <View style={{ ...styles.homeFeed, backgroundColor: 'black' }}></View>
                   <View style={{ ...styles.homeFeed, backgroundColor: 'grey' }}></View>
               </Swiper> */}
-          <Navbar
-              style={styles.navStyles}
-            navigation = {navigation}
-          />
+      <Navbar style={styles.navStyles} navigation={navigation} />
     </SafeAreaView>
   );
 }

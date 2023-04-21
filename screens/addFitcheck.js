@@ -4,7 +4,7 @@ import { Permissions } from "expo-permissions";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Icon from "react-native-vector-icons/AntDesign";
 
-import { Video } from 'expo-av';
+import { Video } from "expo-av";
 
 import {
   reset,
@@ -23,7 +23,7 @@ import { SafeAreaView } from "react-native";
 
 export default function AddFitcheck({ navigation, route }) {
   const dispatch = useDispatch();
-  console.log(route)
+  console.log(route);
   const {
     isLoggedIn,
     email,
@@ -35,12 +35,14 @@ export default function AddFitcheck({ navigation, route }) {
   } = useSelector((state) => state.user);
   const [videoCaption, setVideoCaption] = useState("");
   const [isPlaying, setIsPlaying] = useState(false);
-  
-  const playIcon = <Icon name='playcircleo' size={70} color='white'/>
-  const pauseIcon = <Icon name='pausecircleo' size={70} color='white' />
+  const videoUri = route.params.uri;
+
+  const playIcon = <Icon name="playcircleo" size={70} color="white" />;
+  const pauseIcon = <Icon name="pausecircleo" size={70} color="white" />;
+
   function togglePlaying() {
     setIsPlaying(!isPlaying);
-    }
+  }
 
   // pick image
 
@@ -51,27 +53,22 @@ export default function AddFitcheck({ navigation, route }) {
       return;
     }
 
-    const base64Video = await FileSystem.readAsStringAsync(route.params.uri, {
-      encoding: FileSystem.EncodingType.Base64,
+    const formData = new FormData();
+    formData.append("username", username);
+    formData.append("caption", videoCaption);
+    formData.append("video", {
+      uri: route.params.uri,
+      type: "video/mp4", // replace with the actual file type
+      name: "video.mp4", // replace with the actual file name
     });
 
-    const formData = {
-      username: username,
-      caption: videoCaption,
-      video: base64Video,
-    };
-
-    fetch(
-      "http://192.168.1.20:3000/uploadfitcheck" ||
-        "http://192.168.1.30:3000/uploadfitcheck",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      }
-    )
+    fetch("http://192.168.1.30:3000/uploadfitcheck2", {
+      method: "POST",
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+      body: formData,
+    })
       .then((response) => {
         return response.json();
       })
@@ -89,20 +86,30 @@ export default function AddFitcheck({ navigation, route }) {
 
   return (
     <SafeAreaView style={styles.container}>
-      <TouchableOpacity onPress={togglePlaying} style={{ ...styles.preview, borderColor: 'black', borderWidth: 2 }}> 
-      <Video
-        source={{ uri: route.params.uri }}
+      <TouchableOpacity
+        onPress={togglePlaying}
+        style={{ ...styles.preview, borderColor: "black", borderWidth: 2 }}
+      >
+        <Video
+          source={{ uri: route.params.uri }}
           style={styles.previewVideo}
-        shouldPlay={isPlaying}
-        isLooping
-        resizeMode="cover"
-      />
-      </TouchableOpacity> 
-      
-      <View style={styles.captionContainer}>
-        
+          shouldPlay={isPlaying}
+          isLooping
+          resizeMode="cover"
+        />
+      </TouchableOpacity>
 
-        <Text style={{ ...styles.buttonText, color: 'black', textAlign: "left", paddingBottom: 10 }}>Write Video Caption: </Text>
+      <View style={styles.captionContainer}>
+        <Text
+          style={{
+            ...styles.buttonText,
+            color: "black",
+            textAlign: "left",
+            paddingBottom: 10,
+          }}
+        >
+          Write Video Caption:{" "}
+        </Text>
         <TextInput
           style={styles.input}
           placeholder="Enter Caption"
@@ -111,18 +118,18 @@ export default function AddFitcheck({ navigation, route }) {
           value={videoCaption}
         />
         <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.button} onPress={uploadVideo}>
-          <Text style={styles.buttonText}>Upload Video</Text>
-        </TouchableOpacity>
+          <TouchableOpacity style={styles.button} onPress={uploadVideo}>
+            <Text style={styles.buttonText}>Upload Video</Text>
+          </TouchableOpacity>
 
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => navigation.navigate("Video")}
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => navigation.navigate("Video")}
           >
-          <Text style={styles.buttonText}>Cancel</Text>
-        </TouchableOpacity>
-            </View>
-          </View>
+            <Text style={styles.buttonText}>Cancel</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
     </SafeAreaView>
   );
 }

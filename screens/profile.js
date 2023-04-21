@@ -10,6 +10,8 @@ import {
   setFollowing,
   setFitcheckArray,
 } from "../reducers/user";
+import { Video } from "expo-av";
+
 import {
   View,
   Text,
@@ -34,6 +36,7 @@ export default function Profile({ navigation }) {
   } = useSelector((state) => state.user);
 
   const [retrievedFitchecks, setRetrievedFitchecks] = useState([]);
+  const [videoUri, setVideoUri] = useState(null);
 
   const fetchFitchecks = () => {
     const formData = {
@@ -54,6 +57,7 @@ export default function Profile({ navigation }) {
         return response.json();
       })
       .then((data) => {
+        console.log(data);
         setRetrievedFitchecks(data);
       })
       .catch((error) => {
@@ -85,8 +89,8 @@ export default function Profile({ navigation }) {
     };
 
     fetch(
-      "http://192.168.1.30:3000/getfitcheckdata" ||
-        "http://192.168.1.30:3000/getfitcheckdata",
+      "http://192.168.1.30:3000/getfitcheckdata2" ||
+        "http://192.168.1.30:3000/getfitcheckdata2",
       {
         method: "POST",
         headers: {
@@ -99,6 +103,8 @@ export default function Profile({ navigation }) {
         return response.json();
       })
       .then((data) => {
+        console.log("FITCHECK DATA IS");
+        console.log(data.fitcheck);
         navigation.navigate("Fitcheck", { fitcheck: data.fitcheck });
       })
       .catch((error) => {
@@ -119,21 +125,82 @@ export default function Profile({ navigation }) {
       console.log("Error retrieving data from AsyncStorage: ", error);
     });
 
-  const renderFitcheckItem = ({ item }) => (
-    <View style={styles.fitcheckContainer}>
-      <View style={styles.imageContainer}>
-        <TouchableOpacity onPress={() => handleFitcheckPress(item)}>
-          <Image
-            style={{ ...styles.image }}
-            source={{ uri: `data:${item.contentType};base64,${item.data}` }}
-          />
-        </TouchableOpacity>
+  const getFile = async (filename) => {
+    const formData = {
+      username: username,
+      filename: fitcheck.video.filename,
+    };
+    const response = await fetch(
+      "http://192.168.1.30:3000/getfile" || "http://192.168.1.30:3000/getfile",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      }
+    );
+
+    const blob = await response.blob();
+    const reader = new FileReader();
+    reader.readAsDataURL(blob);
+    reader.onloadend = () => {
+      const base64data = reader.result;
+      setVideoUri(base64data);
+    };
+  };
+
+  const renderFitcheckItem = ({ item }) => {
+    const formData = {
+      username: username,
+      filename: item.video.filename,
+    };
+    const response = fetch(
+      "http://192.168.1.30:3000/getfile" || "http://192.168.1.30:3000/getfile",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      }
+    )
+      .then((response) => {
+        const blob = response.blob();
+        return blob;
+      })
+      .then((blob) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(blob);
+        reader.onloadend = () => {
+          const base64data = reader.result;
+          setVideoUri(base64data);
+        };
+      });
+
+    return (
+      <View style={styles.fitcheckContainer}>
+        <View style={styles.imageContainer}>
+          <TouchableOpacity onPress={() => handleFitcheckPress(item)}>
+            {videoUri ? (
+              <Video
+                source={{ uri: videoUri }}
+                style={styles.previewVideo}
+                shouldPlay={true}
+                isLooping
+                resizeMode="cover"
+              />
+            ) : (
+              <Text>Loading</Text>
+            )}
+          </TouchableOpacity>
+        </View>
+        <View>
+          <Text>{item.caption}</Text>
+        </View>
       </View>
-      <View>
-        <Text>{item.caption}</Text>
-      </View>
-    </View>
-  );
+    );
+  };
 
   return (
     <View style={styles.container}>
@@ -167,15 +234,26 @@ export default function Profile({ navigation }) {
           <Text style={styles.buttonText}>Upload Fitcheck</Text>
         </TouchableOpacity>
       </View>
+      {videoUri ? (
+        <Video
+          source={{ uri: videoUri }}
+          style={styles.previewVideo}
+          shouldPlay={true}
+          isLooping
+          resizeMode="cover"
+        />
+      ) : (
+        <Text>Loading</Text>
+      )}
       {retrievedFitchecks ? (
         <FlatList
           data={retrievedFitchecks}
           renderItem={renderFitcheckItem}
-          keyExtractor={(item) => item.filename}
+          keyExtractor={(item) => item.id}
           numColumns={3}
         />
       ) : (
-        ""
+        <Text>Loading</Text>
       )}
     </View>
   );

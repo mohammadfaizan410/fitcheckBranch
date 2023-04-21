@@ -94,6 +94,13 @@ const fitcheckCollectionSchema = new mongoose.Schema({
   fitcheck: {
     type: [fitcheckSchema],
   },
+  avatar: {
+    filename: String,
+    contentType: String,
+    uploadDate: Date,
+    caption: String,
+    size: Number,
+  },
 });
 
 module.exports = mongoose.model(

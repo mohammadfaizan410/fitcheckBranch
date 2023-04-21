@@ -7,10 +7,14 @@ const { Readable } = require("stream");
 const sharp = require("sharp");
 const util = require("util");
 const exec = util.promisify(require("child_process").exec);
+const multer = require("multer");
+const fs = require("fs");
+const { v4: uuidv4 } = require("uuid");
+const path = require("path");
 const bodyParser = require("body-parser");
 
 // ------- mongo db connection --------
-mongoose.connect("mongodb://localhost:27017/fitcheckDB");
+mongoose.connect("mongodb://localhost:27018/fitcheckDB");
 const database = mongoose.connection; //get the database object from mongoose connection
 
 database.on("error", (error) => {
@@ -22,6 +26,22 @@ database.once("connected", () => {
 });
 
 // ------- mongo db connection --------
+
+// Create storage for multer
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "./uploads");
+  },
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now() + "-" + uuidv4();
+    cb(null, uniqueSuffix + path.extname(file.originalname));
+  },
+});
+
+router.post("/getfile", (req, res) => {
+  const filePath = path.join(__dirname, "../uploads", req.body.filename);
+  res.sendFile(filePath);
+});
 
 // create GridFS instance
 const { GridFSBucket } = require("mongodb");
@@ -59,31 +79,6 @@ async function compressImage(base64Image) {
     .jpeg({ quality: 80 })
     .toBuffer();
   return resizedImageBuffer.toString("base64");
-}
-
-//compress video
-async function compressVideo(base64Video) {
-  // Decode base64 video to buffer
-  const videoBuffer = Buffer.from(base64Video, "base64");
-
-  // Write buffer to temporary file
-  const tempInputFile = "/tmp/input.mp4";
-  await sharp(videoBuffer).toFile(tempInputFile);
-
-  // Compress video using ffmpeg
-  const tempOutputFile = "/tmp/output.mp4";
-  const compressionOptions =
-    "-c:v libx264 -crf 28 -preset slow -c:a aac -b:a 128k";
-  const command = `ffmpeg -i ${tempInputFile} ${compressionOptions} ${tempOutputFile}`;
-  await exec(command);
-
-  // Read compressed file into buffer
-  const compressedBuffer = await sharp(tempOutputFile).toBuffer();
-
-  // Convert compressed buffer to base64 string
-  const compressedBase64 = compressedBuffer.toString("base64");
-
-  return compressedBase64;
 }
 
 //handle Register
@@ -193,12 +188,118 @@ router.post("/imageupload", async (req, res) => {
   }
 });
 
+//SET Fitcheck and its video
+const upload = multer({ storage: storage });
+
+router.post("/uploadfitcheck2", upload.single("video"), async (req, res) => {
+  try {
+    const file = req.file;
+    const user = await User.findOne({ username: req.body.username });
+
+    const updatedUser = await User.findOneAndUpdate(
+      { username: req.body.username }, // Find user by username
+      {
+        $push: {
+          fitcheck: {
+            likes: "0",
+            caption: req.body.caption,
+            listings: [],
+            video: {
+              filename: file.filename,
+              contentType: file.mimetype,
+              uploadDate: Date.now(),
+              caption: req.body.caption,
+              size: file.size,
+            },
+          },
+        },
+      }, // Push a new fitcheck object to the fitcheck array
+      { new: true } // Return the updated user object
+    );
+
+    const fitcheckObject =
+      updatedUser.fitcheck[updatedUser.fitcheck.length - 1];
+
+    res.send({ message: "Video uploaded successfully!" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send({ message: "Error uploading video" });
+  }
+});
+
+// GET A Fitcheck (2)
+router.post("/getfitcheckdata2", async (req, res) => {
+  try {
+    const username = req.body.username;
+    const fitcheckId = req.body.fitcheckId;
+    console.log(username + fitcheckId);
+    const user = await User.findOne({ username: username });
+    const fitcheck = await user.fitcheck.find(
+      (fitcheck) => fitcheck._id == fitcheckId
+    );
+
+    if (!user) {
+      res.status(404).json({ message: "User not found" });
+      return;
+    }
+    if (!fitcheck) {
+      res.status(404).json({ message: "Fitcheck not found" });
+      return;
+    }
+
+    // Check if video exists
+    if (!fitcheck.video.filename) {
+      return res.status(404).send({ message: "Video not found" });
+    }
+
+    // Read video from disk
+    const path = `./uploads/${fitcheck.video.filename}`;
+    const stat = fs.statSync(path);
+    const fileSize = stat.size;
+    const range = req.headers.range;
+    if (range) {
+      const parts = range.replace(/bytes=/, "").split("-");
+      const start = parseInt(parts[0], 10);
+      const end = parts[1] ? parseInt(parts[1], 10) : fileSize - 1;
+      const chunksize = end - start + 1;
+      const file = fs.createReadStream(path, { start, end });
+      const head = {
+        "Content-Range": `bytes ${start}-${end}/${fileSize}`,
+        "Accept-Ranges": "bytes",
+        "Content-Length": chunksize,
+        "Content-Type": fitcheck.video.contentType,
+      };
+      res.writeHead(206, head);
+      file.pipe(res);
+    } else {
+      const head = {
+        "Content-Length": fileSize,
+        "Content-Type": fitcheck.video.contentType,
+      };
+      //res.writeHead(200, head);
+      const file = fs.createReadStream(path);
+      const fitcheckToSend = {
+        id: fitcheck._id,
+        caption: fitcheck.caption,
+        likes: fitcheck.likes,
+        video: { file: file, filename: fitcheck.video.filename },
+      };
+      console.log(fitcheckToSend);
+      res.status(200).json({ fitcheck: fitcheckToSend });
+      //fs.createReadStream(path).pipe(res);
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).send({ message: "Error retrieving video" });
+  }
+});
+
 // define a route for handling fitcheck uploads
 router.post("/uploadfitcheck", async (req, res) => {
   try {
-    const compressedVideo = await compressVideo(req.body.video);
+    //const compressedVideo = await compressVideo(req.body.video);
     // decode the base64-encoded image data to a buffer
-    const buffer = Buffer.from(compressedVideo, "base64");
+    const buffer = Buffer.from(req.body.video, "base64");
 
     const uniqueFilename = await generateUniqueFilename(
       req.body.username,
@@ -216,7 +317,7 @@ router.post("/uploadfitcheck", async (req, res) => {
     const fileData = {
       id: fileID,
       filename: uniqueFilename,
-      contentType: "video/mp4",
+      contentType: "video/webm",
     };
 
     const updatedUser = await User.findOneAndUpdate(
@@ -611,44 +712,45 @@ router.post("/getallfitcheckdata", async (req, res) => {
     const ids = fitchecks.map((fitcheck) => fitcheck._id);
     const captions = fitchecks.map((fitcheck) => fitcheck.caption);
 
-    const videos = [];
+    const allFitchecks = [];
 
     for (let i = 0; i < filenames.length; i++) {
-      const file = await bucket.find({ filename: filenames[i] }).toArray();
-
-      if (file.length === 0) {
-        res.status(404).json({ message: `File ${filenames[i]} not found` });
-        return;
-      }
-
-      const stream = bucket.openDownloadStreamByName(filenames[i]);
-      const chunks = [];
-
-      stream.on("data", (chunk) => {
-        chunks.push(chunk);
-      });
-
-      stream.on("end", () => {
-        const buffer = Buffer.concat(chunks);
-        const videoData = {
-          filename: filenames[i],
+      // Read video from disk
+      const path = `./uploads/${filenames[i]}`;
+      const filename = filenames[i];
+      const stat = fs.statSync(path);
+      const fileSize = stat.size;
+      const range = req.headers.range;
+      if (range) {
+        const parts = range.replace(/bytes=/, "").split("-");
+        const start = parseInt(parts[0], 10);
+        const end = parts[1] ? parseInt(parts[1], 10) : fileSize - 1;
+        const chunksize = end - start + 1;
+        const file = fs.createReadStream(path, { start, end });
+        const head = {
+          "Content-Range": `bytes ${start}-${end}/${fileSize}`,
+          "Accept-Ranges": "bytes",
+          "Content-Length": chunksize,
+          "Content-Type": fitchecks[i].video.contentType,
+        };
+        res.writeHead(206, head);
+        file.pipe(res);
+      } else {
+        const head = {
+          "Content-Length": fileSize,
+          "Content-Type": fitchecks[i].video.contentType,
+        };
+        //res.writeHead(200, head);
+        const file = fs.createReadStream(path);
+        const fitcheckToSend = {
+          id: ids[i],
           caption: captions[i],
           likes: likes[i],
-          id: ids[i],
-          contentType: file[0].contentType,
-          data: buffer.toString("base64"),
+          video: { file: file, filename: filename },
         };
-        videos.push(videoData);
-
-        if (videos.length === filenames.length) {
-          res.status(200).json(videos);
-        }
-      });
-
-      stream.on("error", (error) => {
-        console.log(error);
-        res.status(500).json({ message: "Error downloading file" });
-      });
+        allFitchecks.push(fitcheckToSend);
+      }
+      res.status(200).json(allFitchecks);
     }
   } catch (error) {
     res.status(500).json({ message: "Error getting Fitchecks" });
@@ -674,36 +776,42 @@ router.post("/getfitcheckdata", async (req, res) => {
       return;
     }
 
-    const filename = fitcheck.video.filename;
-    const likes = fitcheck.likes;
-    const id = fitcheck._id;
-    const caption = fitcheck.caption;
-
-    const file = await bucket.find({ filename: filename });
-    const data = [];
-
-    const stream = bucket.openDownloadStreamByName(filename);
-    const chunks = [];
-
-    stream.on("data", (chunk) => {
-      chunks.push(chunk);
-    });
-
-    stream.on("end", () => {
-      const buffer = Buffer.concat(chunks);
-      const fitcheckData = {
-        filename: filename,
-        caption: caption,
-        likes: likes,
-        id: id,
-        contentType: file.contentType,
-        data: buffer.toString("base64"),
+    // Read video from disk
+    const path = `./uploads/${fitcheck.video.filename}`;
+    const stat = fs.statSync(path);
+    const fileSize = stat.size;
+    const range = req.headers.range;
+    if (range) {
+      const parts = range.replace(/bytes=/, "").split("-");
+      const start = parseInt(parts[0], 10);
+      const end = parts[1] ? parseInt(parts[1], 10) : fileSize - 1;
+      const chunksize = end - start + 1;
+      const file = fs.createReadStream(path, { start, end });
+      const head = {
+        "Content-Range": `bytes ${start}-${end}/${fileSize}`,
+        "Accept-Ranges": "bytes",
+        "Content-Length": chunksize,
+        "Content-Type": fitcheck.video.contentType,
       };
+      res.writeHead(206, head);
+      file.pipe(res);
+    } else {
+      const head = {
+        "Content-Length": fileSize,
+        "Content-Type": fitcheck.video.contentType,
+      };
+      //res.writeHead(200, head);
+      const file = fs.createReadStream(path);
+      const fitcheckToSend = {
+        id: fitcheck._id,
+        caption: fitcheck.caption,
+        likes: fitcheck.likes,
+        video: file,
+      };
+      console.log(fitcheckToSend);
 
-      data.push(fitcheckData);
-
-      res.status(200).json({ message: "Success", fitcheck: data[0] });
-    });
+      res.status(200).json({ message: "Success", fitcheck: fitcheckToSend });
+    }
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: error });

@@ -11,6 +11,9 @@ import {
   setFitcheckArray,
   setListingArray,
 } from "../reducers/user";
+import { Video } from "expo-av";
+import * as FileSystem from "expo-file-system";
+
 import {
   View,
   Text,
@@ -21,6 +24,7 @@ import {
   SafeAreaView,
   ScrollView,
 } from "react-native";
+
 import styles from "./fitcheck.style";
 
 export default function Fitcheck({ navigation, route }) {
@@ -38,6 +42,43 @@ export default function Fitcheck({ navigation, route }) {
   const { fitcheck } = route.params;
   const [likes, setLikes] = useState(fitcheck.likes);
   const [retrievedListings, setRetrievedListings] = useState([]);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [videoUri, setVideoUri] = useState(null);
+
+  const path = fitcheck.video.filename;
+
+  const getFile = async () => {
+    const formData = {
+      username: username,
+      filename: fitcheck.video.filename,
+    };
+    const response = await fetch(
+      "http://192.168.1.30:3000/getfile" || "http://192.168.1.30:3000/getfile",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      }
+    );
+
+    const blob = await response.blob();
+    const reader = new FileReader();
+    reader.readAsDataURL(blob);
+    reader.onloadend = () => {
+      const base64data = reader.result;
+      setVideoUri(base64data);
+    };
+  };
+
+  useEffect(() => {
+    getFile();
+  }, []);
+
+  function togglePlaying() {
+    setIsPlaying(!isPlaying);
+  }
 
   useEffect(() => {}, [likes]);
 
@@ -182,12 +223,26 @@ export default function Fitcheck({ navigation, route }) {
         ListHeaderComponent={
           <>
             <View style={styles.imageContainer}>
-              <Image
-                style={{ ...styles.image }}
-                source={{
-                  uri: `data:${fitcheck.contentType};base64,${fitcheck.data}`,
+              <TouchableOpacity
+                onPress={togglePlaying}
+                style={{
+                  ...styles.preview,
+                  borderColor: "black",
+                  borderWidth: 2,
                 }}
-              />
+              >
+                {videoUri ? (
+                  <Video
+                    source={{ uri: videoUri }}
+                    style={styles.previewVideo}
+                    shouldPlay={isPlaying}
+                    isLooping
+                    resizeMode="cover"
+                  />
+                ) : (
+                  <Text>Loading</Text>
+                )}
+              </TouchableOpacity>
             </View>
             <View style={styles.captionContainer}>
               <Text style={styles.description}>{fitcheck.caption}</Text>
