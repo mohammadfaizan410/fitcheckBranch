@@ -1,0 +1,1 @@
+- You need to install ffmpeg on your pc and add to environment variables to run a few API calls.
