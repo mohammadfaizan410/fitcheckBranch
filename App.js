@@ -17,7 +17,8 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import WelcomePrompt from "./screens/welcomePrompt";
 import CameraComponent from "./screens/components/cameraComponent";
-import VideoComponent from "./screens//components/videoComponent";
+import VideoComponent from "./screens/components/videoComponent";
+import FitcheckVideoComponent from "./screens/components/fitcheckVideo";
 import Navbar from "./screens/components/navbar";
 import Home from "./screens/home";
 
@@ -63,13 +64,15 @@ export default function App() {
   function VideoComponentScreen(props) {
     return <VideoComponent {...props} />;
   }
+  function FitcheckVideoComponentScreen(props) {
+    return <FitcheckVideoComponent {...props} />;
+  }
   function NavbarPartial(props) {
     return <Navbar {...props} />;
   }
   function HomeScreen(props) {
     return <Home {...props} />;
   }
-
 
   return (
     <Provider store={store}>
@@ -145,12 +148,16 @@ export default function App() {
             component={NavbarPartial}
             options={{ headerShown: false }}
           />
-          {/* <Stack.Screen
+          <Stack.Screen
             name="Home"
             component={HomeScreen}
             options={{ headerShown: false }}
-          /> 
-      
+          />
+          <Stack.Screen
+            name="FitcheckVideoComponent"
+            component={FitcheckVideoComponentScreen}
+            options={{ headerShown: false }}
+          />
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Navbar from "./components/navbar";
+import FitcheckVideo from "./components/fitcheckVideo";
 
 import {
   reset,
@@ -21,7 +22,7 @@ import {
   TouchableOpacity,
   Image,
   FlatList,
-  ScrollView 
+  ScrollView,
 } from "react-native";
 import styles from "./profile.style";
 import { SafeAreaView } from "react-native";
@@ -43,11 +44,12 @@ export default function Profile({ navigation }) {
   const [videoUri, setVideoUri] = useState(null);
 
   const fetchFitchecks = () => {
+    console.log("FITCHECK USERNAME: " + username);
     const formData = {
       username: username,
     };
     fetch(
-      "http://192.168.1.20:3000/getallfitcheckdata" ||
+      "http://192.168.1.30:3000/getallfitcheckdata" ||
         "http://192.168.1.30:3000/getallfitcheckdata",
       {
         method: "POST",
@@ -86,36 +88,6 @@ export default function Profile({ navigation }) {
     navigation.navigate("Landing");
   };
 
-  const handleFitcheckPress = (fitcheckObject) => {
-    const formData = {
-      username: username,
-      fitcheckId: fitcheckObject.id,
-    };
-
-    fetch(
-      "http://192.168.1.30:3000/getfitcheckdata2" ||
-        "http://192.168.1.30:3000/getfitcheckdata2",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      }
-    )
-      .then((response) => {
-        return response.json();
-      })
-      .then((data) => {
-        console.log("FITCHECK DATA IS");
-        console.log(data.fitcheck);
-        navigation.navigate("Fitcheck", { fitcheck: data.fitcheck });
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  };
-
   AsyncStorage.getItem("user")
     .then((storedData) => {
       const userData = JSON.parse(storedData);
@@ -129,215 +101,62 @@ export default function Profile({ navigation }) {
       console.log("Error retrieving data from AsyncStorage: ", error);
     });
 
-  const getFile = async (filename) => {
-    const formData = {
-      username: username,
-      filename: fitcheck.video.filename,
-    };
-    const response = await fetch(
-      "http://192.168.1.30:3000/getfile" || "http://192.168.1.30:3000/getfile",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      }
-    );
-
-    const blob = await response.blob();
-    const reader = new FileReader();
-    reader.readAsDataURL(blob);
-    reader.onloadend = () => {
-      const base64data = reader.result;
-      setVideoUri(base64data);
-    };
-  };
-
   const renderFitcheckItem = ({ item }) => {
-    const formData = {
-      username: username,
-      filename: item.video.filename,
-    };
-    const response = fetch(
-      "http://192.168.1.30:3000/getfile" || "http://192.168.1.30:3000/getfile",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      }
-    )
-      .then((response) => {
-        const blob = response.blob();
-        return blob;
-      })
-      .then((blob) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(blob);
-        reader.onloadend = () => {
-          const base64data = reader.result;
-          setVideoUri(base64data);
-        };
-      });
+    console.log(item.video);
 
-    return (
-      <View style={styles.fitcheckContainer}>
-        <View style={styles.imageContainer}>
-          <TouchableOpacity onPress={() => handleFitcheckPress(item)}>
-            {videoUri ? (
-              <Video
-                source={{ uri: videoUri }}
-                style={styles.previewVideo}
-                shouldPlay={true}
-                isLooping
-                resizeMode="cover"
-              />
-            ) : (
-              <Text>Loading</Text>
-            )}
-          </TouchableOpacity>
-        </View>
-        <View>
-          <Text>{item.caption}</Text>
-        </View>
-      </View>
-    );
+    return <FitcheckVideo fitcheck={item} navigation={navigation} />;
   };
 
-  const DATA = [
-    {
-      id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
-      title: 'First Item',
-    },
-    {
-      id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
-      title: 'Second Item',
-    },
-    {
-      id: '58694a0f-3da1-471f-bd96-145571e29d72',
-      title: 'Third Item',
-    },
-    {
-      id: '58694a0f-3da1-471f-bd96-145571e29d72',
-      title: 'Third Item',
-    },
-    {
-      id: '58694a0f-3da1-471f-bd96-145571e29d72',
-      title: 'Third Item',
-    },
-    {
-      id: '58694a0f-3da1-471f-bd96-145571e29d72',
-      title: 'Third Item',
-    },
-    {
-      id: '58694a0f-3da1-471f-bd96-145571e29d72',
-      title: 'Third Item',
-    },
-    {
-      id: '58694a0f-3da1-471f-bd96-145571e29d72',
-      title: 'Third Item',
-    },
-  ];
-
-  const Item = ({title}) => (
-    <View style={styles.item}>
-      <Text >{title}</Text>
-    </View>
-  );
   return (
-    // <View style={styles.container}>
-    //   <View style={styles.rowContainer}>
-    //     <Image
-    //       source={require("../assets/favicon.png")}
-    //       style={[styles.profilePicture, { alignSelf: "flex-start" }]}
-    //     />
-    //     <View style={styles.columnContainer}>
-    //       <Text style={{ ...styles.title }}>{username}</Text>
-    //       <Text style={{ ...styles.subtitle }}>{fullname}</Text>
-    //       <Text style={{ ...styles.subtitle }}>
-    //         Followers: {followers.length}
-    //       </Text>
-    //       <Text style={{ ...styles.subtitle }}>
-    //         Following: {following.length}
-    //       </Text>
-    //     </View>
-
-    //     <TouchableOpacity
-    //       style={[styles.button, { alignSelf: "flex-end" }]}
-    //       onPress={handleLogout}
-    //     >
-    //       <Text style={[styles.buttonText]}>Logout</Text>
-    //     </TouchableOpacity>
-
-    //     <TouchableOpacity
-    //       style={styles.button}
-    //       onPress={() => navigation.navigate("UploadFitcheck")}
-    //     >
-    //       <Text style={styles.buttonText}>Upload Fitcheck</Text>
-    //     </TouchableOpacity>
-    //   </View>
-    //   {retrievedFitchecks ? (
-    //     <FlatList
-    //       data={retrievedFitchecks}
-    //       renderItem={renderFitcheckItem}
-    //       keyExtractor={(item) => item.filename}
-    //       numColumns={3}
-    //     />
-    //   ) : (
-    //     ""
-    //   )}
-    // </View>
-
     <SafeAreaView style={styles.container}>
-    <View style={{height: '4%'}}>
-      </View>
+      <View style={{ height: "4%" }}></View>
       <View style={styles.titleContainer}>
-          <Text style={styles.title}>Profile</Text>
+        <Text style={styles.title}>Profile</Text>
       </View>
       <View style={styles.infoContainer}>
         <View style={styles.imageName}>
-          <Image style={styles.profileImg} source={require("../images/homeImg1.png")} />
-          <Text style= {styles.name}>Muhammad Faizan</Text>
+          <Image
+            style={styles.profileImg}
+            source={require("../images/homeImg1.png")}
+          />
+          <Text style={styles.name}>Muhammad Faizan</Text>
         </View>
-       
       </View>
       <View style={styles.statsContainer}>
-          <View style={styles.profileStats}>
-            <Text style={styles.statsTitle}>Items</Text>
-            <Text style={styles.statsNum}>10</Text>
-          </View>
-          <View style={styles.profileStats}>
-            <Text style={styles.statsTitle}>Followers</Text>
-            <Text style={styles.statsNum}>20</Text>
-          </View>
-          <View style={styles.profileStats}>
-
-            <Text style={styles.statsTitle}>Following</Text>
-            <Text style={styles.statsNum}>30</Text>
-          </View>
-          <View style={{...styles.profileStats, borderRightColor: 'white'}}>
-            <Text style={styles.statsTitle}>Sold Items</Text>
-            <Text style={styles.statsNum}>40</Text>
-          </View>
+        <View style={styles.profileStats}>
+          <Text style={styles.statsTitle}>Items</Text>
+          <Text style={styles.statsNum}>10</Text>
+        </View>
+        <View style={styles.profileStats}>
+          <Text style={styles.statsTitle}>Followers</Text>
+          <Text style={styles.statsNum}>20</Text>
+        </View>
+        <View style={styles.profileStats}>
+          <Text style={styles.statsTitle}>Following</Text>
+          <Text style={styles.statsNum}>30</Text>
+        </View>
+        <View style={{ ...styles.profileStats, borderRightColor: "white" }}>
+          <Text style={styles.statsTitle}>Sold Items</Text>
+          <Text style={styles.statsNum}>40</Text>
+        </View>
       </View>
       <View style={styles.btnContainer}>
-      <TouchableOpacity style={styles.followBtn}>
-        <Text style={styles.btnText}>Follow</Text>
-      </TouchableOpacity>
+        <TouchableOpacity style={styles.followBtn}>
+          <Text style={styles.btnText}>Follow</Text>
+        </TouchableOpacity>
       </View>
-      {retrievedFitchecks ? (
+      <View style={{ flex: 1, flexWrap: "nowrap" }}>
         <FlatList
+          key={3}
+          numColumns={3}
           data={retrievedFitchecks}
           renderItem={renderFitcheckItem}
-          keyExtractor={(item) => item.filename}
-          numColumns={3}
+          keyExtractor={(item) => item.id}
         />
-      ) : (
-        ""
-      )}
-    </View>
-  </SafeAreaView>
+      </View>
+      <View style={styles.navbar}>
+        <Navbar navigation={navigation} />
+      </View>
+    </SafeAreaView>
   );
 }

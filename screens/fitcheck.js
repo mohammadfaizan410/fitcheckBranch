@@ -152,7 +152,7 @@ export default function Fitcheck({ navigation, route }) {
     };
 
     fetch(
-      "http://192.168.1.20:3000/getlistingdata" ||
+      "http://192.168.1.30:3000/getlistingdata" ||
         "http://192.168.1.30:3000/getlistingdata",
       {
         method: "POST",

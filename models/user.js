@@ -52,6 +52,7 @@ const fitcheckSchema = new mongoose.Schema({
     uploadDate: Date,
     caption: String,
     size: Number,
+    postername: String,
   },
 });
 

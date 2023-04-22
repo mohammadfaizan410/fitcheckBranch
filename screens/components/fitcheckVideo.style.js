@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 30,
     color: "grey",
-    fontWeight: 400,
+    fontWeight: "400",
   },
   infoContainer: {
     display: "flex",

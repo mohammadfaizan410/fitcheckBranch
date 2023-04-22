@@ -9,6 +9,7 @@ const util = require("util");
 const exec = util.promisify(require("child_process").exec);
 const multer = require("multer");
 const fs = require("fs");
+const ffmpeg = require("ffmpeg");
 const { v4: uuidv4 } = require("uuid");
 const path = require("path");
 const bodyParser = require("body-parser");
@@ -125,76 +126,41 @@ router.post("/login", async (req, res) => {
   });
 });
 
-// define a route for handling image uploads
-router.post("/imageupload", async (req, res) => {
-  try {
-    // find the user object in the database using the username in req.body
-    const user = await User.findOne({ username: req.body.username });
-    const userId = user._id;
-    const fitcheckId = req.body.fitcheckid;
-    const listingId = req.body.listingid;
-    const caption = req.body.caption;
-
-    // decode the base64-encoded image data to a buffer
-    const buffer = Buffer.from(req.body.image, "base64");
-
-    const uniqueFilename = await generateUniqueFilename(user.username, bucket);
-    // upload the buffer to GridFS
-    const uploadStream = bucket.openUploadStream(uniqueFilename);
-    const readStream = new Readable();
-    readStream.push(buffer);
-    readStream.push(null);
-    readStream.pipe(uploadStream);
-
-    // save the file metadata to the images array of the user object
-    const fileID = uploadStream.id.toString();
-    const fileData = {
-      id: fileID,
-      filename: uniqueFilename,
-      caption: caption,
-      contentType: "image/jpeg",
-    };
-
-    await User.updateOne(
-      {
-        _id: userId,
-        "fitcheck._id": fitcheckId,
-        "fitcheck.listings._id": listingId,
-      },
-      {
-        $push: {
-          "fitcheck.$[fitcheckElem].listings.$[listingElem].images": fileData,
-        },
-      },
-      {
-        arrayFilters: [
-          {
-            "fitcheckElem._id": fitcheckId,
-          },
-          {
-            "listingElem._id": listingId,
-          },
-        ],
-      }
-    );
-
-    res.status(200).json({
-      message: "Image saved successfully! file id: " + fileData.filename,
-      filename: fileData.filename,
-    });
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ message: "Error saving image" });
-  }
-});
-
 //SET Fitcheck and its video
 const upload = multer({ storage: storage });
 
 router.post("/uploadfitcheck2", upload.single("video"), async (req, res) => {
   try {
     const file = req.file;
-    const user = await User.findOne({ username: req.body.username });
+
+    const videoPath = path.join(__dirname, "../uploads", file.filename);
+    const outputFilename = file.filename.replace(".mp4", "_1.jpg");
+    const outputPath = path.join(__dirname, "../uploads");
+    const timePosition = 1;
+
+    const process = new ffmpeg(videoPath);
+    const thumbnailPromise = new Promise((resolve, reject) => {
+      process.then((video) => {
+        video.fnExtractFrameToJPG(
+          outputPath,
+          {
+            frame_rate: 1,
+            number: 1,
+          },
+          (error, files) => {
+            if (error) {
+              reject(error);
+            } else {
+              const thumbnailPath = path.join(outputPath, outputFilename);
+              console.log(`Saved thumbnail image to ${thumbnailPath}`);
+              resolve(thumbnailPath);
+            }
+          }
+        );
+      });
+    });
+
+    const thumbnailPath = await thumbnailPromise;
 
     const updatedUser = await User.findOneAndUpdate(
       { username: req.body.username }, // Find user by username
@@ -210,6 +176,7 @@ router.post("/uploadfitcheck2", upload.single("video"), async (req, res) => {
               uploadDate: Date.now(),
               caption: req.body.caption,
               size: file.size,
+              postername: outputFilename,
             },
           },
         },
@@ -219,8 +186,8 @@ router.post("/uploadfitcheck2", upload.single("video"), async (req, res) => {
 
     const fitcheckObject =
       updatedUser.fitcheck[updatedUser.fitcheck.length - 1];
-
     res.send({ message: "Video uploaded successfully!" });
+    //res.status(200).send({ message: "Video uploaded successfully!" });
   } catch (err) {
     console.error(err);
     res.status(500).send({ message: "Error uploading video" });
@@ -282,7 +249,11 @@ router.post("/getfitcheckdata2", async (req, res) => {
         id: fitcheck._id,
         caption: fitcheck.caption,
         likes: fitcheck.likes,
-        video: { file: file, filename: fitcheck.video.filename },
+        video: {
+          file: file,
+          filename: fitcheck.video.filename,
+          postername: fitcheck.video.postername,
+        },
       };
       console.log(fitcheckToSend);
       res.status(200).json({ fitcheck: fitcheckToSend });
@@ -296,7 +267,7 @@ router.post("/getfitcheckdata2", async (req, res) => {
 
 // define a route for handling fitcheck uploads
 router.post("/uploadfitcheck", async (req, res) => {
-  console.log("hello there")
+  console.log("hello there");
   try {
     //const compressedVideo = await compressVideo(req.body.video);
     // decode the base64-encoded image data to a buffer
@@ -681,22 +652,6 @@ router.post("/getlistingdata", async (req, res) => {
 });
 
 // GET request handler for getting images by filenames
-router.post("/getallfitcheck", async (req, res) => {
-  try {
-    const username = req.body.username;
-    const user = await User.findOne({ username: username });
-
-    if (!user) {
-      res.status(404).json({ message: "User not found" });
-      return;
-    }
-    const fitchecks = user.fitcheck;
-    res.status(200).json(fitchecks);
-  } catch (error) {
-    res.status(500).json({ message: "Error getting Fitchecks" });
-  }
-});
-
 // GET request handler for getting images by filenames
 router.post("/getallfitcheckdata", async (req, res) => {
   try {
@@ -709,6 +664,7 @@ router.post("/getallfitcheckdata", async (req, res) => {
     }
     const fitchecks = user.fitcheck;
     const filenames = fitchecks.map((fitcheck) => fitcheck.video.filename);
+    const posternames = fitchecks.map((fitcheck) => fitcheck.video.postername);
     const likes = fitchecks.map((fitcheck) => fitcheck.likes);
     const ids = fitchecks.map((fitcheck) => fitcheck._id);
     const captions = fitchecks.map((fitcheck) => fitcheck.caption);
@@ -747,12 +703,12 @@ router.post("/getallfitcheckdata", async (req, res) => {
           id: ids[i],
           caption: captions[i],
           likes: likes[i],
-          video: { file: file, filename: filename },
+          video: { file: file, filename: filename, postername: posternames[i] },
         };
         allFitchecks.push(fitcheckToSend);
       }
-      res.status(200).json(allFitchecks);
     }
+    res.status(200).json(allFitchecks);
   } catch (error) {
     res.status(500).json({ message: "Error getting Fitchecks" });
   }
