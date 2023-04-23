@@ -5,6 +5,7 @@ import Navbar from "./components/navbar";
 import styles from "./home.style";
 import Swiper from "react-native-swiper";
 import { Video } from "expo-av";
+import HomeFitcheckVideo from "./components/homeFitcheckVideo";
 
 import {
   reset,
@@ -37,35 +38,37 @@ export default function Home({ navigation }) {
     fitcheckArray,
   } = useSelector((state) => state.user);
 
-  const [allUser, setUsers] = useState(null);
+  const [allFitchecks, setAllFitchecks] = useState(null);
   const [currentVideoIndex, setCurrentVideoIndex] = useState(null);
 
   const fetchAllUsers = () => {
     const formData = {
       username: username,
     };
-    fetch("http://192.168.1.30:3000/" || "http://192.168.1.30:3000/", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(formData),
-    })
+    fetch(
+      "http://192.168.1.30:3000/getallusersandfitchecks" ||
+        "http://192.168.1.30:3000/getallusersandfitchecks",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      }
+    )
       .then((response) => {
         return response.json();
       })
       .then((data) => {
-        setUsers(data);
+        setAllFitchecks(data);
       })
       .catch((error) => {
-        console.error(error);
+        console.error(allFitchecks);
       });
   };
-  sampleArr = [1, 2, 3, 4, 5];
+
   useEffect(() => {
-    console.log("use effects");
     fetchAllUsers();
-    console.log(allUser);
   }, []);
 
   //   useEffect(() => {
@@ -105,7 +108,7 @@ export default function Home({ navigation }) {
   return (
     <SafeAreaView style={styles.homeContainer}>
       <View style={styles.homeContent}>
-        {allUser !== null ? (
+        {allFitchecks !== null ? (
           <Swiper
             showsPagination={false}
             showsButtons={false}
@@ -114,20 +117,28 @@ export default function Home({ navigation }) {
             onIndexChanged={onIndexChanged}
             s
           >
-            {sampleArr.map((item, index) => (
-              <View style={{ ...styles.homeFeed, backgroundColor: "white" }}>
+            {allFitchecks.map((item, index) => (
+              <View
+                key={item.id}
+                style={{ ...styles.homeFeed, backgroundColor: "white" }}
+              >
                 <TouchableOpacity
-                  onPress={() => togglePlaying(index)}
+                  onPress={() => togglePlaying(item, index)}
                   activeOpacity={1}
                 >
-                  <Video
+                  <HomeFitcheckVideo
+                    shouldPlay={currentVideoIndex === index && isPlaying}
+                    fitcheck={item}
+                    navigation={navigation}
+                  />
+                  {/*<Video
                     style={{ width: "100%", height: "100%" }}
                     source={{ uri: `data:video/mp4;base64,${sampleVideo}` }}
                     resizeMode="stretch"
                     shouldPlay={currentVideoIndex === index && isPlaying}
-                    isLooping
-                    useNativeControls={true}
-                  />
+                    
+                    
+            />*/}
                 </TouchableOpacity>
               </View>
             ))}

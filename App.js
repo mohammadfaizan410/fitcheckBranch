@@ -19,6 +19,7 @@ import WelcomePrompt from "./screens/welcomePrompt";
 import CameraComponent from "./screens/components/cameraComponent";
 import VideoComponent from "./screens/components/videoComponent";
 import FitcheckVideoComponent from "./screens/components/fitcheckVideo";
+import HomeFitcheckVideoComponent from "./screens/components/homeFitcheckVideo";
 import Navbar from "./screens/components/navbar";
 import Home from "./screens/home";
 
@@ -67,6 +68,9 @@ export default function App() {
   function FitcheckVideoComponentScreen(props) {
     return <FitcheckVideoComponent {...props} />;
   }
+  function HomeFitcheckVideoComponentScreen(props) {
+    return <HomeFitcheckVideoComponent {...props} />;
+  }
   function NavbarPartial(props) {
     return <Navbar {...props} />;
   }
@@ -77,7 +81,7 @@ export default function App() {
   return (
     <Provider store={store}>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="Profile">
+        <Stack.Navigator initialRouteName="Landing">
           <Stack.Screen
             name="Landing"
             component={LandingImageScreen}
@@ -156,6 +160,11 @@ export default function App() {
           <Stack.Screen
             name="FitcheckVideoComponent"
             component={FitcheckVideoComponentScreen}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="HomeFitcheckVideoComponent"
+            component={HomeFitcheckVideoComponentScreen}
             options={{ headerShown: false }}
           />
         </Stack.Navigator>

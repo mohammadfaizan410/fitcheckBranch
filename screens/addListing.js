@@ -151,6 +151,7 @@ export default function AddListing({ navigation, route }) {
         selectedValue={listingcategory}
         onValueChange={(itemValue, itemIndex) => setListingcategory(itemValue)}
       >
+        <Picker.Item label="Select" value="-1" />
         <Picker.Item label="Jeans" value="Jeans" />
         <Picker.Item label="Shirt" value="Shirt" />
         <Picker.Item label="Coat" value="Coat" />
@@ -162,6 +163,7 @@ export default function AddListing({ navigation, route }) {
         selectedValue={listingsize}
         onValueChange={(itemValue, itemIndex) => setListingsize(itemValue)}
       >
+        <Picker.Item label="Select" value="-1" />
         <Picker.Item label="S" value="S" />
         <Picker.Item label="M" value="M" />
         <Picker.Item label="L" value="L" />
@@ -175,6 +177,7 @@ export default function AddListing({ navigation, route }) {
         selectedValue={listingbrand}
         onValueChange={(itemValue, itemIndex) => setListingbrand(itemValue)}
       >
+        <Picker.Item label="Select" value="-1" />
         <Picker.Item label="P&B" value="P&B" />
         <Picker.Item label="Addidas" value="Addidas" />
         <Picker.Item label="Nike" value="Nike" />
@@ -185,6 +188,7 @@ export default function AddListing({ navigation, route }) {
         selectedValue={listingcondition}
         onValueChange={(itemValue, itemIndex) => setListingcondition(itemValue)}
       >
+        <Picker.Item label="Select" value="-1" />
         <Picker.Item label="Fresh" value="Fresh" />
         <Picker.Item label="Mildly User" value="Mildly Used" />
         <Picker.Item label="Wearable" value="Wearable" />
@@ -197,6 +201,7 @@ export default function AddListing({ navigation, route }) {
           setListingpackagesize(itemValue)
         }
       >
+        <Picker.Item label="Select" value="-1" />
         <Picker.Item label="< 1kg" value="< 1kg" />
         <Picker.Item label="< 2kg" value="< 2kg" />
         <Picker.Item label="< 3kg" value="< 3kg" />

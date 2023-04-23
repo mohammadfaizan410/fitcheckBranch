@@ -87,6 +87,21 @@ const fitcheckCollectionSchema = new mongoose.Schema({
     default: [],
     type: [String],
   },
+  items: {
+    required: false,
+    default: [],
+    type: [String],
+  },
+  solditems: {
+    required: false,
+    default: [],
+    type: [String],
+  },
+  activity: {
+    required: false,
+    default: [],
+    type: [String],
+  },
   bio: {
     required: false,
     default: "",

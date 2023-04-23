@@ -10,6 +10,7 @@ const exec = util.promisify(require("child_process").exec);
 const multer = require("multer");
 const fs = require("fs");
 const ffmpeg = require("ffmpeg");
+
 const { v4: uuidv4 } = require("uuid");
 const path = require("path");
 const bodyParser = require("body-parser");
@@ -40,7 +41,9 @@ const storage = multer.diskStorage({
 });
 
 router.post("/getfile", (req, res) => {
+  console.log("FILENAME IS: " + req.body.filename);
   const filePath = path.join(__dirname, "../uploads", req.body.filename);
+
   res.sendFile(filePath);
 });
 
@@ -129,7 +132,7 @@ router.post("/login", async (req, res) => {
 //SET Fitcheck and its video
 const upload = multer({ storage: storage });
 
-router.post("/uploadfitcheck2", upload.single("video"), async (req, res) => {
+router.post("/uploadfitcheck", upload.single("video"), async (req, res) => {
   try {
     const file = req.file;
 
@@ -195,7 +198,7 @@ router.post("/uploadfitcheck2", upload.single("video"), async (req, res) => {
 });
 
 // GET A Fitcheck (2)
-router.post("/getfitcheckdata2", async (req, res) => {
+router.post("/getfitcheckdata", async (req, res) => {
   try {
     const username = req.body.username;
     const fitcheckId = req.body.fitcheckId;
@@ -262,63 +265,6 @@ router.post("/getfitcheckdata2", async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).send({ message: "Error retrieving video" });
-  }
-});
-
-// define a route for handling fitcheck uploads
-router.post("/uploadfitcheck", async (req, res) => {
-  console.log("hello there");
-  try {
-    //const compressedVideo = await compressVideo(req.body.video);
-    // decode the base64-encoded image data to a buffer
-    const buffer = Buffer.from(req.body.video, "base64");
-
-    const uniqueFilename = await generateUniqueFilename(
-      req.body.username,
-      bucket
-    );
-    // upload the buffer to GridFS
-    const uploadStream = bucket.openUploadStream(uniqueFilename);
-    const readStream = new Readable();
-    readStream.push(buffer);
-    readStream.push(null);
-    readStream.pipe(uploadStream);
-
-    // save the file metadata to the images array of the user object
-    const fileID = uploadStream.id.toString();
-    const fileData = {
-      id: fileID,
-      filename: uniqueFilename,
-      contentType: "video/webm",
-    };
-
-    const updatedUser = await User.findOneAndUpdate(
-      { username: req.body.username }, // Find user by username
-      {
-        $push: {
-          fitcheck: {
-            likes: "0",
-            caption: req.body.caption,
-            listings: [],
-            video: fileData,
-          },
-        },
-      }, // Push a new fitcheck object to the fitcheck array
-      { new: true } // Return the updated user object
-    );
-    const fitcheckObject =
-      updatedUser.fitcheck[updatedUser.fitcheck.length - 1];
-
-    console.log(fitcheckObject);
-
-    res.status(200).json({
-      message: "Video saved successfully! file id: " + fileData.filename,
-      filename: fileData.filename,
-      fitcheckObject: fitcheckObject,
-    });
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ message: "Error saving video" });
   }
 });
 
@@ -714,67 +660,6 @@ router.post("/getallfitcheckdata", async (req, res) => {
   }
 });
 
-//GET Single Fitcheck
-router.post("/getfitcheckdata", async (req, res) => {
-  try {
-    const username = req.body.username;
-    const fitcheckId = req.body.fitcheckId;
-    const user = await User.findOne({ username: username });
-    const fitcheck = await user.fitcheck.find(
-      (fitcheck) => fitcheck._id == fitcheckId
-    );
-
-    if (!user) {
-      res.status(404).json({ message: "User not found" });
-      return;
-    }
-    if (!fitcheck) {
-      res.status(404).json({ message: "Fitcheck not found" });
-      return;
-    }
-
-    // Read video from disk
-    const path = `./uploads/${fitcheck.video.filename}`;
-    const stat = fs.statSync(path);
-    const fileSize = stat.size;
-    const range = req.headers.range;
-    if (range) {
-      const parts = range.replace(/bytes=/, "").split("-");
-      const start = parseInt(parts[0], 10);
-      const end = parts[1] ? parseInt(parts[1], 10) : fileSize - 1;
-      const chunksize = end - start + 1;
-      const file = fs.createReadStream(path, { start, end });
-      const head = {
-        "Content-Range": `bytes ${start}-${end}/${fileSize}`,
-        "Accept-Ranges": "bytes",
-        "Content-Length": chunksize,
-        "Content-Type": fitcheck.video.contentType,
-      };
-      res.writeHead(206, head);
-      file.pipe(res);
-    } else {
-      const head = {
-        "Content-Length": fileSize,
-        "Content-Type": fitcheck.video.contentType,
-      };
-      //res.writeHead(200, head);
-      const file = fs.createReadStream(path);
-      const fitcheckToSend = {
-        id: fitcheck._id,
-        caption: fitcheck.caption,
-        likes: fitcheck.likes,
-        video: file,
-      };
-      console.log(fitcheckToSend);
-
-      res.status(200).json({ message: "Success", fitcheck: fitcheckToSend });
-    }
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ message: error });
-  }
-});
-
 async function getAllUsersAndListings() {
   const users = await User.find();
   //const listingImages = [];
@@ -852,29 +737,12 @@ async function getAllUsersAndFitchecks() {
   for (const user of users) {
     for (const fitcheck of user.fitcheck) {
       const filename = fitcheck.video.filename;
-      const file = await bucket.find({ filename });
-      const chunks = [];
-
-      // read file data in chunks
-      const stream = bucket.openDownloadStreamByName(filename);
-      await new Promise((resolve, reject) => {
-        stream.on("data", (chunk) => {
-          chunks.push(chunk);
-        });
-        stream.on("end", async () => {
-          // combine chunks into single buffer
-          const buffer = Buffer.concat(chunks);
-
-          // update fitcheck's video object to contain only data
-          fitcheckVideosAndUsernames.push({
-            username: user.username,
-            caption: fitcheck.caption,
-            likes: fitcheck.likes,
-            video: buffer.toString("base64"),
-          });
-          resolve();
-        });
-        stream.on("error", reject);
+      fitcheckVideosAndUsernames.push({
+        id: fitcheck._id,
+        username: user.username,
+        caption: fitcheck.caption,
+        likes: fitcheck.likes,
+        video: fitcheck.video.filename,
       });
     }
   }

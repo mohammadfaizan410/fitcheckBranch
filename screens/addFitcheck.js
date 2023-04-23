@@ -62,7 +62,7 @@ export default function AddFitcheck({ navigation, route }) {
       name: "video.mp4", // replace with the actual file name
     });
 
-    fetch("http://192.168.1.30:3000/uploadfitcheck2", {
+    fetch("http://192.168.1.30:3000/uploadfitcheck", {
       method: "POST",
       headers: {
         "Content-Type": "multipart/form-data",

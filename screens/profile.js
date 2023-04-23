@@ -110,9 +110,6 @@ export default function Profile({ navigation }) {
   return (
     <SafeAreaView style={styles.container}>
       <View style={{ height: "4%" }}></View>
-      <View style={styles.titleContainer}>
-        <Text style={styles.title}>Profile</Text>
-      </View>
       <View style={styles.infoContainer}>
         <View style={styles.imageName}>
           <Image
@@ -147,8 +144,8 @@ export default function Profile({ navigation }) {
       </View>
       <View style={{ flex: 1, flexWrap: "nowrap" }}>
         <FlatList
-          key={3}
-          numColumns={3}
+          key={2}
+          numColumns={2}
           data={retrievedFitchecks}
           renderItem={renderFitcheckItem}
           keyExtractor={(item) => item.id}

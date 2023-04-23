@@ -80,8 +80,8 @@ export default function FitcheckVideo({ navigation, fitcheck }) {
     };
 
     fetch(
-      "http://192.168.1.30:3000/getfitcheckdata2" ||
-        "http://192.168.1.30:3000/getfitcheckdata2",
+      "http://192.168.1.30:3000/getfitcheckdata" ||
+        "http://192.168.1.30:3000/getfitcheckdata",
       {
         method: "POST",
         headers: {
