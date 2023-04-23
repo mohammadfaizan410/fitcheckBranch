@@ -131,31 +131,15 @@ export default function Home({ navigation }) {
                     fitcheck={item}
                     navigation={navigation}
                   />
-                  {/*<Video
-                    style={{ width: "100%", height: "100%" }}
-                    source={{ uri: `data:video/mp4;base64,${sampleVideo}` }}
-                    resizeMode="stretch"
-                    shouldPlay={currentVideoIndex === index && isPlaying}
-                    
-                    
-            />*/}
                 </TouchableOpacity>
               </View>
             ))}
           </Swiper>
         ) : (
-          <Text>hello there empty list</Text>
+          <Text>No Fitchecks to show!</Text>
         )}
       </View>
-      {/* <Swiper
-                horizontal={false}
-                showsVerticalScrollIndicator={false}
-                  loop={false}
-                  showsPagination={false}
-              >
-                  <View style={{ ...styles.homeFeed, backgroundColor: 'black' }}></View>
-                  <View style={{ ...styles.homeFeed, backgroundColor: 'grey' }}></View>
-              </Swiper> */}
+
       <Navbar style={styles.navStyles} navigation={navigation} />
     </SafeAreaView>
   );
