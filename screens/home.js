@@ -115,7 +115,8 @@ export default function Home({ navigation }) {
             horizontal={false}
             loop={false}
             onIndexChanged={onIndexChanged}
-            s
+            loadMinimal={true}
+            loadMinimalSize={0}
           >
             {allFitchecks.map((item, index) => (
               <View
