@@ -9,7 +9,7 @@ const util = require("util");
 const exec = util.promisify(require("child_process").exec);
 const multer = require("multer");
 const fs = require("fs");
-const ffmpeg = require("ffmpeg");
+const ffmpeg = require("fluent-ffmpeg");
 
 const { v4: uuidv4 } = require("uuid");
 const path = require("path");
@@ -129,75 +129,89 @@ router.post("/login", async (req, res) => {
   });
 });
 
+//UPLOAD FITCHECK
 //SET Fitcheck and its video
 const upload = multer({ storage: storage });
-
 router.post("/uploadfitcheck", upload.single("video"), async (req, res) => {
   try {
     const file = req.file;
 
     const videoPath = path.join(__dirname, "../uploads", file.filename);
-    const outputFilename = file.filename.replace(".mp4", "_1.jpg");
+    const outputPostername = file.filename.replace(".mp4", "_1.jpg");
     const outputPath = path.join(__dirname, "../uploads");
-    const timePosition = 1;
 
-    const process = new ffmpeg(videoPath);
-    const thumbnailPromise = new Promise((resolve, reject) => {
-      process.then((video) => {
-        video.fnExtractFrameToJPG(
-          outputPath,
-          {
-            frame_rate: 1,
-            number: 1,
-          },
-          (error, files) => {
-            if (error) {
+    const outputVideoPath = path.join(
+      outputPath,
+      "compressed_" + file.filename
+    );
+    const outputThumbnailPath = path.join(outputPath, outputPostername);
+
+    // Set the video and audio bitrates to 500k
+    const command = ffmpeg(videoPath)
+      .videoBitrate("2000k")
+      .audioBitrate("128k")
+      .output(outputVideoPath)
+      .on("end", async () => {
+        console.log("Compressed video saved to " + outputVideoPath);
+
+        // Extract a thumbnail image
+        await new Promise((resolve, reject) => {
+          ffmpeg(outputVideoPath)
+            .screenshots({
+              count: 1,
+              timemarks: ["1"],
+              folder: outputPath,
+              filename: outputPostername,
+            })
+            .on("end", () => {
+              console.log("Thumbnail saved to " + outputThumbnailPath);
+              resolve();
+            })
+            .on("error", (error) => {
               reject(error);
-            } else {
-              const thumbnailPath = path.join(outputPath, outputFilename);
-              console.log(`Saved thumbnail image to ${thumbnailPath}`);
-              resolve(thumbnailPath);
-            }
-          }
-        );
-      });
-    });
+            });
+        });
 
-    const thumbnailPath = await thumbnailPromise;
-
-    const updatedUser = await User.findOneAndUpdate(
-      { username: req.body.username }, // Find user by username
-      {
-        $push: {
-          fitcheck: {
-            likes: "0",
-            caption: req.body.caption,
-            listings: [],
-            video: {
-              filename: file.filename,
-              contentType: file.mimetype,
-              uploadDate: Date.now(),
-              caption: req.body.caption,
-              size: file.size,
-              postername: outputFilename,
+        // Update the user object with the new fitcheck
+        const updatedUser = await User.findOneAndUpdate(
+          { username: req.body.username },
+          {
+            $push: {
+              fitcheck: {
+                likes: "0",
+                caption: req.body.caption,
+                listings: [],
+                video: {
+                  filename: "compressed_" + file.filename,
+                  contentType: file.mimetype,
+                  uploadDate: Date.now(),
+                  caption: req.body.caption,
+                  size: file.size,
+                  postername: outputPostername,
+                },
+              },
             },
           },
-        },
-      }, // Push a new fitcheck object to the fitcheck array
-      { new: true } // Return the updated user object
-    );
+          { new: true }
+        );
 
-    const fitcheckObject =
-      updatedUser.fitcheck[updatedUser.fitcheck.length - 1];
-    res.send({ message: "Video uploaded successfully!" });
-    //res.status(200).send({ message: "Video uploaded successfully!" });
+        const fitcheckObject =
+          updatedUser.fitcheck[updatedUser.fitcheck.length - 1];
+
+        res.send({ message: "Video uploaded successfully!" });
+      })
+      .on("error", (err) => {
+        console.error(err);
+        res.status(500).send({ message: "Error uploading video" });
+      })
+      .run();
   } catch (err) {
     console.error(err);
     res.status(500).send({ message: "Error uploading video" });
   }
 });
 
-// GET A Fitcheck (2)
+// GET A Fitcheck
 router.post("/getfitcheckdata", async (req, res) => {
   try {
     const username = req.body.username;
