@@ -6,7 +6,7 @@ import {
   reset,
   setIsLoggedIn,
   setUserEmail,
-  setUsername,
+  setCurrentUsername,
   setFollowers,
   setFollowing,
   setFitcheckArray,
@@ -30,7 +30,7 @@ export default function FitcheckVideo({ navigation, fitcheck }) {
   const {
     isLoggedIn,
     email,
-    username,
+    currentusername,
     fullname,
     followers,
     following,
@@ -42,7 +42,7 @@ export default function FitcheckVideo({ navigation, fitcheck }) {
 
   const fetchVideo = () => {
     const formData = {
-      username: username,
+      username: currentusername,
       filename: fitcheck.video.postername,
     };
     const response = fetch(
@@ -75,7 +75,7 @@ export default function FitcheckVideo({ navigation, fitcheck }) {
 
   const handleFitcheckPress = (fitcheckObject) => {
     const formData = {
-      username: username,
+      username: currentusername,
       fitcheckId: fitcheckObject.id,
     };
 
@@ -94,8 +94,6 @@ export default function FitcheckVideo({ navigation, fitcheck }) {
         return response.json();
       })
       .then((data) => {
-        console.log("FITCHECK DATA IS");
-        console.log(data.fitcheck);
         navigation.navigate("Fitcheck", { fitcheck: fitcheck });
       })
       .catch((error) => {

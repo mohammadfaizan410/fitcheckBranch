@@ -21,7 +21,7 @@ export default function Register({ navigation }) {
   const [fullname, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [phonenumber, setPhonenumber] = useState("");
-  const [username, setUsername] = useState("");
+  const [username, setCurrentUsername] = useState("");
   const [password, setPassword] = useState("");
   const [formData, setFormData] = useState({});
   const [inputError, setInputError] = useState("");
@@ -145,7 +145,7 @@ export default function Register({ navigation }) {
             style={styles.registerInput}
             placeholder="Username"
             placeholderTextColor="#999"
-            onChangeText={setUsername}
+            onChangeText={setCurrentUsername}
             value={username}
           />
         </View>
@@ -184,7 +184,7 @@ export default function Register({ navigation }) {
           style={styles.input}
           placeholder="Enter your Username"
           placeholderTextColor="#999"
-          onChangeText={setUsername}
+          onChangeText={setCurrentUsername}
           value={username}
           />
 

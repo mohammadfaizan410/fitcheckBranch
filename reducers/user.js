@@ -3,13 +3,14 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   isLoggedIn: false,
   email: "",
-  username: "",
+  currentusername: "",
   fullname: "",
   followers: [],
   following: [],
   fitcheckArray: [],
   listingArray: [{}],
   pageIndex: 0,
+  pageRefresher: false,
 };
 
 export const userSlice = createSlice({
@@ -23,8 +24,8 @@ export const userSlice = createSlice({
     setUserEmail: (state, action) => {
       state.email = action.payload;
     },
-    setUsername: (state, action) => {
-      state.username = action.payload;
+    setCurrentUsername: (state, action) => {
+      state.currentusername = action.payload;
     },
     setFullname: (state, action) => {
       state.fullname = action.payload;
@@ -47,6 +48,9 @@ export const userSlice = createSlice({
     decrPageIndex: (state, action) => {
       state.pageIndex -= 1;
     },
+    setPageRefresher: (state, action) => {
+      state.listingArray = action.payload;
+    },
   },
 });
 
@@ -54,7 +58,7 @@ export const {
   reset,
   setIsLoggedIn,
   setUserEmail,
-  setUsername,
+  setCurrentUsername,
   setFullname,
   setFollowers,
   setFollowing,
@@ -62,6 +66,7 @@ export const {
   setListingArray,
   incrPageIndex,
   decrPageIndex,
+  setPageRefresher,
 } = userSlice.actions;
 
 export default userSlice.reducer;

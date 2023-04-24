@@ -10,7 +10,7 @@ import {
   reset,
   setIsLoggedIn,
   setUserEmail,
-  setUsername,
+  setCurrentUsername,
   setFollowers,
   setFollowing,
   setFitcheckArray,
@@ -27,7 +27,7 @@ export default function AddFitcheck({ navigation, route }) {
   const {
     isLoggedIn,
     email,
-    username,
+    currentusername,
     fullname,
     followers,
     following,
@@ -54,7 +54,7 @@ export default function AddFitcheck({ navigation, route }) {
     }
 
     const formData = new FormData();
-    formData.append("username", username);
+    formData.append("username", currentusername);
     formData.append("caption", videoCaption);
     formData.append("video", {
       uri: route.params.uri,

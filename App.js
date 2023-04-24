@@ -6,7 +6,6 @@ import Register from "./screens/register";
 import Profile from "./screens/profile";
 import Landing from "./screens/landing";
 import ShopSetup from "./screens/shopSetup";
-import UploadImage from "./screens/uploadImage";
 import AddFitcheck from "./screens/addFitcheck";
 import Fitcheck from "./screens/fitcheck";
 import Listing from "./screens/listing";
@@ -22,6 +21,7 @@ import FitcheckVideoComponent from "./screens/components/fitcheckVideo";
 import HomeFitcheckVideoComponent from "./screens/components/homeFitcheckVideo";
 import Navbar from "./screens/components/navbar";
 import Home from "./screens/home";
+import Following from "./screens/following";
 
 const Stack = createStackNavigator();
 
@@ -34,9 +34,6 @@ export default function App() {
   }
   function RegisterScreen(props) {
     return <Register {...props} />;
-  }
-  function UploadImageScreen(props) {
-    return <UploadImage {...props} />;
   }
   function UploadFitcheckScreen(props) {
     return <AddFitcheck {...props} />;
@@ -77,6 +74,9 @@ export default function App() {
   function HomeScreen(props) {
     return <Home {...props} />;
   }
+  function FollowingScreen(props) {
+    return <Following {...props} />;
+  }
 
   return (
     <Provider store={store}>
@@ -110,11 +110,6 @@ export default function App() {
           <Stack.Screen
             name="WelcomePrompt"
             component={WelcomePromptScreen}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="UploadImage"
-            component={UploadImageScreen}
             options={{ headerShown: false }}
           />
           <Stack.Screen
@@ -165,6 +160,11 @@ export default function App() {
           <Stack.Screen
             name="HomeFitcheckVideoComponent"
             component={HomeFitcheckVideoComponentScreen}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="Following"
+            component={FollowingScreen}
             options={{ headerShown: false }}
           />
         </Stack.Navigator>

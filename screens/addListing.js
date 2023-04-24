@@ -5,7 +5,7 @@ import {
   reset,
   setIsLoggedIn,
   setUserEmail,
-  setUsername,
+  setCurrentUsername,
   setFollowers,
   setFollowing,
   setFitcheckArray,
@@ -31,7 +31,7 @@ export default function AddListing({ navigation, route }) {
   const {
     isLoggedIn,
     email,
-    username,
+    currentusername,
     fullname,
     followers,
     following,
@@ -81,7 +81,7 @@ export default function AddListing({ navigation, route }) {
     });
 
     const formData = {
-      username: username,
+      username: currentusername,
       fitcheckId: fitcheck.id,
       name: listingname,
       description: listingdescription,
@@ -110,13 +110,13 @@ export default function AddListing({ navigation, route }) {
         return response.json();
       })
       .then((result) => {
-        console.log("Listing Added: ", result);
+        /*console.log("Listing Added: ", result);
         const { newListingArrayObject } = {
           fitcheckId: result.fitcheckId,
           listingId: result.listingId,
         };
         const newListingArray = [...listingArray, newListingArrayObject];
-        dispatch(setListingArray(newListingArray));
+        dispatch(setListingArray(newListingArray));*/
         navigation.goBack();
       })
       .catch((error) => {

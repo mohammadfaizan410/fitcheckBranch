@@ -11,7 +11,7 @@ import {
   reset,
   setIsLoggedIn,
   setUserEmail,
-  setUsername,
+  setCurrentUsername,
   setFollowers,
   setFollowing,
   setFitcheckArray,
@@ -31,7 +31,7 @@ export default function Home({ navigation }) {
   const dispatch = useDispatch();
   const {
     isLoggedIn,
-    username,
+    currentusername,
     fullname,
     followers,
     following,
@@ -43,7 +43,7 @@ export default function Home({ navigation }) {
 
   const fetchAllUsers = () => {
     const formData = {
-      username: username,
+      username: currentusername,
     };
     fetch(
       "http://192.168.1.30:3000/getallusersandfitchecks" ||
@@ -70,12 +70,6 @@ export default function Home({ navigation }) {
   useEffect(() => {
     fetchAllUsers();
   }, []);
-
-  //   useEffect(() => {
-  //     if (!isLoggedIn) {
-  //       navigation.navigate("Login");
-  //     }
-  //   }, [isLoggedIn]);
 
   const handleLogout = () => {
     dispatch(reset());

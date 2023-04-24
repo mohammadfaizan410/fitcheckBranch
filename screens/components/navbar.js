@@ -21,7 +21,9 @@ export default function Navbar({ navigation }) {
   return (
     <View style={styles.navContainer}>
       <View style={styles.innerContainer}>
-        <TouchableOpacity onPress={() => navigation.navigate("Home")}>
+        <TouchableOpacity
+          onPress={() => navigation.navigate("Home", { otherUser: undefined })}
+        >
           <View style={styles.innerContainer}>
             {homeIcon}
             <Text>Home</Text>
@@ -29,7 +31,9 @@ export default function Navbar({ navigation }) {
         </TouchableOpacity>
       </View>
       <View style={styles.innerContainer}>
-        <TouchableOpacity onPress={() => navigation.navigate("Home")}>
+        <TouchableOpacity
+          onPress={() => navigation.navigate("Home", { otherUser: undefined })}
+        >
           <View style={styles.innerContainer}>
             {feedIcon}
             <Text>Feed</Text>
@@ -38,7 +42,9 @@ export default function Navbar({ navigation }) {
       </View>
 
       <View style={styles.innerContainer}>
-        <TouchableOpacity onPress={() => navigation.navigate("Video")}>
+        <TouchableOpacity
+          onPress={() => navigation.navigate("Video", { otherUser: undefined })}
+        >
           <View style={styles.innerContainer}>{addIcon}</View>
         </TouchableOpacity>
       </View>
@@ -51,7 +57,11 @@ export default function Navbar({ navigation }) {
         </TouchableOpacity>
       </View>
       <View style={styles.innerContainer}>
-        <TouchableOpacity onPress={() => navigation.navigate("Profile")}>
+        <TouchableOpacity
+          onPress={() =>
+            navigation.navigate("Profile", { otherUser: undefined })
+          }
+        >
           <View style={styles.innerContainer}>
             {userIcon}
             <Text>Profile</Text>

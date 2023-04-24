@@ -6,7 +6,7 @@ import {
   reset,
   setIsLoggedIn,
   setUserEmail,
-  setUsername,
+  setCurrentUsername,
   setFollowers,
   setFollowing,
   setFitcheckArray,
@@ -34,7 +34,7 @@ export default function HomeFitcheckVideo({
   const {
     isLoggedIn,
     email,
-    username,
+    currentusername,
     fullname,
     followers,
     following,

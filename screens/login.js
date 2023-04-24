@@ -5,7 +5,7 @@ import Icon from "react-native-vector-icons/AntDesign";
 import {
   setIsLoggedIn,
   setUserEmail,
-  setUsername,
+  setCurrentUsername,
   setFullname,
   setFollowers,
   setFollowing,
@@ -32,7 +32,7 @@ export default function Login({ navigation }) {
   const {
     isLoggedIn,
     email,
-    username,
+    currentusername,
     fullname,
     followers,
     following,
@@ -58,8 +58,7 @@ export default function Login({ navigation }) {
   useEffect(() => {
     if (isLoggedIn) {
       console.log("logged in");
-      navigation.navigate("Profile");
-      navigation.navigate("Profile");
+      navigation.navigate("Home");
     }
   }, [isLoggedIn]);
 
@@ -99,7 +98,7 @@ export default function Login({ navigation }) {
           AsyncStorage.setItem("user", JSON.stringify(userData));
           setUserData(userData);
           setIsLoggedIn(true);
-          navigation.navigate("Profile");
+          navigation.navigate("Home");
         } else {
           //login cred. WRONG
           console.log("Invalid Email or Password");
@@ -112,7 +111,7 @@ export default function Login({ navigation }) {
 
   const setUserData = (userData) => {
     dispatch(setIsLoggedIn(true));
-    dispatch(setUsername(userData["username"]));
+    dispatch(setCurrentUsername(userData["username"]));
     dispatch(setFullname(userData["fullname"]));
     dispatch(setUserEmail(userData["email"]));
     dispatch(setFollowers(userData["followers"]));

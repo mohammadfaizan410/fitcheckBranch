@@ -41,7 +41,6 @@ const storage = multer.diskStorage({
 });
 
 router.post("/getfile", (req, res) => {
-  console.log("FILENAME IS: " + req.body.filename);
   const filePath = path.join(__dirname, "../uploads", req.body.filename);
 
   res.sendFile(filePath);
@@ -272,7 +271,7 @@ router.post("/getfitcheckdata", async (req, res) => {
           postername: fitcheck.video.postername,
         },
       };
-      console.log(fitcheckToSend);
+
       res.status(200).json({ fitcheck: fitcheckToSend });
       //fs.createReadStream(path).pipe(res);
     }
@@ -776,14 +775,19 @@ router.post("/addfollower", async (req, res) => {
   try {
     const username = req.body.username;
     const user = await User.findOne({ username: username });
-    const follower = req.body.follower;
+    const followerUsername = req.body.follower;
 
     if (!user) {
       res.status(404).json({ message: "User not found" });
       return;
     }
 
-    user.followers.push(follower);
+    if (user.followers.includes(followerUsername)) {
+      res.status(400).json({ message: "This follower already exists" });
+      return;
+    }
+
+    user.followers.push(followerUsername);
     await user.save();
 
     res.status(200).json({ message: "Success: Follower Added" });
@@ -855,60 +859,54 @@ router.post("/addLikes", async (req, res) => {
   }
 });
 
-// GET request handler for getting images by filenames
-router.post("/getimages", async (req, res) => {
+//Add Following
+router.post("/addfollowing", async (req, res) => {
   try {
     const username = req.body.username;
     const user = await User.findOne({ username: username });
+    const followingPersonsUsername = req.body.following;
 
     if (!user) {
       res.status(404).json({ message: "User not found" });
       return;
     }
 
-    const filenames = user.images.map((image) => image.filename);
-    const fileCaptions = user.images.map((image) => image.caption);
-
-    const images = [];
-
-    for (let i = 0; i < filenames.length; i++) {
-      const file = await bucket.find({ filename: filenames[i] }).toArray();
-
-      if (file.length === 0) {
-        res.status(404).json({ message: `File ${filenames[i]} not found` });
-        return;
-      }
-
-      const stream = bucket.openDownloadStreamByName(filenames[i]);
-      const chunks = [];
-
-      stream.on("data", (chunk) => {
-        chunks.push(chunk);
-      });
-
-      stream.on("end", () => {
-        const buffer = Buffer.concat(chunks);
-        const imageData = {
-          filename: filenames[i],
-          caption: fileCaptions[i],
-          contentType: file[0].contentType,
-          data: buffer.toString("base64"),
-        };
-        images.push(imageData);
-
-        if (images.length === filenames.length) {
-          res.send(images);
-        }
-      });
-
-      stream.on("error", (error) => {
-        console.log(error);
-        res.status(500).json({ message: "Error downloading file" });
-      });
+    if (
+      !followingPersonsUsername ||
+      typeof followingPersonsUsername !== "string"
+    ) {
+      res.status(400).json({ message: "Invalid following person username" });
+      return;
     }
+
+    if (user.following.includes(followingPersonsUsername)) {
+      res.status(400).json({ message: "Already following this user" });
+      return;
+    }
+
+    user.following.push(followingPersonsUsername);
+    await user.save();
+
+    res.status(200).json({ message: "Success: Following Person Added" });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ message: "Error getting images" });
+    res.status(500).json({ message: "Error Adding Following Person" });
+  }
+});
+
+//Get a single user using their username
+router.post("/getuser", async (req, res) => {
+  try {
+    const user = await User.findOne({ username: req.body.username });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json({ user: user });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Error getting user" });
   }
 });
 

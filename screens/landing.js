@@ -6,7 +6,7 @@ import { PanResponder } from "react-native";
 import {
   setIsLoggedIn,
   setUserEmail,
-  setUsername,
+  setCurrentUsername,
   setFullname,
   setFollowers,
   setFollowing,
@@ -105,7 +105,7 @@ export default function Login({ navigation }) {
 
   const setUserData = (userData) => {
     dispatch(setIsLoggedIn(true));
-    dispatch(setUsername(userData["username"]));
+    dispatch(setCurrentUsername(userData["username"]));
     dispatch(setFullname(userData["fullname"]));
     dispatch(setUserEmail(userData["email"]));
     dispatch(setFollowers(userData["followers"]));
