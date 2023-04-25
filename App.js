@@ -22,6 +22,7 @@ import HomeFitcheckVideoComponent from "./screens/components/homeFitcheckVideo";
 import Navbar from "./screens/components/navbar";
 import Home from "./screens/home";
 import Following from "./screens/following";
+import OtherUserProfile from "./screens/otherUserProfile";
 
 const Stack = createStackNavigator();
 
@@ -76,6 +77,9 @@ export default function App() {
   }
   function FollowingScreen(props) {
     return <Following {...props} />;
+  }
+  function OtherUserProfileScreen(props) {
+    return <OtherUserProfile {...props} />;
   }
 
   return (
@@ -165,6 +169,11 @@ export default function App() {
           <Stack.Screen
             name="Following"
             component={FollowingScreen}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="OtherUserProfile"
+            component={OtherUserProfileScreen}
             options={{ headerShown: false }}
           />
         </Stack.Navigator>

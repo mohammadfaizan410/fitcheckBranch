@@ -10,6 +10,7 @@ import {
   setFollowers,
   setFollowing,
   setFitcheckArray,
+  setPageRefresher,
 } from "../../reducers/user";
 import { Video } from "expo-av";
 
@@ -25,17 +26,49 @@ import {
 import styles from "./followbutton.style";
 import { SafeAreaView } from "react-native";
 
-export default function FollowButton({
-  navigation,
-  username,
-  followingTousername,
-}) {
+export default function FollowButton({ navigation, followingToUsername }) {
   //Redux Store data
+  const dispatch = useDispatch();
+  const {
+    isLoggedIn,
+    email,
+    currentusername,
+    fullname,
+    followers,
+    following,
+    fitcheckArray,
+    pageRefresher,
+  } = useSelector((state) => state.user);
 
   const [retrievedFitchecks, setRetrievedFitchecks] = useState([]);
   const [videoUri, setVideoUri] = useState(null);
 
-  const handleFollowPress = (username) => {};
+  const handleFollowPress = () => {
+    const formData = {
+      username: currentusername,
+      following: followingToUsername,
+    };
+    fetch(
+      "http://192.168.1.30:3000/addfollowing" ||
+        "http://192.168.1.30:3000/addfollowing",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      }
+    )
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        console.log(data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
 
   return (
     <View style={styles.btnContainer}>

@@ -43,84 +43,184 @@ export default function Following({ navigation, route }) {
     pageRefresher,
   } = useSelector((state) => state.user);
 
-  const [retrievedfollowing, setretrievedfollowing] = useState([]);
-  const [profileImage, setProfileImage] = useState(null);
-  const [pressedUserObject, setPressedUserObject] = useState(null);
+  if (!(route && route.params && route.params.otherUser !== undefined)) {
+    console.log("OTHER NOT USERNAME SET: FOLLOWING PAGE");
+    const [retrievedfollowing, setretrievedfollowing] = useState([]);
+    const [profileImage, setProfileImage] = useState(null);
 
-  const fetchUser = () => {
-    const formData = {
-      username: currentusername,
+    const fetchUser = () => {
+      const formData = {
+        username: currentusername,
+      };
+      fetch(
+        "http://192.168.1.30:3000/getuser" ||
+          "http://192.168.1.30:3000/getuser",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        }
+      )
+        .then((response) => {
+          return response.json();
+        })
+        .then((data) => {
+          setretrievedfollowing(data.user.following);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
     };
-    fetch(
-      "http://192.168.1.30:3000/getuser" || "http://192.168.1.30:3000/getuser",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      }
-    )
-      .then((response) => {
-        return response.json();
-      })
-      .then((data) => {
-        setretrievedfollowing(data.user.following);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  };
 
-  useEffect(() => {
-    fetchUser();
-  }, []);
+    useEffect(() => {
+      fetchUser();
 
-  const handleUserPress = (item) => {
-    const formData = {
-      username: item,
+      // cleanup function to reset the state when the component unmounts
+      return () => {
+        setretrievedfollowing([]);
+        setProfileImage(null);
+      };
+    }, []);
+
+    const handleUserPress = (item) => {
+      const formData = {
+        username: item,
+      };
+      fetch(
+        "http://192.168.1.30:3000/getuser" ||
+          "http://192.168.1.30:3000/getuser",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        }
+      )
+        .then((response) => {
+          return response.json();
+        })
+        .then((data) => {
+          dispatch(setPageRefresher(!pageRefresher));
+          navigation.navigate("OtherUserProfile", { otherUser: data.user });
+        })
+        .catch((error) => {
+          console.error(error);
+        });
     };
-    fetch(
-      "http://192.168.1.30:3000/getuser" || "http://192.168.1.30:3000/getuser",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      }
-    )
-      .then((response) => {
-        return response.json();
-      })
-      .then((data) => {
-        dispatch(setPageRefresher(!pageRefresher));
-        navigation.navigate("Profile", { otherUser: data.user });
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  };
 
-  const renderFollowingList = ({ item }) => {
+    const renderFollowingList = ({ item }) => {
+      return (
+        <View style={{ marginVertical: 10 }}>
+          <TouchableOpacity onPress={() => handleUserPress(item)}>
+            <Text style={styles.statsTitle}>{item}</Text>
+          </TouchableOpacity>
+        </View>
+      );
+    };
+
     return (
-      <View style={{ marginVertical: 10 }}>
-        <TouchableOpacity onPress={() => handleUserPress(item)}>
-          <Text style={styles.statsTitle}>{item}</Text>
-        </TouchableOpacity>
-      </View>
+      <SafeAreaView style={{ flex: 1, marginTop: "10%" }}>
+        <View style={{ paddingHorizontal: 20 }}>
+          <FlatList
+            data={retrievedfollowing}
+            renderItem={renderFollowingList}
+            keyExtractor={(item, index) => index}
+          />
+        </View>
+      </SafeAreaView>
     );
-  };
+  } else {
+    console.log("OTHER USERNAME SET: FOLLOWING PAGE");
+    const [retrievedfollowing, setretrievedfollowing] = useState([]);
+    const [profileImage, setProfileImage] = useState(null);
+    const otherUser = route.params.otherUser;
 
-  return (
-    <SafeAreaView style={{ flex: 1, marginTop: "10%" }}>
-      <View style={{ paddingHorizontal: 20 }}>
-        <FlatList
-          data={retrievedfollowing}
-          renderItem={renderFollowingList}
-          keyExtractor={(item, index) => index}
-        />
-      </View>
-    </SafeAreaView>
-  );
+    const fetchUser = () => {
+      const formData = {
+        username: otherUser.username,
+      };
+      fetch(
+        "http://192.168.1.30:3000/getuser" ||
+          "http://192.168.1.30:3000/getuser",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        }
+      )
+        .then((response) => {
+          return response.json();
+        })
+        .then((data) => {
+          setretrievedfollowing(data.user.following);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    };
+
+    useEffect(() => {
+      fetchUser();
+
+      // cleanup function to reset the state when the component unmounts
+      return () => {
+        setretrievedfollowing([]);
+        setProfileImage(null);
+      };
+    }, [route.params.otherUser]);
+
+    const handleUserPress = (item) => {
+      const formData = {
+        username: item,
+      };
+      fetch(
+        "http://192.168.1.30:3000/getuser" ||
+          "http://192.168.1.30:3000/getuser",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        }
+      )
+        .then((response) => {
+          return response.json();
+        })
+        .then((data) => {
+          dispatch(setPageRefresher(!pageRefresher));
+          navigation.navigate("OtherUserProfile", { otherUser: data.user });
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    };
+
+    const renderFollowingList = ({ item }) => {
+      return (
+        <View style={{ marginVertical: 10 }}>
+          <TouchableOpacity onPress={() => handleUserPress(item)}>
+            <Text style={styles.statsTitle}>{item}</Text>
+          </TouchableOpacity>
+        </View>
+      );
+    };
+
+    return (
+      <SafeAreaView style={{ flex: 1, marginTop: "10%" }}>
+        <View style={{ paddingHorizontal: 20 }}>
+          <FlatList
+            data={retrievedfollowing}
+            renderItem={renderFollowingList}
+            keyExtractor={(item, index) => index}
+          />
+        </View>
+      </SafeAreaView>
+    );
+  }
 }

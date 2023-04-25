@@ -9,7 +9,6 @@ import {
   reset,
   setIsLoggedIn,
   setUserEmail,
-  setCurrentUsername,
   setFollowers,
   setFollowing,
   setFitcheckArray,
@@ -26,16 +25,14 @@ import {
   FlatList,
   ScrollView,
 } from "react-native";
-import styles from "./profile.style";
+import styles from "./otherUserProfile.style";
 import { SafeAreaView } from "react-native";
 
-export default function Profile({ navigation, route }) {
-  //Redux Store data
+export default function OtherUserProfile({ navigation, route }) {
   const dispatch = useDispatch();
   const {
     isLoggedIn,
     email,
-    currentusername,
     fullname,
     followers,
     following,
@@ -43,10 +40,11 @@ export default function Profile({ navigation, route }) {
     pageRefresher,
   } = useSelector((state) => state.user);
 
-  console.log("OTHER USERNAME NOT SET");
+  const otherUser = route.params.otherUser;
+  console.log(otherUser);
 
-  const [retrievedFitchecks, setRetrievedFitchecks] = useState([]);
-  const [videoUri, setVideoUri] = useState(null);
+  const [otherretrievedFitchecks, setOtherRetrievedFitchecks] = useState([]);
+  const [othervideoUri, setOtherVideoUri] = useState(null);
 
   useEffect(() => {
     if (!isLoggedIn) {
@@ -60,7 +58,7 @@ export default function Profile({ navigation, route }) {
 
   const fetchFitchecks = () => {
     const formData = {
-      username: currentusername,
+      username: otherUser.username,
     };
     fetch(
       "http://192.168.1.30:3000/getallfitcheckdata" ||
@@ -77,7 +75,7 @@ export default function Profile({ navigation, route }) {
         return response.json();
       })
       .then((data) => {
-        setRetrievedFitchecks(data);
+        setOtherRetrievedFitchecks(data);
       })
       .catch((error) => {
         console.error(error);
@@ -91,7 +89,7 @@ export default function Profile({ navigation, route }) {
   };
 
   const handleFollowingScreenPress = () => {
-    navigation.navigate("Following");
+    navigation.navigate("Following", { otherUser: otherUser });
   };
 
   AsyncStorage.getItem("user")
@@ -103,7 +101,13 @@ export default function Profile({ navigation, route }) {
     });
 
   const renderFitcheckItem = ({ item }) => {
-    return <FitcheckVideo fitcheck={item} navigation={navigation} />;
+    return (
+      <FitcheckVideo
+        fitcheck={item}
+        navigation={navigation}
+        otherUserObject={otherUser}
+      />
+    );
   };
 
   return (
@@ -115,7 +119,7 @@ export default function Profile({ navigation, route }) {
             style={styles.profileImg}
             source={require("../images/homeImg1.png")}
           />
-          <Text style={styles.name}>{fullname}</Text>
+          <Text style={styles.name}>{otherUser.username}</Text>
         </View>
       </View>
       <View style={styles.statsContainer}>
@@ -138,12 +142,12 @@ export default function Profile({ navigation, route }) {
           <Text style={styles.statsNum}>40</Text>
         </View>
       </View>
-
-      <View style={{ flex: 1, flexWrap: "nowrap", marginTop: 20 }}>
+      <FollowButton followingToUsername={otherUser.username} />
+      <View style={{ flex: 1, flexWrap: "nowrap" }}>
         <FlatList
           key={2}
           numColumns={2}
-          data={retrievedFitchecks}
+          data={otherretrievedFitchecks}
           renderItem={renderFitcheckItem}
           keyExtractor={(item) => item.id}
         />
