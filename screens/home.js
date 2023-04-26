@@ -6,6 +6,7 @@ import styles from "./home.style";
 import Swiper from "react-native-swiper";
 import { Video } from "expo-av";
 import HomeFitcheckVideo from "./components/homeFitcheckVideo";
+import SearchBox from "./components/searchbox";
 
 import {
   reset,
@@ -63,7 +64,7 @@ export default function Home({ navigation }) {
         setAllFitchecks(data);
       })
       .catch((error) => {
-        console.error(allFitchecks);
+        console.error(error);
       });
   };
 
@@ -101,6 +102,7 @@ export default function Home({ navigation }) {
 
   return (
     <SafeAreaView style={styles.homeContainer}>
+      <SearchBox navigation={navigation} />
       <View style={styles.homeContent}>
         {allFitchecks !== null ? (
           <Swiper

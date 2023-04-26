@@ -910,4 +910,99 @@ router.post("/getuser", async (req, res) => {
   }
 });
 
+// GET All Matching Search Params
+router.post("/search", async (req, res) => {
+  let searchParams = req.body.params;
+  const currentusername = req.body.username;
+
+  if (!searchParams || Object.keys(searchParams).length === 0) {
+    searchParams = "";
+    console.log("SEARCH PARAM EMPTY");
+    return res.status(200).json([]);
+  }
+
+  try {
+    const results = await User.find({
+      $or: [
+        { username: { $regex: searchParams, $options: "i" } }, // search by username
+        { "fitcheck.caption": { $regex: searchParams, $options: "i" } }, // search by fitcheck caption
+        { "fitcheck.listings.name": { $regex: searchParams, $options: "i" } }, // search by listing name
+        { "fitcheck.listings.brand": { $regex: searchParams, $options: "i" } }, // search by listing brand
+        {
+          "fitcheck.listings.category": { $regex: searchParams, $options: "i" },
+        }, // search by listing category
+        { "fitcheck.listings.size": { $regex: searchParams, $options: "i" } }, // search by listing size
+        {
+          "fitcheck.listings.condition": {
+            $regex: searchParams,
+            $options: "i",
+          },
+        }, // search by listing condition
+      ],
+    });
+
+    //Sanitize Usernames
+    const filteredUsernames = results.filter(
+      (user) => user.username !== currentusername
+    );
+    let usernamesArray = filteredUsernames;
+
+    //Sanitize Fitchecks
+    const filteredFitchecks = results.map((user) =>
+      user.fitcheck.map((fitcheck) => {
+        if (fitcheck.video.caption === searchParams) {
+          return fitcheck;
+        }
+      })
+    );
+    const fitchecksSanitized = filteredFitchecks.map((arr) =>
+      arr.filter((element) => element !== undefined)
+    );
+
+    let fitceckArray = [];
+    fitchecksSanitized.map((item) => {
+      item.forEach((arr) => {
+        fitceckArray.push(arr);
+      });
+    });
+
+    //Sanitize Listings
+    const filteredListings = results.map((user) =>
+      user.fitcheck.map((fitcheck) =>
+        fitcheck.listings.map((listing) => {
+          if (listing.name === searchParams) {
+            return listing;
+          }
+        })
+      )
+    );
+    const lisitingsSanitized = filteredListings.map((arr) =>
+      arr.map((morearr) => morearr)
+    );
+
+    let lisitingArray = [];
+    lisitingsSanitized.map((item) => {
+      item.forEach((arr) =>
+        arr.map((item) => {
+          lisitingArray.push(item);
+        })
+      );
+    });
+
+    const removeNullFromListing = lisitingArray.filter(
+      (item) => item !== undefined
+    );
+    lisitingArray = removeNullFromListing;
+
+    res.status(200).json({
+      users: usernamesArray,
+      fitchecks: fitceckArray,
+      listings: lisitingArray,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Server error");
+  }
+});
+
 module.exports = router;
