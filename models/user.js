@@ -38,7 +38,7 @@ const listingSchema = new mongoose.Schema({
 
 const fitcheckSchema = new mongoose.Schema({
   likes: {
-    type: String,
+    type: [String],
   },
   caption: {
     type: String,
