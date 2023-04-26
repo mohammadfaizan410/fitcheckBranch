@@ -10,10 +10,11 @@ const styles = StyleSheet.create({
     backgroundColor: "grey",
     marginBottom: 10,
     marginLeft: 10,
-    height: 150,
+    height: 200,
     marginRight: 10,
     borderRadius: 20,
     alignItems: "center",
+    borderRadius: 30
   },
   navbar: {
     height: 60,
@@ -114,6 +115,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: "#5E2BAA",
   },
+
 });
 
 export default styles;

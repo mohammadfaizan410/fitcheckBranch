@@ -55,8 +55,8 @@ export default function FitcheckVideo({
         filename: fitcheck.video.postername,
       };
       const response = fetch(
-        "http://192.168.1.30:3000/getfile" ||
-          "http://192.168.1.30:3000/getfile",
+        "http://192.168.1.22:3000/getfile" ||
+          "http://192.168.1.22:3000/getfile",
         {
           method: "POST",
           headers: {
@@ -90,8 +90,8 @@ export default function FitcheckVideo({
       };
 
       fetch(
-        "http://192.168.1.30:3000/getfitcheckdata" ||
-          "http://192.168.1.30:3000/getfitcheckdata",
+        "http://192.168.1.22:3000/getfitcheckdata" ||
+          "http://192.168.1.22:3000/getfitcheckdata",
         {
           method: "POST",
           headers: {
@@ -113,10 +113,10 @@ export default function FitcheckVideo({
 
     return (
       <View style={styles.item}>
-        <TouchableOpacity onPress={() => handleFitcheckPress(fitcheck)}>
+        <TouchableOpacity onPress={() => handleFitcheckPress(fitcheck)} style={{width: '100%', height: '100%'}}>
           {imageUri ? (
             <Image
-              style={{ width: 100, height: 100 }}
+              style={{ width: '100%', height: "100%", borderRadius: 30, resizeMode: 'contain'  }}
               source={{
                 uri: imageUri,
               }}
@@ -124,9 +124,6 @@ export default function FitcheckVideo({
           ) : (
             <Text>Loading</Text>
           )}
-          <Text style={{ fontSize: 18, fontWeight: "bold", marginTop: 10 }}>
-            {fitcheck.caption}
-          </Text>
         </TouchableOpacity>
       </View>
     );
@@ -142,8 +139,8 @@ export default function FitcheckVideo({
         filename: fitcheck.video.postername,
       };
       const response = fetch(
-        "http://192.168.1.30:3000/getfile" ||
-          "http://192.168.1.30:3000/getfile",
+        "http://192.168.1.22:3000/getfile" ||
+          "http://192.168.1.22:3000/getfile",
         {
           method: "POST",
           headers: {
@@ -177,8 +174,8 @@ export default function FitcheckVideo({
       };
 
       fetch(
-        "http://192.168.1.30:3000/getfitcheckdata" ||
-          "http://192.168.1.30:3000/getfitcheckdata",
+        "http://192.168.1.22:3000/getfitcheckdata" ||
+          "http://192.168.1.22:3000/getfitcheckdata",
         {
           method: "POST",
           headers: {

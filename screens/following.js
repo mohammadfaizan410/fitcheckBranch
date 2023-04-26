@@ -53,8 +53,8 @@ export default function Following({ navigation, route }) {
         username: currentusername,
       };
       fetch(
-        "http://192.168.1.30:3000/getuser" ||
-          "http://192.168.1.30:3000/getuser",
+        "http://192.168.1.22:3000/getuser" ||
+          "http://192.168.1.22:3000/getuser",
         {
           method: "POST",
           headers: {
@@ -89,8 +89,8 @@ export default function Following({ navigation, route }) {
         username: item,
       };
       fetch(
-        "http://192.168.1.30:3000/getuser" ||
-          "http://192.168.1.30:3000/getuser",
+        "http://192.168.1.22:3000/getuser" ||
+          "http://192.168.1.22:3000/getuser",
         {
           method: "POST",
           headers: {
@@ -143,8 +143,8 @@ export default function Following({ navigation, route }) {
         username: otherUser.username,
       };
       fetch(
-        "http://192.168.1.30:3000/getuser" ||
-          "http://192.168.1.30:3000/getuser",
+        "http://192.168.1.22:3000/getuser" ||
+          "http://192.168.1.22:3000/getuser",
         {
           method: "POST",
           headers: {
@@ -179,8 +179,8 @@ export default function Following({ navigation, route }) {
         username: item,
       };
       fetch(
-        "http://192.168.1.30:3000/getuser" ||
-          "http://192.168.1.30:3000/getuser",
+        "http://192.168.1.22:3000/getuser" ||
+          "http://192.168.1.22:3000/getuser",
         {
           method: "POST",
           headers: {

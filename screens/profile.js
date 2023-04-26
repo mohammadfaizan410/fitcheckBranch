@@ -4,6 +4,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import Navbar from "./components/navbar";
 import FitcheckVideo from "./components/fitcheckVideo";
 import FollowButton from "./components/followbutton";
+import Icon from "react-native-vector-icons/Feather";
 
 import {
   reset,
@@ -47,6 +48,7 @@ export default function Profile({ navigation, route }) {
 
   const [retrievedFitchecks, setRetrievedFitchecks] = useState([]);
   const [videoUri, setVideoUri] = useState(null);
+  const settingsIcon = <Icon name="settings" size={28} color={'#5E2BAA'} />;
 
   useEffect(() => {
     if (!isLoggedIn) {
@@ -63,8 +65,8 @@ export default function Profile({ navigation, route }) {
       username: currentusername,
     };
     fetch(
-      "http://192.168.1.30:3000/getallfitcheckdata" ||
-        "http://192.168.1.30:3000/getallfitcheckdata",
+      "http://192.168.1.22:3000/getallfitcheckdata" ||
+        "http://192.168.1.22:3000/getallfitcheckdata",
       {
         method: "POST",
         headers: {
@@ -137,6 +139,17 @@ export default function Profile({ navigation, route }) {
           <Text style={styles.statsTitle}>Sold Items</Text>
           <Text style={styles.statsNum}>40</Text>
         </View>
+      </View>
+ 
+      <View style={styles.profileOptions}>
+          <TouchableOpacity><View style={styles.profileOptionBtn}><Text style={styles.btnText}>Edit Profile</Text></View></TouchableOpacity>
+          <TouchableOpacity><View style={styles.profileOptionBtn}><Text style={styles.btnText}>Fitprint</Text></View></TouchableOpacity>
+          <TouchableOpacity><View style={styles.profileOptionBtn}><Text style={styles.btnText}>Sync listings</Text></View></TouchableOpacity>
+          <TouchableOpacity><View>{settingsIcon }</View></TouchableOpacity>
+      </View>
+      <View style={styles.listOptions}> 
+        <TouchableOpacity style={{ ...styles.listOptionsBtn, borderRightWidth: 0 }}><Text style={{textAlign: 'center',color: 'grey'}}>Fitchecks</Text></TouchableOpacity>
+          <TouchableOpacity style={{ ...styles.listOptionsBtn, borderLeftWidth: 0 }}><Text style={{textAlign: 'center',color: 'grey'}}>Listings</Text></TouchableOpacity>
       </View>
 
       <View style={{ flex: 1, flexWrap: "nowrap", marginTop: 20 }}>

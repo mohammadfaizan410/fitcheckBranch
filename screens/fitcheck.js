@@ -61,8 +61,8 @@ export default function Fitcheck({ navigation, route }) {
         filename: fitcheck.video.filename,
       };
       const response = await fetch(
-        "http://192.168.1.30:3000/getfile" ||
-          "http://192.168.1.30:3000/getfile",
+        "http://192.168.1.22:3000/getfile" ||
+          "http://192.168.1.22:3000/getfile",
         {
           method: "POST",
           headers: {
@@ -97,8 +97,8 @@ export default function Fitcheck({ navigation, route }) {
         fitcheckId: fitcheck.id,
       };
       fetch(
-        "http://192.168.1.30:3000/addLikes" ||
-          "http://192.168.1.30:3000/addLikes",
+        "http://192.168.1.22:3000/addLikes" ||
+          "http://192.168.1.22:3000/addLikes",
         {
           method: "POST",
           headers: {
@@ -124,8 +124,8 @@ export default function Fitcheck({ navigation, route }) {
         fitcheckId: fitcheck.id,
       };
       fetch(
-        "http://192.168.1.30:3000/getallListingdata" ||
-          "http://192.168.1.30:3000/getallListingdata",
+        "http://192.168.1.22:3000/getallListingdata" ||
+          "http://192.168.1.22:3000/getallListingdata",
         {
           method: "POST",
           headers: {
@@ -161,8 +161,8 @@ export default function Fitcheck({ navigation, route }) {
       };
 
       fetch(
-        "http://192.168.1.30:3000/getlistingdata" ||
-          "http://192.168.1.30:3000/getlistingdata",
+        "http://192.168.1.22:3000/getlistingdata" ||
+          "http://192.168.1.22:3000/getlistingdata",
         {
           method: "POST",
           headers: {
@@ -305,8 +305,8 @@ export default function Fitcheck({ navigation, route }) {
         filename: fitcheck.video.filename,
       };
       const response = await fetch(
-        "http://192.168.1.30:3000/getfile" ||
-          "http://192.168.1.30:3000/getfile",
+        "http://192.168.1.22:3000/getfile" ||
+          "http://192.168.1.22:3000/getfile",
         {
           method: "POST",
           headers: {
@@ -341,8 +341,8 @@ export default function Fitcheck({ navigation, route }) {
         fitcheckId: fitcheck.id,
       };
       fetch(
-        "http://192.168.1.30:3000/addLikes" ||
-          "http://192.168.1.30:3000/addLikes",
+        "http://192.168.1.22:3000/addLikes" ||
+          "http://192.168.1.22:3000/addLikes",
         {
           method: "POST",
           headers: {
@@ -368,8 +368,8 @@ export default function Fitcheck({ navigation, route }) {
         fitcheckId: fitcheck.id,
       };
       fetch(
-        "http://192.168.1.30:3000/getallListingdata" ||
-          "http://192.168.1.30:3000/getallListingdata",
+        "http://192.168.1.22:3000/getallListingdata" ||
+          "http://192.168.1.22:3000/getallListingdata",
         {
           method: "POST",
           headers: {
@@ -405,8 +405,8 @@ export default function Fitcheck({ navigation, route }) {
       };
 
       fetch(
-        "http://192.168.1.30:3000/getlistingdata" ||
-          "http://192.168.1.30:3000/getlistingdata",
+        "http://192.168.1.22:3000/getlistingdata" ||
+          "http://192.168.1.22:3000/getlistingdata",
         {
           method: "POST",
           headers: {

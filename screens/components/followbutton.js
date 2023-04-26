@@ -49,8 +49,8 @@ export default function FollowButton({ navigation, followingToUsername }) {
       following: followingToUsername,
     };
     fetch(
-      "http://192.168.1.30:3000/addfollowing" ||
-        "http://192.168.1.30:3000/addfollowing",
+      "http://192.168.1.22:3000/addfollowing" ||
+        "http://192.168.1.22:3000/addfollowing",
       {
         method: "POST",
         headers: {

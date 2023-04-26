@@ -114,6 +114,40 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: "#5E2BAA",
   },
+  profileOptions: {
+    display: "flex",
+    justifyContent: "space-around",
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 20,
+    width: "90%",
+    alignSelf: 'flex-end',
+    marginRight: '5%'
+  },
+  profileOptionBtn: {
+    display: "flex",
+    textAlign: "center",
+    borderColor: "#5E2BAA",
+    borderWidth: 1,
+    padding: 10,
+    paddingTop:5,
+    paddingBottom:5,
+    borderRadius: 20
+  },
+  listOptions: {
+    display: "flex",
+    flexDirection: 'row',
+    marginTop: 20,
+  },
+  listOptionsBtn: {
+    display: "flex",
+    textAlign: "center",
+    width: '50%',
+    textAlign: 'center',
+    borderColor: 'grey',
+    borderWidth: 1,
+    padding : 10
+  }
 });
 
 export default styles;

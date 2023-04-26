@@ -47,7 +47,7 @@ export default function SearchBox({ navigation }) {
       username: currentusername,
     };
     await fetch(
-      "http://192.168.1.30:3000/search" || "http://192.168.1.30:3000/search",
+      "http://192.168.1.22:3000/search" || "http://192.168.1.22:3000/search",
       {
         method: "POST",
         headers: {
