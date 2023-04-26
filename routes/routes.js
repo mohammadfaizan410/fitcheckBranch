@@ -177,7 +177,7 @@ router.post("/uploadfitcheck", upload.single("video"), async (req, res) => {
           {
             $push: {
               fitcheck: {
-                likes: "0",
+                likes: [],
                 caption: req.body.caption,
                 listings: [],
                 video: {
@@ -797,13 +797,13 @@ router.post("/addfollower", async (req, res) => {
   }
 });
 
-//GET Likes
-router.post("/getLikes", async (req, res) => {
+//Modify Likes (of a fitcheck)
+router.post("/modifyLikes", async (req, res) => {
   try {
     const username = req.body.username;
     const fitcheckId = req.body.fitcheckId;
-    const user = await User.findOne({ username: username });
-    const fitcheck = await user.fitcheck.find(
+    const user = await User.findOne({ "fitcheck._id": fitcheckId });
+    const fitcheck = user.fitcheck.find(
       (fitcheck) => fitcheck._id == fitcheckId
     );
 
@@ -816,8 +816,47 @@ router.post("/getLikes", async (req, res) => {
       return;
     }
 
-    const likes = fitcheck.likes;
+    const likes = fitcheck.likes; //this is the array all usernames that have liked this fitcheck
 
+    if (likes.includes(username)) {
+      // remove username from likes array
+      fitcheck.likes = likes.filter(
+        (likedUsername) => likedUsername !== username
+      );
+    } else {
+      // add username to likes array
+      fitcheck.likes.push(username);
+    }
+
+    await user.save();
+
+    res.status(200).json({ message: "Success", likes: fitcheck.likes });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: error });
+  }
+});
+
+//GET Likes
+router.post("/getLikes", async (req, res) => {
+  try {
+    const fitcheckId = req.body.fitcheckId;
+
+    const user = await User.findOne({ "fitcheck._id": fitcheckId });
+    if (!user) {
+      res.status(404).json({ message: "User not found" });
+      return;
+    }
+
+    const fitcheck = await user.fitcheck.find(
+      (fitcheck) => fitcheck._id == fitcheckId
+    );
+
+    if (!fitcheck) {
+      res.status(404).json({ message: "Fitcheck not found" });
+      return;
+    }
+    const likes = fitcheck.likes;
     res.status(200).json({ message: "Success", likes: likes });
   } catch (error) {
     console.log(error);
@@ -825,42 +864,8 @@ router.post("/getLikes", async (req, res) => {
   }
 });
 
-//SET Likes
-router.post("/addLikes", async (req, res) => {
-  try {
-    const username = req.body.username;
-    const fitcheckId = req.body.fitcheckId;
-    const user = await User.findOne({ username: username });
-    const fitcheck = await user.fitcheck.find(
-      (fitcheck) => fitcheck._id == fitcheckId
-    );
-
-    if (!user) {
-      res.status(404).json({ message: "User not found" });
-      return;
-    }
-    if (!fitcheck) {
-      res.status(404).json({ message: "Fitcheck not found" });
-      return;
-    }
-
-    const newLikes = parseInt(fitcheck.likes) + 1;
-
-    await User.findOneAndUpdate(
-      { username: username, "fitcheck._id": fitcheckId },
-      { $set: { "fitcheck.$.likes": newLikes.toString() } },
-      { new: true }
-    );
-
-    res.status(200).json({ message: "Sucess", likes: newLikes.toString() });
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ message: error });
-  }
-});
-
 //Add Following
-router.post("/addfollowing", async (req, res) => {
+router.post("/modifyfollowing", async (req, res) => {
   try {
     const username = req.body.username;
     const user = await User.findOne({ username: username });
@@ -879,18 +884,35 @@ router.post("/addfollowing", async (req, res) => {
       return;
     }
 
-    if (user.following.includes(followingPersonsUsername)) {
-      res.status(400).json({ message: "Already following this user" });
+    const followingPerson = await User.findOne({
+      username: followingPersonsUsername,
+    });
+
+    if (!followingPerson) {
+      res.status(404).json({ message: "Following User not found" });
       return;
     }
 
-    user.following.push(followingPersonsUsername);
-    await user.save();
+    const userIndex = followingPerson.followers.indexOf(username);
+    const followingPersonIndex = user.following.indexOf(
+      followingPersonsUsername
+    );
 
-    res.status(200).json({ message: "Success: Following Person Added" });
+    if (userIndex !== -1 && followingPersonIndex !== -1) {
+      followingPerson.followers.splice(userIndex, 1);
+      user.following.splice(followingPersonIndex, 1);
+    } else {
+      followingPerson.followers.push(username);
+      user.following.push(followingPersonsUsername);
+    }
+
+    await user.save();
+    await followingPerson.save();
+
+    res.status(200).json({ message: "Success: Following Person Updated" });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ message: "Error Adding Following Person" });
+    res.status(500).json({ message: "Error Updating Following Person" });
   }
 });
 

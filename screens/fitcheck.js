@@ -97,8 +97,38 @@ export default function Fitcheck({ navigation, route }) {
         fitcheckId: fitcheck.id,
       };
       fetch(
-        "http://192.168.1.22:3000/addLikes" ||
-          "http://192.168.1.22:3000/addLikes",
+        "http://192.168.1.30:3000/modifyLikes" ||
+          "http://192.168.1.30:3000/modifyLikes",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        }
+      )
+        .then((response) => {
+          return response.json();
+        })
+        .then((data) => {
+          setLikes(data.likes);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    };
+
+    useEffect(() => {
+      fetchLikes();
+    }, []);
+
+    const fetchLikes = () => {
+      const formData = {
+        fitcheckId: fitcheck.id,
+      };
+      fetch(
+        "http://192.168.1.30:3000/getLikes" ||
+          "http://192.168.1.30:3000/getLikes",
         {
           method: "POST",
           headers: {
@@ -257,7 +287,7 @@ export default function Fitcheck({ navigation, route }) {
               </View>
               <View style={styles.captionContainer}>
                 <Text style={styles.description}>{fitcheck.caption}</Text>
-                <Text>Likes {likes}</Text>
+                <Text>Likes {likes.length}</Text>
               </View>
 
               <TouchableOpacity
@@ -341,8 +371,38 @@ export default function Fitcheck({ navigation, route }) {
         fitcheckId: fitcheck.id,
       };
       fetch(
-        "http://192.168.1.22:3000/addLikes" ||
-          "http://192.168.1.22:3000/addLikes",
+        "http://192.168.1.30:3000/modifyLikes" ||
+          "http://192.168.1.30:3000/modifyLikes",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        }
+      )
+        .then((response) => {
+          return response.json();
+        })
+        .then((data) => {
+          setLikes(data.likes);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    };
+
+    useEffect(() => {
+      fetchLikes();
+    }, []);
+
+    const fetchLikes = () => {
+      const formData = {
+        fitcheckId: fitcheck.id,
+      };
+      fetch(
+        "http://192.168.1.30:3000/getLikes" ||
+          "http://192.168.1.30:3000/getLikes",
         {
           method: "POST",
           headers: {
@@ -501,7 +561,7 @@ export default function Fitcheck({ navigation, route }) {
               </View>
               <View style={styles.captionContainer}>
                 <Text style={styles.description}>{fitcheck.caption}</Text>
-                <Text>Likes {likes}</Text>
+                <Text>Likes {likes.length}</Text>
               </View>
 
               <TouchableOpacity
