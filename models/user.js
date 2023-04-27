@@ -36,12 +36,24 @@ const listingSchema = new mongoose.Schema({
   ],
 });
 
+const commentSchema = new mongoose.Schema({
+  text: {
+    type: String,
+  },
+  username: {
+    type: String,
+  },
+});
+
 const fitcheckSchema = new mongoose.Schema({
   likes: {
     type: [String],
   },
   caption: {
     type: String,
+  },
+  comments: {
+    type: [commentSchema],
   },
   listings: {
     type: [listingSchema],
@@ -76,6 +88,10 @@ const fitcheckCollectionSchema = new mongoose.Schema({
   phonenumber: {
     required: true,
     type: String,
+  },
+  avatar: {
+    filename: String,
+    contentType: String,
   },
   followers: {
     required: false,

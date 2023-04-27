@@ -47,8 +47,8 @@ export default function Home({ navigation }) {
       username: currentusername,
     };
     fetch(
-      "http://192.168.1.22:3000/getallusersandfitchecks" ||
-        "http://192.168.1.22:3000/getallusersandfitchecks",
+      "http://192.168.1.30:3000/getallusersandfitchecks" ||
+        "http://192.168.1.30:3000/getallusersandfitchecks",
       {
         method: "POST",
         headers: {

@@ -23,6 +23,7 @@ import Navbar from "./screens/components/navbar";
 import Home from "./screens/home";
 import Following from "./screens/following";
 import OtherUserProfile from "./screens/otherUserProfile";
+import Settings from "./screens/settings";
 
 const Stack = createStackNavigator();
 
@@ -80,6 +81,9 @@ export default function App() {
   }
   function OtherUserProfileScreen(props) {
     return <OtherUserProfile {...props} />;
+  }
+  function SettingsScreen(props) {
+    return <Settings {...props} />;
   }
 
   return (
@@ -174,6 +178,11 @@ export default function App() {
           <Stack.Screen
             name="OtherUserProfile"
             component={OtherUserProfileScreen}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="Settings"
+            component={SettingsScreen}
             options={{ headerShown: false }}
           />
         </Stack.Navigator>

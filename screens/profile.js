@@ -5,6 +5,7 @@ import Navbar from "./components/navbar";
 import FitcheckVideo from "./components/fitcheckVideo";
 import FollowButton from "./components/followbutton";
 import Icon from "react-native-vector-icons/Feather";
+import Avatar from "./components/avatar";
 
 import {
   reset,
@@ -43,12 +44,16 @@ export default function Profile({ navigation, route }) {
     fitcheckArray,
     pageRefresher,
   } = useSelector((state) => state.user);
+  console.log("FOLLOWING IS: ");
+  console.log(following);
+  console.log("FOLLOWERS ARE : ");
+  console.log(followers);
 
   console.log("OTHER USERNAME NOT SET");
 
   const [retrievedFitchecks, setRetrievedFitchecks] = useState([]);
   const [videoUri, setVideoUri] = useState(null);
-  const settingsIcon = <Icon name="settings" size={28} color={'#5E2BAA'} />;
+  const settingsIcon = <Icon name="settings" size={28} color={"#5E2BAA"} />;
 
   useEffect(() => {
     if (!isLoggedIn) {
@@ -65,8 +70,8 @@ export default function Profile({ navigation, route }) {
       username: currentusername,
     };
     fetch(
-      "http://192.168.1.22:3000/getallfitcheckdata" ||
-        "http://192.168.1.22:3000/getallfitcheckdata",
+      "http://192.168.1.30:3000/getallfitcheckdata" ||
+        "http://192.168.1.30:3000/getallfitcheckdata",
       {
         method: "POST",
         headers: {
@@ -86,14 +91,12 @@ export default function Profile({ navigation, route }) {
       });
   };
 
-  const handleLogout = () => {
-    dispatch(reset());
-    AsyncStorage.clear();
-    navigation.navigate("Landing");
-  };
-
   const handleFollowingScreenPress = () => {
     navigation.navigate("Following");
+  };
+
+  const handleSettingsPress = () => {
+    navigation.navigate("Settings");
   };
 
   AsyncStorage.getItem("user")
@@ -113,9 +116,9 @@ export default function Profile({ navigation, route }) {
       <View style={{ height: "4%" }}></View>
       <View style={styles.infoContainer}>
         <View style={styles.imageName}>
-          <Image
-            style={styles.profileImg}
-            source={require("../images/homeImg1.png")}
+          <Avatar
+            incomingStyle={{ width: 100, height: 100, alignSelf: "center" }}
+            incomingUsername={currentusername}
           />
           <Text style={styles.name}>{fullname}</Text>
         </View>
@@ -140,16 +143,38 @@ export default function Profile({ navigation, route }) {
           <Text style={styles.statsNum}>40</Text>
         </View>
       </View>
- 
+
       <View style={styles.profileOptions}>
-          <TouchableOpacity><View style={styles.profileOptionBtn}><Text style={styles.btnText}>Edit Profile</Text></View></TouchableOpacity>
-          <TouchableOpacity><View style={styles.profileOptionBtn}><Text style={styles.btnText}>Fitprint</Text></View></TouchableOpacity>
-          <TouchableOpacity><View style={styles.profileOptionBtn}><Text style={styles.btnText}>Sync listings</Text></View></TouchableOpacity>
-          <TouchableOpacity><View>{settingsIcon }</View></TouchableOpacity>
+        <TouchableOpacity>
+          <View style={styles.profileOptionBtn}>
+            <Text style={styles.btnText}>Edit Profile</Text>
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity>
+          <View style={styles.profileOptionBtn}>
+            <Text style={styles.btnText}>Fitprint</Text>
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity>
+          <View style={styles.profileOptionBtn}>
+            <Text style={styles.btnText}>Sync listings</Text>
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={handleSettingsPress}>
+          <View>{settingsIcon}</View>
+        </TouchableOpacity>
       </View>
-      <View style={styles.listOptions}> 
-        <TouchableOpacity style={{ ...styles.listOptionsBtn, borderRightWidth: 0 }}><Text style={{textAlign: 'center',color: 'grey'}}>Fitchecks</Text></TouchableOpacity>
-          <TouchableOpacity style={{ ...styles.listOptionsBtn, borderLeftWidth: 0 }}><Text style={{textAlign: 'center',color: 'grey'}}>Listings</Text></TouchableOpacity>
+      <View style={styles.listOptions}>
+        <TouchableOpacity
+          style={{ ...styles.listOptionsBtn, borderRightWidth: 0 }}
+        >
+          <Text style={{ textAlign: "center", color: "grey" }}>Fitchecks</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={{ ...styles.listOptionsBtn, borderLeftWidth: 0 }}
+        >
+          <Text style={{ textAlign: "center", color: "grey" }}>Listings</Text>
+        </TouchableOpacity>
       </View>
 
       <View style={{ flex: 1, flexWrap: "nowrap", marginTop: 20 }}>
