@@ -52,7 +52,7 @@ export default function HomeFitcheckVideo({
       filename: fitcheck.video,
     };
     const response = fetch(
-      "http://192.168.1.22:3000/getfile" || "http://192.168.1.22:3000/getfile",
+      "http://192.168.1.30:3000/getfile" || "http://192.168.1.30:3000/getfile",
       {
         method: "POST",
         headers: {

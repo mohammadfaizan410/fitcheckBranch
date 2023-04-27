@@ -74,8 +74,8 @@ export default function UploadImage({ navigation }) {
     console.log("Form Data: " + formData.username);
 
     fetch(
-      "http://192.168.1.22:3000/imageupload" ||
-        "http://192.168.1.22:3000/imageupload",
+      "http://192.168.1.30:3000/imageupload" ||
+        "http://192.168.1.30:3000/imageupload",
       {
         method: "POST",
         headers: {

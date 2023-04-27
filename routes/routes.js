@@ -16,7 +16,7 @@ const path = require("path");
 const bodyParser = require("body-parser");
 
 // ------- mongo db connection --------
-mongoose.connect("mongodb://localhost:27017/fitcheckDB");
+mongoose.connect("mongodb://localhost:27018/fitcheckDB");
 const database = mongoose.connection; //get the database object from mongoose connection
 
 database.on("error", (error) => {
@@ -115,17 +115,21 @@ router.post("/register", async (req, res) => {
 
 //Handle Login
 router.post("/login", async (req, res) => {
-  const query = { username: req.body.username, password: req.body.password };
-  User.find(query).then(async (result) => {
-    if (!result) {
-      // user not found
+  const username = req.body.username;
+  const password = req.body.password;
 
-      res.status(400).json({ message: "Username Not Found" });
-    } else {
-      const token = jwt.sign({ email: req.body.email }, "secretKey");
-      res.status(200).json({ message: result, token: token });
+  try {
+    const user = await User.findOne({ username, password });
+    if (!user) {
+      res.status(400).json({ message: "Username or password is incorrect" });
+      return;
     }
-  });
+
+    res.status(200).json({ user: user });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Error while logging in" });
+  }
 });
 
 //UPLOAD FITCHECK
@@ -179,6 +183,7 @@ router.post("/uploadfitcheck", upload.single("video"), async (req, res) => {
               fitcheck: {
                 likes: [],
                 caption: req.body.caption,
+                comments: [],
                 listings: [],
                 video: {
                   filename: "compressed_" + file.filename,
@@ -265,6 +270,7 @@ router.post("/getfitcheckdata", async (req, res) => {
         id: fitcheck._id,
         caption: fitcheck.caption,
         likes: fitcheck.likes,
+        comments: fitcheck.comments,
         video: {
           file: file,
           filename: fitcheck.video.filename,
@@ -1024,6 +1030,187 @@ router.post("/search", async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).send("Server error");
+  }
+});
+
+// SET A comment (of a fitcheck)
+router.post("/addcomment", async (req, res) => {
+  const username = req.body.username;
+  const fitcheckId = req.body.fitcheckId;
+  const commentText = req.body.text;
+
+  try {
+    const user = await User.findOne({
+      "fitcheck._id": fitcheckId,
+    });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const fitcheck = user.fitcheck.find((f) => f._id.toString() === fitcheckId);
+
+    if (!fitcheck) {
+      return res.status(404).json({ message: "Fitcheck not found" });
+    }
+
+    const comment = {
+      text: commentText,
+      username: username,
+    };
+
+    fitcheck.comments.push(comment);
+    await user.save();
+
+    res.json({ message: "Comment added successfully" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+// Get all comments (of a fitcheck)
+router.post("/getcomments", async (req, res) => {
+  try {
+    const fitcheckId = req.body.fitcheckId;
+    const user = await User.findOne({ "fitcheck._id": fitcheckId });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    const fitcheck = user.fitcheck.find(
+      (fitcheck) => fitcheck._id == req.body.fitcheckId
+    );
+
+    if (!fitcheck) {
+      return res.status(404).json({ message: "Fitcheck not found" });
+    }
+
+    res.json(fitcheck.comments);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server Error" });
+  }
+});
+
+// Delete a comment (of a fitcheck)
+router.post("/deletecomment", async (req, res) => {
+  try {
+    const fitcheckId = req.body.fitcheckId;
+    const commentId = req.body.commentId;
+    const user = await User.findOne({ "fitcheck._id": fitcheckId });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Find the fitcheck with the given ID
+    const fitcheck = user.fitcheck.find((f) => f._id == fitcheckId);
+
+    if (!fitcheck) {
+      return res.status(404).json({ message: "Fitcheck not found" });
+    }
+
+    // Find the comment with the given ID in the fitcheck
+    const comment = fitcheck.comments.find((c) => c._id == commentId);
+
+    if (!comment) {
+      return res.status(404).json({ message: "Comment not found" });
+    }
+
+    // Remove the comment
+    await comment.deleteOne();
+
+    // Save the user document
+    await user.save();
+
+    res.json({ message: "Comment deleted successfully" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server Error" });
+  }
+});
+
+// Set Avatar (of a user)
+router.post("/setAvatar", async (req, res) => {
+  const username = req.body.username;
+  const image = req.body.image;
+
+  try {
+    // Find the user by their username
+    const user = await User.findOne({ username });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    //Make the new image ready for saving
+    const compressedImage = await compressImage(req.body.image);
+
+    // decode the base64-encoded image data to a buffer
+    const buffer = Buffer.from(compressedImage, "base64");
+
+    const uniqueFilename = await generateUniqueFilename(
+      req.body.username,
+      bucket
+    );
+
+    // upload the buffer to GridFS
+    const uploadStream = bucket.openUploadStream(uniqueFilename);
+    const readStream = new Readable();
+    readStream.push(buffer);
+    readStream.push(null);
+    readStream.pipe(uploadStream);
+
+    // save the file metadata to the images array of the listing object
+    const fileData = {
+      filename: uniqueFilename,
+      contentType: "image/jpeg",
+    };
+
+    user.avatar = fileData;
+    await user.save();
+
+    // Return the newly added listing ID
+    res.status(200).json({
+      message: "Success",
+    });
+  } catch (error) {
+    res.status(400).json({ message: "There was error in the request." });
+  }
+});
+
+// GET a Avatar (of a user)
+router.post("/getAvatar", async (req, res) => {
+  const username = req.body.username;
+
+  try {
+    const user = await User.findOne({ username });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    const filename = user.avatar.filename;
+
+    const stream = bucket.openDownloadStreamByName(filename);
+    const chunks = [];
+
+    stream.on("data", (chunk) => {
+      chunks.push(chunk);
+    });
+
+    stream.on("end", () => {
+      const buffer = Buffer.concat(chunks);
+      const base64Image = buffer.toString("base64");
+
+      res.status(200).json({ image: base64Image });
+    });
+
+    stream.on("error", (err) => {
+      console.error(err);
+      res.status(500).json({ message: "Error getting Avatar" });
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Error getting Listing" });
   }
 });
 

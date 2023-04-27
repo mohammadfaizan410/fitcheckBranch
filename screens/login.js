@@ -77,7 +77,7 @@ export default function Login({ navigation }) {
     };
 
     fetch(
-      "http://192.168.1.22:3000/login" || "http://192.168.1.22:3000/login",
+      "http://192.168.1.30:3000/login" || "http://192.168.1.30:3000/login",
       {
         //replace with server IP later
         method: "POST",
@@ -91,10 +91,10 @@ export default function Login({ navigation }) {
         return res.json();
       })
       .then((data) => {
-        if (data.message[0] != undefined) {
+        if (data.user != undefined) {
           // do stuff if login creds. correct
-          console.log(data.message[0]);
-          let userData = data.message[0];
+          console.log(data.user);
+          let userData = data.user;
           AsyncStorage.setItem("user", JSON.stringify(userData));
           setUserData(userData);
           setIsLoggedIn(true);

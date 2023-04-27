@@ -75,7 +75,7 @@ export default function Login({ navigation }) {
       id: usernameAtLogin,
     };
 
-    fetch("http://192.168.1.22:3000/login", {
+    fetch("http://192.168.1.30:3000/login", {
       //replace with server IP later
       method: "POST",
       headers: {
