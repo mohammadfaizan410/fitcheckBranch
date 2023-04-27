@@ -116,9 +116,9 @@ export default function FitcheckVideo({
         <TouchableOpacity onPress={() => handleFitcheckPress(fitcheck)} style={{width: '100%', height: '100%'}}>
           {imageUri ? (
             <Image
-              style={{ width: '100%', height: "100%", borderRadius: 30, resizeMode: 'contain'  }}
+              style={{ width: '100%', height: "100%", borderRadius: 30, resizeMode: 'contain'}}
               source={{
-                uri: imageUri,
+              uri: imageUri,
               }}
             />
           ) : (

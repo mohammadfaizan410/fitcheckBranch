@@ -97,8 +97,8 @@ export default function Fitcheck({ navigation, route }) {
         fitcheckId: fitcheck.id,
       };
       fetch(
-        "http://192.168.1.30:3000/modifyLikes" ||
-          "http://192.168.1.30:3000/modifyLikes",
+        "http://192.168.1.22:3000/modifyLikes" ||
+          "http://192.168.1.22:3000/modifyLikes",
         {
           method: "POST",
           headers: {
@@ -127,8 +127,8 @@ export default function Fitcheck({ navigation, route }) {
         fitcheckId: fitcheck.id,
       };
       fetch(
-        "http://192.168.1.30:3000/getLikes" ||
-          "http://192.168.1.30:3000/getLikes",
+        "http://192.168.1.22:3000/getLikes" ||
+          "http://192.168.1.22:3000/getLikes",
         {
           method: "POST",
           headers: {
@@ -371,8 +371,8 @@ export default function Fitcheck({ navigation, route }) {
         fitcheckId: fitcheck.id,
       };
       fetch(
-        "http://192.168.1.30:3000/modifyLikes" ||
-          "http://192.168.1.30:3000/modifyLikes",
+        "http://192.168.1.22:3000/modifyLikes" ||
+          "http://192.168.1.22:3000/modifyLikes",
         {
           method: "POST",
           headers: {
@@ -401,8 +401,8 @@ export default function Fitcheck({ navigation, route }) {
         fitcheckId: fitcheck.id,
       };
       fetch(
-        "http://192.168.1.30:3000/getLikes" ||
-          "http://192.168.1.30:3000/getLikes",
+        "http://192.168.1.22:3000/getLikes" ||
+          "http://192.168.1.22:3000/getLikes",
         {
           method: "POST",
           headers: {

@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Navbar from "./navbar";
+import NavVideo from "./navVideo";
+
 import {
   reset,
   setIsLoggedIn,
@@ -80,6 +82,7 @@ export default function HomeFitcheckVideo({
   return (
     <View>
       {videoUri ? (
+        <>
         <Video
           source={{ uri: videoUri }}
           style={{ width: "100%", height: "100%" }}
@@ -87,7 +90,12 @@ export default function HomeFitcheckVideo({
           shouldPlay={shouldPlay}
           isLooping
           useNativeControls={true}
+          />
+        <NavVideo
+        navigation={navigation}
+        fitcheck={fitcheck}
         />
+        </>
       ) : (
         <Text>Loading</Text>
       )}

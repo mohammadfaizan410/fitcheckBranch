@@ -20,9 +20,10 @@ import VideoComponent from "./screens/components/videoComponent";
 import FitcheckVideoComponent from "./screens/components/fitcheckVideo";
 import HomeFitcheckVideoComponent from "./screens/components/homeFitcheckVideo";
 import Navbar from "./screens/components/navbar";
-import Home from "./screens/home";
+import Feed from "./screens/feed";
 import Following from "./screens/following";
 import OtherUserProfile from "./screens/otherUserProfile";
+import NavVideo from "./screens/components/navVideo";
 
 const Stack = createStackNavigator();
 
@@ -72,6 +73,9 @@ export default function App() {
   function NavbarPartial(props) {
     return <Navbar {...props} />;
   }
+  function FeedScreen(props) {
+    return <Feed {...props} />;
+  }
   function HomeScreen(props) {
     return <Home {...props} />;
   }
@@ -81,7 +85,7 @@ export default function App() {
   function OtherUserProfileScreen(props) {
     return <OtherUserProfile {...props} />;
   }
-
+  
   return (
     <Provider store={store}>
       <NavigationContainer>
@@ -149,6 +153,11 @@ export default function App() {
           <Stack.Screen
             name="NavbarPartial"
             component={NavbarPartial}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="Feed"
+            component={FeedScreen}
             options={{ headerShown: false }}
           />
           <Stack.Screen

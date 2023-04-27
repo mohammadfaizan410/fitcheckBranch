@@ -90,7 +90,7 @@ const styles = StyleSheet.create({
   statsNum: {
     color: "#5E2BAA",
     fontSize: 17,
-    fontWeight: "",
+
   },
   btnContainer: {
     display: "flex",

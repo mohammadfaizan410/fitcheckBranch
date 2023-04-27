@@ -76,11 +76,11 @@ export default function AddFitcheck({ navigation, route }) {
         console.log(result);
         const newfitcheckArray = [...fitcheckArray, result];
         dispatch(setFitcheckArray(newfitcheckArray));
-        navigation.navigate("Home");
+        navigation.navigate("Feed");
       })
       .catch((error) => {
         console.error(error);
-        navigation.navigate("Home");
+        navigation.navigate("Feed");
       });
   };
 

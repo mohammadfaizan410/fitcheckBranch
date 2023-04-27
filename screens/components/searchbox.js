@@ -118,7 +118,6 @@ export default function SearchBox({ navigation }) {
   return (
     <View style={{ ...styles.searchStyles }}>
       <View style={{ ...styles.content }}>
-        <Text>Searchh booox bbby</Text>
         <TextInput
           style={styles.loginInput}
           placeholder="Search"

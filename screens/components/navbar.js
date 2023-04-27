@@ -22,7 +22,7 @@ export default function Navbar({ navigation }) {
     <View style={styles.navContainer}>
       <View style={styles.innerContainer}>
         <TouchableOpacity
-          onPress={() => navigation.navigate("Home", { otherUser: undefined })}
+          onPress={() => navigation.navigate("Feed", { otherUser: undefined })}
         >
           <View style={styles.innerContainer}>
             {homeIcon}
@@ -32,7 +32,7 @@ export default function Navbar({ navigation }) {
       </View>
       <View style={styles.innerContainer}>
         <TouchableOpacity
-          onPress={() => navigation.navigate("Home", { otherUser: undefined })}
+          onPress={() => navigation.navigate("Feed", { otherUser: undefined })}
         >
           <View style={styles.innerContainer}>
             {feedIcon}
