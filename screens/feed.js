@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Navbar from "./components/navbar";
-import styles from './feed.style'
+import styles from "./feed.style";
 import Swiper from "react-native-swiper";
 import { Video } from "expo-av";
 import HomeFitcheckVideo from "./components/homeFitcheckVideo";
@@ -47,8 +47,8 @@ export default function Feed({ navigation }) {
       username: currentusername,
     };
     fetch(
-      "http://192.168.1.22:3000/getallusersandfitchecks" ||
-        "http://192.168.1.22:3000/getallusersandfitchecks",
+      "http://192.168.1.30:3000/getallusersandfitchecks" ||
+        "http://192.168.1.30:3000/getallusersandfitchecks",
       {
         method: "POST",
         headers: {

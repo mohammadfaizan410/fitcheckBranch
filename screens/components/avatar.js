@@ -3,6 +3,8 @@ import { useDispatch, useSelector } from "react-redux";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as ImagePicker from "expo-image-picker";
 import * as FileSystem from "expo-file-system";
+import RefreshStore from "./refreshStoreData";
+
 import {
   reset,
   setIsLoggedIn,
@@ -46,7 +48,8 @@ export default function Avatar({
     pageRefresher,
   } = useSelector((state) => state.user);
   dispatch(setPageRefresher(!pageRefresher));
-  console.log("INCOMING USERNAME IN AVATAR IS:" + incomingUsername);
+
+  RefreshStore();
 
   const [recievedImage, setRecievedImage] = useState(null);
 

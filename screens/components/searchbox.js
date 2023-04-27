@@ -63,9 +63,6 @@ export default function SearchBox({ navigation }) {
         setUserResults(data.users);
         setFitcheckResults(data.fitchecks);
         setListingResults(data.listings);
-        console.log(userResults);
-        //console.log(fitcheckResults);
-        //console.log(listingResults);
       })
       .catch((error) => {
         console.error(error);
@@ -82,11 +79,42 @@ export default function SearchBox({ navigation }) {
     return (
       <View>
         <Text>Users:</Text>
-        {userArray.map((username) => {
-          return <Text>{username}</Text>;
+        {userArray.map((username, index) => {
+          return (
+            <View style={{ marginVertical: 10 }}>
+              <TouchableOpacity onPress={() => handleUserPress(username)}>
+                <Text>{username}</Text>
+              </TouchableOpacity>
+            </View>
+          );
         })}
       </View>
     );
+  };
+
+  const handleUserPress = (username) => {
+    const formData = {
+      username: username,
+    };
+    fetch(
+      "http://192.168.1.30:3000/getUser" || "http://192.168.1.30:3000/getUser",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      }
+    )
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        navigation.navigate("OtherUserProfile", { otherUser: data.user });
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   };
 
   const renderFitcheckResults = () => {
@@ -95,7 +123,7 @@ export default function SearchBox({ navigation }) {
     return (
       <View>
         <Text>Fitchecks:</Text>
-        {fitcheckArray.map((caption) => {
+        {fitcheckArray.map((caption, index) => {
           return <Text>{caption}</Text>;
         })}
       </View>
@@ -108,7 +136,7 @@ export default function SearchBox({ navigation }) {
     return (
       <View>
         <Text>Listings:</Text>
-        {listingArray.map((name) => {
+        {listingArray.map((name, index) => {
           return <Text>{name}</Text>;
         })}
       </View>

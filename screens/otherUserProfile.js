@@ -4,6 +4,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import Navbar from "./components/navbar";
 import FitcheckVideo from "./components/fitcheckVideo";
 import FollowButton from "./components/followbutton";
+import Avatar from "./components/avatar";
+import RefreshStore from "./components/refreshStoreData";
 
 import {
   reset,
@@ -39,6 +41,8 @@ export default function OtherUserProfile({ navigation, route }) {
     fitcheckArray,
     pageRefresher,
   } = useSelector((state) => state.user);
+
+  RefreshStore();
 
   const otherUser = route.params.otherUser;
   console.log(otherUser);
@@ -115,9 +119,9 @@ export default function OtherUserProfile({ navigation, route }) {
       <View style={{ height: "4%" }}></View>
       <View style={styles.infoContainer}>
         <View style={styles.imageName}>
-          <Image
-            style={styles.profileImg}
-            source={require("../images/homeImg1.png")}
+          <Avatar
+            incomingStyle={{ width: 100, height: 100, alignSelf: "center" }}
+            incomingUsername={otherUser.username}
           />
           <Text style={styles.name}>{otherUser.username}</Text>
         </View>
@@ -129,12 +133,12 @@ export default function OtherUserProfile({ navigation, route }) {
         </View>
         <View style={styles.profileStats}>
           <Text style={styles.statsTitle}>Followers</Text>
-          <Text style={styles.statsNum}>20</Text>
+          <Text style={styles.statsNum}>{otherUser.followers.length}</Text>
         </View>
         <View style={styles.profileStats}>
           <TouchableOpacity onPress={handleFollowingScreenPress}>
             <Text style={styles.statsTitle}>Following</Text>
-            <Text style={styles.statsNum}>30</Text>
+            <Text style={styles.statsNum}>{otherUser.following.length}</Text>
           </TouchableOpacity>
         </View>
         <View style={{ ...styles.profileStats, borderRightColor: "white" }}>

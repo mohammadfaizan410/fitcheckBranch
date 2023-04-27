@@ -103,7 +103,7 @@ export default function Settings({ navigation }) {
         return response.json();
       })
       .then((result) => {
-        console.log(result);
+        setChangeAvatar(false);
       })
       .catch((error) => {
         console.error(error);
@@ -143,7 +143,10 @@ export default function Settings({ navigation }) {
         </>
       ) : (
         <>
-          <Avatar incomingUsername={currentusername} />
+          <Avatar
+            incomingStyle={{ width: 100, height: 100, alignSelf: "center" }}
+            incomingUsername={currentusername}
+          />
           <TouchableOpacity
             style={styles.button}
             onPress={() => setChangeAvatar(true)}

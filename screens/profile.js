@@ -6,6 +6,7 @@ import FitcheckVideo from "./components/fitcheckVideo";
 import FollowButton from "./components/followbutton";
 import Icon from "react-native-vector-icons/Feather";
 import Avatar from "./components/avatar";
+import RefreshStore from "./components/refreshStoreData";
 
 import {
   reset,
@@ -44,12 +45,8 @@ export default function Profile({ navigation, route }) {
     fitcheckArray,
     pageRefresher,
   } = useSelector((state) => state.user);
-  console.log("FOLLOWING IS: ");
-  console.log(following);
-  console.log("FOLLOWERS ARE : ");
-  console.log(followers);
 
-  console.log("OTHER USERNAME NOT SET");
+  RefreshStore();
 
   const [retrievedFitchecks, setRetrievedFitchecks] = useState([]);
   const [videoUri, setVideoUri] = useState(null);
@@ -130,12 +127,14 @@ export default function Profile({ navigation, route }) {
         </View>
         <View style={styles.profileStats}>
           <Text style={styles.statsTitle}>Followers</Text>
-          <Text style={styles.statsNum}>20</Text>
+          <Text style={styles.statsNum}>{followers.length}</Text>
         </View>
         <View style={styles.profileStats}>
           <TouchableOpacity onPress={handleFollowingScreenPress}>
             <Text style={styles.statsTitle}>Following</Text>
-            <Text style={styles.statsNum}>30</Text>
+            <Text style={{ ...styles.statsNum, alignSelf: "center" }}>
+              {following.length}
+            </Text>
           </TouchableOpacity>
         </View>
         <View style={{ ...styles.profileStats, borderRightColor: "white" }}>

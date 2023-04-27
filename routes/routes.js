@@ -145,11 +145,11 @@ router.post("/uploadfitcheck", upload.single("video"), async (req, res) => {
 
     const outputVideoPath = path.join(
       outputPath,
-      "compressed_" + file.filename
+      "compressed_" + file.filename.replace(".mp4", ".mov") // set the output format to .mov
     );
     const outputThumbnailPath = path.join(outputPath, outputPostername);
 
-    // Set the video and audio bitrates to 500k
+    // Set the video and audio bitrates
     const command = ffmpeg(videoPath)
       .videoBitrate("2000k")
       .audioBitrate("128k")
@@ -186,8 +186,9 @@ router.post("/uploadfitcheck", upload.single("video"), async (req, res) => {
                 comments: [],
                 listings: [],
                 video: {
-                  filename: "compressed_" + file.filename,
-                  contentType: file.mimetype,
+                  filename:
+                    "compressed_" + file.filename.replace(".mp4", ".mov"), // set the output format to .mov
+                  contentType: "video/mov",
                   uploadDate: Date.now(),
                   caption: req.body.caption,
                   size: file.size,
@@ -240,39 +241,51 @@ router.post("/getfitcheckdata", async (req, res) => {
       return res.status(404).send({ message: "Video not found" });
     }
 
-    // Read video from disk
-    const path = `./uploads/${fitcheck.video.filename}`;
-    const stat = fs.statSync(path);
-    const fileSize = stat.size;
+    // Set the headers for the video response
+    const videoPath = `./uploads/${fitcheck.video.filename}`;
+    const videoStat = fs.statSync(videoPath);
+    const videoSize = videoStat.size;
     const range = req.headers.range;
+    const videoType = fitcheck.video.contentType;
+
+    // Handle iOS devices by returning the full video file
+    if (
+      req.headers["user-agent"].includes("iPhone") ||
+      req.headers["user-agent"].includes("iPad")
+    ) {
+      res.header("Content-Type", videoType);
+      res.sendFile(videoPath);
+      return;
+    }
+
+    // Handle other devices by streaming the video
     if (range) {
       const parts = range.replace(/bytes=/, "").split("-");
       const start = parseInt(parts[0], 10);
-      const end = parts[1] ? parseInt(parts[1], 10) : fileSize - 1;
+      const end = parts[1] ? parseInt(parts[1], 10) : videoSize - 1;
       const chunksize = end - start + 1;
-      const file = fs.createReadStream(path, { start, end });
+      const video = fs.createReadStream(videoPath, { start, end });
       const head = {
-        "Content-Range": `bytes ${start}-${end}/${fileSize}`,
+        "Content-Range": `bytes ${start}-${end}/${videoSize}`,
         "Accept-Ranges": "bytes",
         "Content-Length": chunksize,
-        "Content-Type": fitcheck.video.contentType,
+        "Content-Type": videoType,
       };
       res.writeHead(206, head);
-      file.pipe(res);
+      video.pipe(res);
     } else {
       const head = {
-        "Content-Length": fileSize,
-        "Content-Type": fitcheck.video.contentType,
+        "Content-Length": videoSize,
+        "Content-Type": videoType,
       };
-      //res.writeHead(200, head);
-      const file = fs.createReadStream(path);
+      const video = fs.createReadStream(videoPath);
       const fitcheckToSend = {
         id: fitcheck._id,
         caption: fitcheck.caption,
         likes: fitcheck.likes,
         comments: fitcheck.comments,
         video: {
-          file: file,
+          file: video,
           filename: fitcheck.video.filename,
           postername: fitcheck.video.postername,
         },
@@ -1211,6 +1224,22 @@ router.post("/getAvatar", async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Error getting Listing" });
+  }
+});
+
+// GET a user (complete object)
+router.post("/getUser", async (req, res) => {
+  const username = req.body.username;
+  try {
+    const user = await User.findOne({ username });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json({ user: user });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Error getting User" });
   }
 });
 
