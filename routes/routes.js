@@ -323,6 +323,7 @@ router.post("/uploadnewlisting", async (req, res) => {
     // Create a new listing object using the provided listing data
     const newListing = {
       name: req.body.name,
+      dolapurl: req.body.dolapurl,
       description: req.body.description,
       category: req.body.category,
       size: req.body.size,
@@ -530,6 +531,7 @@ router.post("/getallListingdata", async (req, res) => {
 
       const readyListingObject = {
         name: listing.name,
+        dolapurl: listing.dolapurl,
         description: listing.description,
         category: listing.category,
         size: listing.size,
@@ -612,6 +614,7 @@ router.post("/getlistingdata", async (req, res) => {
 
     const listingToSend = {
       name: listing.name,
+      dolapurl: listing.dolapurl,
       description: listing.description,
       category: listing.category,
       size: listing.size,

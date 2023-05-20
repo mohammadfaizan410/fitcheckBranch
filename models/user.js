@@ -4,6 +4,9 @@ const listingSchema = new mongoose.Schema({
   name: {
     type: String,
   },
+  dolapurl: {
+    type: String,
+  },
   description: {
     type: String,
   },

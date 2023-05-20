@@ -40,6 +40,7 @@ export default function AddListing({ navigation, route }) {
   } = useSelector((state) => state.user);
 
   const [listingname, setListingname] = useState();
+  const [listingdolapurl, setListingdolapurl] = useState();
   const [listingdescription, setListingdescription] = useState();
   const [listingcategory, setListingcategory] = useState();
   const [listingsize, setListingsize] = useState();
@@ -83,6 +84,7 @@ export default function AddListing({ navigation, route }) {
     const formData = {
       username: currentusername,
       fitcheckId: fitcheck.id,
+      dolapurl: listingdolapurl,
       name: listingname,
       description: listingdescription,
       category: listingcategory,
@@ -145,6 +147,14 @@ export default function AddListing({ navigation, route }) {
         placeholderTextColor="#999"
         onChangeText={setListingdescription}
         value={listingdescription}
+      />
+      <Text style={styles.subtitle}>Listing Dolap URL </Text>
+      <TextInput
+        style={styles.input}
+        placeholder="Listing Dolap URL"
+        placeholderTextColor="#999"
+        onChangeText={setListingdolapurl}
+        value={listingdolapurl}
       />
       <Text style={styles.subtitle}>Listing Category </Text>
       <Picker

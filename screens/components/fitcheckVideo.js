@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Navbar from "./navbar";
+
 import {
   reset,
   setIsLoggedIn,
@@ -80,6 +81,7 @@ export default function FitcheckVideo({
     };
 
     useEffect(() => {
+      console.log("USE EFFECT WORK");
       fetchVideo();
     }, []);
 
@@ -119,9 +121,14 @@ export default function FitcheckVideo({
         >
           {imageUri ? (
             <Image
-              style={{ width: '100%', height: "100%", borderRadius: 30, resizeMode: 'contain'}}
+              style={{
+                width: "100%",
+                height: "100%",
+                borderRadius: 30,
+                resizeMode: "contain",
+              }}
               source={{
-              uri: imageUri,
+                uri: imageUri,
               }}
             />
           ) : (

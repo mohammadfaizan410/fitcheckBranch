@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "fitcheck",
-    "slug": "fitcheck2",
+    "slug": "fitcheck",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -29,18 +29,17 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.theintrigued.fitcheck"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "extra": {
       "eas": {
-        "projectId": "4408F1A6-0F3F-4D7F-8F7E-1B3C6DE02D94"
+        "projectId": "68d084df-2695-491b-96ad-7c03205943bb"
       }
     },
-   
-    "owner": "fitcheck"
-
+    "owner": "theintrigued"
   }
 }

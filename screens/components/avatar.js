@@ -4,6 +4,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as ImagePicker from "expo-image-picker";
 import * as FileSystem from "expo-file-system";
 import RefreshStore from "./refreshStoreData";
+import { useFocusEffect } from "@react-navigation/native";
 
 import {
   reset,
@@ -84,6 +85,16 @@ export default function Avatar({
         console.error(error);
       });
   };
+
+  useFocusEffect(
+    React.useCallback(() => {
+      // Code to refresh the screen
+      // For example, you can call an API or update state here
+      // This code will be executed each time the screen gains focus
+      console.log("Avatar ON FOCUS");
+      fetchAvatar();
+    }, [])
+  );
 
   return (
     <View style={{ ...incomingStyle }}>

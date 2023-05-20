@@ -7,6 +7,7 @@ import FollowButton from "./components/followbutton";
 import Icon from "react-native-vector-icons/Feather";
 import Avatar from "./components/avatar";
 import RefreshStore from "./components/refreshStoreData";
+import { useFocusEffect } from "@react-navigation/native";
 
 import {
   reset,
@@ -61,6 +62,16 @@ export default function Profile({ navigation, route }) {
   useEffect(() => {
     fetchFitchecks();
   }, [fitcheckArray]);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      // Code to refresh the screen
+      // For example, you can call an API or update state here
+      // This code will be executed each time the screen gains focus
+      console.log("PROFILE ON FOCUS");
+      fetchFitchecks();
+    }, [])
+  );
 
   const fetchFitchecks = () => {
     const formData = {
