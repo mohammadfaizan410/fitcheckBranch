@@ -65,8 +65,8 @@ export default function Avatar({
     };
 
     await fetch(
-      "http://192.168.1.30:3000/getAvatar" ||
-        "http://192.168.1.30:3000/getAvatar",
+      "http://192.168.1.24:3000/getAvatar" ||
+        "http://192.168.1.24:3000/getAvatar",
       {
         method: "POST",
         headers: {

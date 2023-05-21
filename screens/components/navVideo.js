@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
   Image,
 } from "react-native";
-import { Camera } from "expo-camera";
+// import { Camera } from "expo-camera";
 import * as FileSystem from "expo-file-system";
 import AntDesignIcon from "react-native-vector-icons/AntDesign";
 import Font5Icon from "react-native-vector-icons/FontAwesome5";
@@ -58,8 +58,8 @@ export default function NavVideo({ navigation, fitcheck }) {
     };
 
     fetch(
-      "http://192.168.1.30:3000/getallListingdata" ||
-        "http://192.168.1.30:3000/getallListingdata",
+      "http://192.168.1.24:3000/getallListingdata" ||
+        "http://192.168.1.24:3000/getallListingdata",
       {
         method: "POST",
         headers: {
@@ -89,8 +89,8 @@ export default function NavVideo({ navigation, fitcheck }) {
       fitcheckId: fitcheck.id,
     };
     fetch(
-      "http://192.168.1.30:3000/modifyLikes" ||
-        "http://192.168.1.30:3000/modifyLikes",
+      "http://192.168.1.24:3000/modifyLikes" ||
+        "http://192.168.1.24:3000/modifyLikes",
       {
         method: "POST",
         headers: {
@@ -119,8 +119,8 @@ export default function NavVideo({ navigation, fitcheck }) {
       fitcheckId: fitcheck.id,
     };
     fetch(
-      "http://192.168.1.30:3000/getLikes" ||
-        "http://192.168.1.30:3000/getLikes",
+      "http://192.168.1.24:3000/getLikes" ||
+        "http://192.168.1.24:3000/getLikes",
       {
         method: "POST",
         headers: {

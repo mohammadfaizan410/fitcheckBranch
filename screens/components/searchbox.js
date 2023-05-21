@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Navbar from "./navbar";
 import styles from "./searchbox.style";
-import Swiper from "react-native-swiper";
+// import Swiper from "react-native-swiper";
 
 import {
   reset,

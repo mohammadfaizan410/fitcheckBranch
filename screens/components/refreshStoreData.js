@@ -46,7 +46,7 @@ export default function RefreshStore() {
       username: currentusername,
     };
     await fetch(
-      "http://192.168.1.30:3000/getUser" || "http://192.168.1.30:3000/getUser",
+      "http://192.168.1.24:3000/getUser" || "http://192.168.1.24:3000/getUser",
       {
         method: "POST",
         headers: {

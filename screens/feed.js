@@ -3,8 +3,9 @@ import { useDispatch, useSelector } from "react-redux";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Navbar from "./components/navbar";
 import styles from "./feed.style";
-import Swiper from "react-native-swiper";
+// import Swiper from "react-native-swiper";
 import { Video } from "expo-av";
+import { Carousel, Slide } from 'nuka-carousel';
 import HomeFitcheckVideo from "./components/homeFitcheckVideo";
 import SearchBox from "./components/searchbox";
 
@@ -47,8 +48,8 @@ export default function Feed({ navigation }) {
       username: currentusername,
     };
     fetch(
-      "http://192.168.1.30:3000/getallusersandfitchecks" ||
-        "http://192.168.1.30:3000/getallusersandfitchecks",
+      "http://192.168.1.24:3000/getallusersandfitchecks" ||
+        "http://192.168.1.24:3000/getallusersandfitchecks",
       {
         method: "POST",
         headers: {
@@ -101,43 +102,78 @@ export default function Feed({ navigation }) {
   };
 
   return (
-    <SafeAreaView style={styles.homeContainer}>
-      <SearchBox navigation={navigation} />
-      <View style={styles.homeContent}>
-        {allFitchecks !== null ? (
-          <Swiper
-            showsPagination={false}
-            showsButtons={false}
-            horizontal={false}
-            loop={false}
-            onIndexChanged={onIndexChanged}
-            loadMinimal={true}
-            loadMinimalSize={0}
-          >
-            {allFitchecks.map((item, index) => (
-              <View
-                key={item.id}
-                style={{ ...styles.homeFeed, backgroundColor: "white" }}
-              >
-                <TouchableOpacity
-                  onPress={() => togglePlaying(item, index)}
-                  activeOpacity={1}
-                >
-                  <HomeFitcheckVideo
-                    shouldPlay={currentVideoIndex === index && isPlaying}
-                    fitcheck={item}
-                    navigation={navigation}
-                  />
-                </TouchableOpacity>
-              </View>
-            ))}
-          </Swiper>
-        ) : (
-          <Text>No Fitchecks to show!</Text>
-        )}
-      </View>
+    // <SafeAreaView style={styles.homeContainer}>
+    //   <SearchBox navigation={navigation} />
+    //   <View style={styles.homeContent}>
+    //     {allFitchecks !== null ? (
+    //     <Carousel
+    //     withoutControls={true}
+    //     wrapAround={false}
+    //     vertical={true}
+    //     // afterSlide={onSlideChanged}
+    //     showThumbs={false}
+    //     showArrows={false}
+    //     axis="vertical"
+    //     infiniteLoop={false}
+    //     onChange={onIndexChanged}
+    //     showStatus={false}
+    //   >
+    //         <Slide>
+              
+    //         {allFitchecks.map((item, index) => (
+    //           <View
+    //           key={item.id}
+    //           style={{ ...styles.homeFeed, backgroundColor: "white" }}
+    //           >
+    //             <TouchableOpacity
+    //               onPress={() => togglePlaying(item, index)}
+    //               activeOpacity={1}
+    //               >
+    //               <HomeFitcheckVideo
+    //                 shouldPlay={currentVideoIndex === index && isPlaying}
+    //                 fitcheck={item}
+    //                 navigation={navigation}
+    //               />
+    //             </TouchableOpacity>
+    //           </View>
+    //         ))}
+    //         </Slide>
+    //       </Carousel>
+    //     ) : (
+    //       <Text>No Fitchecks to show!</Text>
+    //     )}
+    //   </View>
 
-      <Navbar style={styles.navStyles} navigation={navigation} />
-    </SafeAreaView>
+    //   <Navbar style={styles.navStyles} navigation={navigation} />
+    // </SafeAreaView>
+
+
+    ///////////web.....................................
+    <div style={styles.homeContainer}>
+  <SearchBox navigation={navigation} />
+  <div style={styles.homeContent}>
+    {allFitchecks !== null ? (
+      <div>
+        {allFitchecks.map((item, index) => (
+          <div
+            key={item.id}
+            style={{ ...styles.homeFeed, backgroundColor: "white" }}
+          >
+            <button onClick={() => togglePlaying(item, index)}>
+              <HomeFitcheckVideo
+                shouldPlay={currentVideoIndex === index && isPlaying}
+                fitcheck={item}
+                navigation={navigation}
+              />
+            </button>
+          </div>
+        ))}
+      </div>
+    ) : (
+      <p>No Fitchecks to show!</p>
+    )}
+  </div>
+  <Navbar style={styles.navStyles} navigation={navigation} />
+</div>
   );
 }

@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   Image,
 } from "react-native";
-import { Camera } from "expo-camera";
+// import { Camera } from "expo-camera";
 import * as FileSystem from "expo-file-system";
 import Icon from "react-native-vector-icons/FontAwesome";
 import styles from "./navbar.style";

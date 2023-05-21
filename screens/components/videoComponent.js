@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { Text, View, TouchableOpacity, SafeAreaView } from 'react-native';
-import { Camera } from 'expo-camera';
+// import { Camera } from 'expo-camera';
 import { FontAwesome } from '@expo/vector-icons';
 import styles from './videoComponent.style';
 import IconFoundation from "react-native-vector-icons/Foundation";
@@ -10,6 +10,8 @@ import Icon from "react-native-vector-icons/AntDesign";
 import { useFocusEffect } from '@react-navigation/native';
 import { Video } from 'expo-av';
 import * as ImagePicker from "expo-image-picker";
+import { Camera } from 'react-native-vision-camera';
+import { requestCameraPermission } from '../../utils/permissions';
 import * as FileSystem from "expo-file-system";
 
 
@@ -74,23 +76,40 @@ export default function CameraComponent({ navigation }) {
         : Camera.Constants.Type.back
     );
   }
+  // useEffect(() => {
+  //   let isMounted = true;
+  
+  //   async function getPermission() {
+  //     const { status } = await Camera.requestCameraPermissionsAsync();
+  //     await Camera.requestMicrophonePermissionsAsync();
+  //     if (isMounted) {
+  //       setPermission(status === 'granted');
+  //     }
+  //   }
+  
+  //   getPermission();
+  
+  //   return () => {
+  //     isMounted = false;
+  //   };
+  // }, []);
+
   useEffect(() => {
-    let isMounted = true;
-  
-    async function getPermission() {
-      const { status } = await Camera.requestCameraPermissionsAsync();
-      await Camera.requestMicrophonePermissionsAsync();
-      if (isMounted) {
-        setPermission(status === 'granted');
+    const checkPermissions = async () => {
+      const hasPermission = await requestCameraPermission(); // Custom function to request camera permission
+      if (hasPermission) {
+        cameraRef.current.start();
+      } else {
+        console.log('Camera permission denied');
       }
-    }
-  
-    getPermission();
-  
+    };
+
+    checkPermissions();
     return () => {
-      isMounted = false;
+      cameraRef.current.stop();
     };
   }, []);
+
   
   useFocusEffect(
     useCallback(() => {

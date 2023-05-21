@@ -78,8 +78,8 @@ export default function Profile({ navigation, route }) {
       username: currentusername,
     };
     fetch(
-      "http://192.168.1.30:3000/getallfitcheckdata" ||
-        "http://192.168.1.30:3000/getallfitcheckdata",
+      "http://192.168.1.24:3000/getallfitcheckdata" ||
+        "http://192.168.1.24:3000/getallfitcheckdata",
       {
         method: "POST",
         headers: {

@@ -89,8 +89,8 @@ export default function Settings({ navigation }) {
     };
 
     fetch(
-      "http://192.168.1.30:3000/setAvatar" ||
-        "http://192.168.1.30:3000/setAvatar",
+      "http://192.168.1.24:3000/setAvatar" ||
+        "http://192.168.1.24:3000/setAvatar",
       {
         method: "POST",
         headers: {
